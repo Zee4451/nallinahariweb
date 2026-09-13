@@ -1898,9 +1898,6 @@ export default function InstagramReelsSection() {
                   <IconEye size={14} />
                   {reel.views} views
                 </span>
-                <span className="nk-card-play" aria-hidden="true">
-                  <IconPlay size={26} />
-                </span>
               </span>
               <span className="nk-card-copy">
                 <span className="nk-card-kicker">Instagram reel</span>
