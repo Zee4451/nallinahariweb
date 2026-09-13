@@ -224,42 +224,19 @@ function IconUsers({ size = 16 }: { size?: number }) {
 
 function CrestLogo() {
   return (
-    <svg
-      className="nk-crest"
-      viewBox="0 0 120 140"
-      role="img"
-      aria-labelledby="nk-crest-title"
-    >
-      <title id="nk-crest-title">Nahari King official crest logo</title>
-      <defs>
-        <linearGradient id="nk-crest-metal" x1="20" y1="12" x2="100" y2="128" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#f6dc82" />
-          <stop offset="0.48" stopColor="#d4af37" />
-          <stop offset="1" stopColor="#8b6b1c" />
-        </linearGradient>
-        <linearGradient id="nk-crest-crimson" x1="28" y1="45" x2="92" y2="122" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stopColor="#9b1719" />
-          <stop offset="1" stopColor="#4d080b" />
-        </linearGradient>
-      </defs>
-      <path
-        d="M24 18 35 36 46 23 60 40 74 23 85 36 96 18 91 50H29L24 18Z"
-        fill="url(#nk-crest-metal)"
-        stroke="#f7e4a5"
-        strokeWidth="1.4"
-      />
-      <path d="M28 48h64l-6 54c-2 18-14 25-26 29-12-4-24-11-26-29l-6-54Z" fill="url(#nk-crest-crimson)" stroke="url(#nk-crest-metal)" strokeWidth="3" />
-      <path d="M37 57h46l-4 44c-1.5 14-9 20-19 24-10-4-17.5-10-19-24l-4-44Z" fill="none" stroke="#e6c465" strokeWidth="1" opacity="0.72" />
-      <path d="M42 68 78 104M78 68 42 104" stroke="#d4af37" strokeWidth="2" opacity="0.48" strokeLinecap="round" />
-      <text x="60" y="91" textAnchor="middle" fill="#f8e7b8" fontSize="27" fontWeight="700" fontFamily="Georgia, 'Times New Roman', serif" letterSpacing="1">
-        NK
-      </text>
-      <path d="M42 103h36" stroke="#d4af37" strokeWidth="1.4" />
-      <text x="60" y="116" textAnchor="middle" fill="#e8c76e" fontSize="7.6" fontWeight="700" fontFamily="Arial, sans-serif" letterSpacing="2.2">
-        NAHARI KING
-      </text>
-      <circle cx="60" cy="31" r="3" fill="#f8e7b8" />
-    </svg>
+    <img
+      src="/nahari-king-crest.png"
+      alt="Nahari King Official Logo"
+      width={70}
+      height={70}
+      style={{
+        width: '100%',
+        height: '100%',
+        borderRadius: '50%',
+        objectFit: 'cover',
+        display: 'block'
+      }}
+    />
   );
 }
 
@@ -630,22 +607,24 @@ export default function InstagramReelsSection() {
         .nk-crest-wrap {
           position: relative;
           flex: 0 0 auto;
-          width: 88px;
-          height: 104px;
+          width: 76px;
+          height: 76px;
           display: grid;
           place-items: center;
-          border: 1px solid rgba(212, 175, 55, 0.32);
-          border-radius: 50% 50% 46% 46%;
-          background: linear-gradient(145deg, rgba(212, 175, 55, 0.13), rgba(122, 12, 14, 0.08));
-          box-shadow: inset 0 0 28px rgba(212, 175, 55, 0.06), 0 14px 34px rgba(0, 0, 0, 0.24);
+          border: 1.5px solid rgba(212, 175, 55, 0.45);
+          border-radius: 50%;
+          background: linear-gradient(145deg, rgba(212, 175, 55, 0.15), rgba(122, 12, 14, 0.15));
+          box-shadow: 0 0 25px rgba(212, 175, 55, 0.25), 0 10px 24px rgba(0, 0, 0, 0.4);
+          padding: 3px;
         }
 
         .nk-crest-wrap::before {
           content: "";
           position: absolute;
-          inset: 7px;
-          border: 1px solid rgba(212, 175, 55, 0.18);
+          inset: 3px;
+          border: 1px solid rgba(212, 175, 55, 0.25);
           border-radius: inherit;
+          pointer-events: none;
         }
 
         .nk-crest {
