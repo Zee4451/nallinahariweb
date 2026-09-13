@@ -100,77 +100,197 @@ export default function ReservationsPage() {
   const today = new Date().toISOString().split('T')[0];
 
   return (
-    <div style={{ background: '#0A0807', color: '#FDFBF7', minHeight: '100vh', padding: '60px 24px 100px' }}>
-      <div style={{ maxWidth: '960px', margin: '0 auto' }}>
+    <div className="reservations-root">
+      <style jsx>{`
+        .reservations-root {
+          background: var(--bg-dark, #090404);
+          color: var(--text-main, #FFFDF9);
+          min-height: 100vh;
+          padding: clamp(36px, 6vw, 60px) clamp(16px, 4vw, 24px) 100px;
+          overflow-x: hidden;
+          width: 100%;
+        }
+
+        .reservations-inner {
+          max-width: 960px;
+          margin: 0 auto;
+          width: 100%;
+        }
+
+        .reservations-header {
+          text-align: center;
+          margin-bottom: clamp(28px, 5vw, 48px);
+        }
+
+        .reservations-eyebrow {
+          font-size: 0.78rem;
+          letter-spacing: 0.22em;
+          text-transform: uppercase;
+          color: #D4AF37;
+          display: block;
+        }
+
+        .reservations-title {
+          font-family: var(--font-serif);
+          fontSize: clamp(1.8rem, 5vw, 3.2rem);
+          color: #FAF7F2;
+          margin-top: 8px;
+          margin-bottom: 12px;
+          line-height: 1.2;
+        }
+
+        .reservations-subtitle {
+          color: #B8B0A5;
+          font-size: clamp(0.9rem, 2vw, 1.05rem);
+          max-width: 640px;
+          margin: 0 auto;
+          line-height: 1.6;
+          padding: 0 6px;
+        }
+
+        .reservation-card-box {
+          background: linear-gradient(160deg, #18090B 0%, #110507 100%);
+          border: 1px solid rgba(212, 175, 55, 0.3);
+          border-radius: 20px;
+          padding: clamp(20px, 4vw, 40px) clamp(16px, 4vw, 32px);
+          display: flex;
+          flex-direction: column;
+          gap: clamp(20px, 4vw, 32px);
+          box-shadow: 0 16px 40px rgba(0,0,0,0.7), 0 0 25px rgba(122, 12, 14, 0.2);
+          width: 100%;
+        }
+
+        .seating-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+          gap: 14px;
+          width: 100%;
+        }
+
+        .schedule-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+          gap: 18px;
+          width: 100%;
+        }
+
+        .contact-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+          gap: 18px;
+          width: 100%;
+        }
+
+        .submit-reserve-btn {
+          padding: 15px 28px;
+          background: linear-gradient(135deg, #FCE8A6 0%, #D4AF37 50%, #9E7D23 100%);
+          color: #160608;
+          border-radius: 8px;
+          font-weight: 800;
+          font-size: clamp(0.88rem, 2vw, 1rem);
+          letter-spacing: 0.05em;
+          text-transform: uppercase;
+          border: none;
+          cursor: pointer;
+          box-shadow: 0 6px 20px rgba(212, 175, 55, 0.35);
+          margin-top: 10px;
+          width: 100%;
+          transition: transform 0.2s ease, filter 0.2s ease;
+        }
+
+        .submit-reserve-btn:active {
+          transform: scale(0.98);
+        }
+
+        .voucher-box {
+          background: linear-gradient(160deg, #1C0C0E 0%, #100507 100%);
+          border: 2px solid #D4AF37;
+          border-radius: 20px;
+          padding: clamp(24px, 4vw, 40px) clamp(16px, 4vw, 32px);
+          box-shadow: 0 20px 50px rgba(0,0,0,0.85), 0 0 35px rgba(212,175,55,0.3);
+          position: relative;
+          overflow: hidden;
+          width: 100%;
+        }
+
+        .voucher-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+          gap: 18px;
+          padding: clamp(16px, 3vw, 24px);
+          background: #19090B;
+          border-radius: 12px;
+          border: 1px solid rgba(212, 175, 55, 0.2);
+          margin-bottom: 28px;
+          width: 100%;
+        }
+
+        @media (max-width: 640px) {
+          .seating-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .schedule-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .contact-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .voucher-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
+
+      <div className="reservations-inner">
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <span style={{ fontSize: '0.8rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#D4AF37' }}>
+        <div className="reservations-header">
+          <span className="reservations-eyebrow">
             Imperial Hospitality
           </span>
-          <h1 style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: 'clamp(2.2rem, 4vw, 3.5rem)',
-            color: '#FAF7F2',
-            marginTop: '8px',
-            marginBottom: '14px'
-          }}>
+          <h1 className="reservations-title">
             Reserve Your Dastarkhwan
           </h1>
-          <p style={{ color: '#B8B0A5', fontSize: '1.05rem', maxWidth: '640px', margin: '0 auto' }}>
+          <p className="reservations-subtitle">
             Select your preferred dining tradition: from the sacred low floor diwan to private royal chambers.
           </p>
         </div>
 
         {/* If Voucher is Generated */}
         {bookingPass ? (
-          <div style={{
-            background: '#14110F',
-            border: '2px solid #D4AF37',
-            borderRadius: '20px',
-            padding: '40px 32px',
-            boxShadow: '0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(212,175,55,0.2)',
-            position: 'relative',
-            overflow: 'hidden'
-          }}>
+          <div className="voucher-box">
             {/* Top Badge */}
-            <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+            <div style={{ textAlign: 'center', marginBottom: '28px' }}>
               <span style={{
-                background: 'rgba(212, 175, 55, 0.15)',
+                background: 'rgba(212, 175, 55, 0.18)',
                 color: '#D4AF37',
-                padding: '6px 18px',
+                padding: '6px 16px',
                 borderRadius: '999px',
-                fontSize: '0.8rem',
+                fontSize: '0.75rem',
                 letterSpacing: '0.1em',
                 textTransform: 'uppercase',
-                border: '1px solid rgba(212, 175, 55, 0.4)'
+                border: '1px solid rgba(212, 175, 55, 0.45)'
               }}>
                 Reservation Confirmed
               </span>
               <h2 style={{
                 fontFamily: 'var(--font-serif)',
                 color: '#FAF7F2',
-                fontSize: '2rem',
+                fontSize: 'clamp(1.6rem, 4vw, 2.2rem)',
                 marginTop: '12px',
                 marginBottom: '4px'
               }}>
                 Shahi Dastarkhwan Pass
               </h2>
-              <div style={{ color: '#D4AF37', fontSize: '1.1rem', fontWeight: 700, letterSpacing: '0.08em' }}>
+              <div style={{ color: '#D4AF37', fontSize: '1rem', fontWeight: 700, letterSpacing: '0.08em' }}>
                 Ref: {bookingPass.id}
               </div>
             </div>
 
             {/* Voucher Details Grid */}
-            <div style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-              gap: '24px',
-              padding: '24px',
-              background: '#1A1613',
-              borderRadius: '12px',
-              border: '1px solid rgba(212, 175, 55, 0.15)',
-              marginBottom: '32px'
-            }}>
+            <div className="voucher-grid">
               <div>
                 <span style={{ fontSize: '0.75rem', color: '#888075', textTransform: 'uppercase' }}>Guest of Honour</span>
                 <div style={{ color: '#FAF7F2', fontSize: '1.05rem', fontWeight: 600, marginTop: '2px' }}>
@@ -274,30 +394,23 @@ export default function ReservationsPage() {
           /* Reservation Form */
           <form
             onSubmit={handleSubmit}
-            style={{
-              background: '#14110F',
-              border: '1px solid rgba(212, 175, 55, 0.2)',
-              borderRadius: '20px',
-              padding: '40px 32px',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '32px'
-            }}
+            className="reservation-card-box"
           >
             {/* 1. Step: Seating Choice */}
             <div>
               <label style={{
                 display: 'block',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 textTransform: 'uppercase',
                 letterSpacing: '0.12em',
                 color: '#D4AF37',
-                marginBottom: '16px'
+                marginBottom: '14px',
+                fontWeight: 700
               }}>
                 1. Select Preferred Seating Style:
               </label>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '16px' }}>
+              <div className="seating-grid">
                 {seatingOptions.map((opt) => {
                   const isChosen = seatingType === opt.id;
                   return (
@@ -305,15 +418,16 @@ export default function ReservationsPage() {
                       key={opt.id}
                       onClick={() => setSeatingType(opt.id)}
                       style={{
-                        padding: '20px',
+                        padding: '18px',
                         borderRadius: '12px',
-                        background: isChosen ? 'rgba(212, 175, 55, 0.12)' : '#1A1613',
-                        border: isChosen ? '2px solid #D4AF37' : '1px solid rgba(255, 255, 255, 0.08)',
+                        background: isChosen ? 'rgba(212, 175, 55, 0.16)' : '#190A0C',
+                        border: isChosen ? '2px solid #D4AF37' : '1px solid rgba(212, 175, 55, 0.18)',
                         cursor: 'pointer',
                         transition: 'all 0.2s ease',
                         display: 'flex',
                         flexDirection: 'column',
-                        justifyContent: 'space-between'
+                        justifyContent: 'space-between',
+                        boxShadow: isChosen ? '0 0 16px rgba(212, 175, 55, 0.25)' : 'none'
                       }}
                     >
                       <div>
@@ -362,7 +476,7 @@ export default function ReservationsPage() {
                 2. Date, Time Slot & Party Size:
               </label>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
+              <div className="schedule-grid">
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', color: '#A89F93', marginBottom: '8px' }}>
                     Feast Date *
@@ -447,7 +561,7 @@ export default function ReservationsPage() {
                 3. Guest Credentials:
               </label>
 
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '20px' }}>
+              <div className="contact-grid">
                 <div>
                   <label style={{ display: 'block', fontSize: '0.8rem', color: '#A89F93', marginBottom: '8px' }}>
                     Full Name *
@@ -545,20 +659,7 @@ export default function ReservationsPage() {
             {/* Submit Button */}
             <button
               type="submit"
-              style={{
-                padding: '16px 36px',
-                background: 'linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #B89025 100%)',
-                color: '#120F0D',
-                borderRadius: '8px',
-                fontWeight: 700,
-                fontSize: '1rem',
-                letterSpacing: '0.06em',
-                textTransform: 'uppercase',
-                border: 'none',
-                cursor: 'pointer',
-                boxShadow: '0 8px 25px rgba(212, 175, 55, 0.3)',
-                marginTop: '10px'
-              }}
+              className="submit-reserve-btn"
             >
               Generate Shahi Reservation Pass ⚜️
             </button>

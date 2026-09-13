@@ -16,38 +16,112 @@ export default function HomePage() {
       <HeroSection />
 
       {/* 2. Viral Offers Banner */}
-      <section style={{
-        background: 'linear-gradient(90deg, #1C0709 0%, #360A0E 50%, #1C0709 100%)',
-        borderBottom: '1px solid rgba(212, 175, 55, 0.35)',
-        boxShadow: 'inset 0 1px 0 rgba(212, 175, 55, 0.15), 0 10px 25px rgba(0,0,0,0.5)',
-        padding: '24px',
-        textAlign: 'center'
-      }}>
-        <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
-          <div style={{ textAlign: 'left' }}>
-            <span style={{ color: '#F87171', fontWeight: 800, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
+      <section className="offers-banner-section">
+        <style jsx>{`
+          .offers-banner-section {
+            background: linear-gradient(90deg, #1C0709 0%, #360A0E 50%, #1C0709 100%);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+            box-shadow: inset 0 1px 0 rgba(212, 175, 55, 0.15), 0 10px 25px rgba(0,0,0,0.5);
+            padding: clamp(18px, 4vw, 24px) clamp(16px, 4vw, 24px);
+            text-align: center;
+            width: 100%;
+            overflow-x: hidden;
+          }
+
+          .offers-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+          }
+
+          .offers-content {
+            text-align: left;
+            flex: 1 1 300px;
+          }
+
+          .offers-tag {
+            color: #F87171;
+            font-weight: 800;
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            display: block;
+          }
+
+          .offers-title {
+            font-family: var(--font-serif);
+            color: #FAF7F2;
+            font-size: clamp(1.15rem, 3vw, 1.35rem);
+            margin-top: 4px;
+            margin-bottom: 4px;
+            line-height: 1.3;
+          }
+
+          .offers-desc {
+            color: #D4C9BC;
+            font-size: clamp(0.82rem, 2vw, 0.88rem);
+            line-height: 1.5;
+          }
+
+          .offers-cta {
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #FCE8A6 0%, #D4AF37 50%, #9E7D23 100%);
+            color: #1A0709;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            white-space: nowrap;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.35);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+          }
+
+          .offers-cta:active {
+            transform: scale(0.97);
+          }
+
+          @media (max-width: 640px) {
+            .offers-container {
+              flex-direction: column;
+              text-align: center;
+              gap: 14px;
+            }
+
+            .offers-content {
+              text-align: center;
+              flex: 1 1 100%;
+            }
+
+            .offers-cta {
+              width: 100%;
+              padding: 13px 20px;
+            }
+          }
+        `}</style>
+
+        <div className="offers-container">
+          <div className="offers-content">
+            <span className="offers-tag">
               ★ Limited Khajrana Special Offer
             </span>
-            <h3 style={{ fontFamily: 'var(--font-serif)', color: '#FAF7F2', fontSize: '1.35rem', marginTop: '2px' }}>
+            <h3 className="offers-title">
               Indore Ki Best Nihari & Paye Non-Veg Thaal — Sirf ₹799 Mein!
             </h3>
-            <p style={{ color: '#D4C9BC', fontSize: '0.88rem' }}>
+            <p className="offers-desc">
               Nalli Nihari + Mutton Paye + Seekh Kebabs + Dum Biryani + 4 Tandoor Rotis + Raita.
             </p>
           </div>
 
           <Link
             href="/menu"
-            style={{
-              padding: '12px 28px',
-              background: 'linear-gradient(135deg, #FCE8A6 0%, #D4AF37 50%, #9E7D23 100%)',
-              color: '#1A0709',
-              borderRadius: '8px',
-              fontWeight: 800,
-              fontSize: '0.9rem',
-              whiteSpace: 'nowrap',
-              boxShadow: '0 4px 15px rgba(212, 175, 55, 0.35)'
-            }}
+            className="offers-cta"
           >
             Order Thaal Now →
           </Link>
@@ -55,28 +129,30 @@ export default function HomePage() {
       </section>
 
       {/* 3. Signature Dishes Spotlight */}
-      <section id="menu" style={{ padding: '80px 24px', maxWidth: '1280px', margin: '0 auto', scrollMarginTop: '80px' }}>
-        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+      <section id="menu" style={{ padding: 'clamp(50px, 8vw, 80px) clamp(16px, 4vw, 24px)', maxWidth: '1280px', margin: '0 auto', scrollMarginTop: '80px', width: '100%', overflowX: 'hidden' }}>
+        <div style={{ textAlign: 'center', marginBottom: 'clamp(32px, 6vw, 50px)' }}>
           <span style={{ fontSize: '0.8rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#D4AF37' }}>
             Khajrana&apos;s Crowning Flavors
           </span>
           <h2 style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: 'clamp(2rem, 3.5vw, 2.8rem)',
+            fontSize: 'clamp(1.8rem, 4.5vw, 2.8rem)',
             color: '#FAF7F2',
-            marginTop: '8px'
+            marginTop: '8px',
+            lineHeight: 1.2
           }}>
             Nahari King&apos;s Bestselling Delicacies
           </h2>
-          <p style={{ color: '#9E9489', fontSize: '0.98rem', maxWidth: '600px', margin: '10px auto 0' }}>
+          <p style={{ color: '#9E9489', fontSize: '0.94rem', maxWidth: '600px', margin: '10px auto 0', padding: '0 8px' }}>
             Prepared in traditional deghs opposite Dargah Gate 2, Kadar Colony.
           </p>
         </div>
 
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-          gap: '30px'
+          gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+          gap: 'clamp(20px, 3vw, 30px)',
+          width: '100%'
         }}>
           {signatureDishes.map((dish) => (
             <div
@@ -202,18 +278,21 @@ export default function HomePage() {
         background: 'linear-gradient(180deg, #140809 0%, #1D090B 50%, #120607 100%)',
         borderTop: '1px solid rgba(212, 175, 55, 0.22)',
         borderBottom: '1px solid rgba(212, 175, 55, 0.22)',
-        padding: '80px 24px'
+        padding: 'clamp(50px, 8vw, 80px) clamp(16px, 4vw, 24px)',
+        width: '100%',
+        overflowX: 'hidden'
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
-          <div style={{ textAlign: 'center', marginBottom: '48px' }}>
+          <div style={{ textAlign: 'center', marginBottom: 'clamp(32px, 6vw, 48px)' }}>
             <span style={{ fontSize: '0.8rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#D4AF37' }}>
               Customer Love & Vlogger Acclaim
             </span>
             <h2 style={{
               fontFamily: 'var(--font-serif)',
-              fontSize: '2.5rem',
+              fontSize: 'clamp(1.8rem, 4vw, 2.5rem)',
               color: '#FAF7F2',
-              marginTop: '8px'
+              marginTop: '8px',
+              lineHeight: 1.25
             }}>
               Why Indore Raves About Nahari King
             </h2>
@@ -221,8 +300,9 @@ export default function HomePage() {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '28px'
+            gridTemplateColumns: 'repeat(auto-fill, minmax(290px, 1fr))',
+            gap: 'clamp(18px, 3vw, 28px)',
+            width: '100%'
           }}>
             {REVIEWS.map((rev) => (
               <div
@@ -231,11 +311,12 @@ export default function HomePage() {
                   background: 'linear-gradient(145deg, #1C0C0E 0%, #15080A 100%)',
                   border: '1px solid rgba(212, 175, 55, 0.24)',
                   borderRadius: '16px',
-                  padding: '30px',
+                  padding: 'clamp(20px, 3vw, 30px)',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'space-between',
-                  boxShadow: '0 10px 25px rgba(0,0,0,0.5)'
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.5)',
+                  width: '100%'
                 }}
               >
                 <div>
@@ -243,8 +324,8 @@ export default function HomePage() {
                     {'★'.repeat(rev.rating)}
                   </div>
                   <p style={{
-                    fontSize: '0.95rem',
-                    lineHeight: 1.7,
+                    fontSize: '0.92rem',
+                    lineHeight: 1.65,
                     color: '#D8CFBF',
                     fontStyle: 'italic',
                     marginBottom: '20px'
@@ -268,11 +349,13 @@ export default function HomePage() {
 
       {/* 5. Khajrana Visit Banner */}
       <section style={{
-        padding: '70px 24px',
+        padding: 'clamp(48px, 8vw, 70px) clamp(16px, 4vw, 24px)',
         textAlign: 'center',
         background: 'linear-gradient(135deg, #24080A 0%, #150607 60%, #0A0405 100%)',
         borderTop: '1px solid rgba(212, 175, 55, 0.25)',
-        boxShadow: 'inset 0 1px 0 rgba(255, 235, 175, 0.1)'
+        boxShadow: 'inset 0 1px 0 rgba(255, 235, 175, 0.1)',
+        width: '100%',
+        overflowX: 'hidden'
       }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <span style={{ color: '#D4AF37', fontSize: '0.8rem', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
@@ -280,28 +363,33 @@ export default function HomePage() {
           </span>
           <h2 style={{
             fontFamily: 'var(--font-serif)',
-            fontSize: '2.4rem',
+            fontSize: 'clamp(1.8rem, 4.5vw, 2.4rem)',
             color: '#FAF7F2',
             marginTop: '8px',
-            marginBottom: '16px'
+            marginBottom: '16px',
+            lineHeight: 1.25
           }}>
             Craving Delhi-Style Nalli Nihari Tonight?
           </h2>
-          <p style={{ color: '#B8B0A5', fontSize: '1rem', lineHeight: 1.6, marginBottom: '32px' }}>
+          <p style={{ color: '#B8B0A5', fontSize: 'clamp(0.9rem, 2vw, 1rem)', lineHeight: 1.6, marginBottom: '28px', padding: '0 8px' }}>
             Opp. Dargah Gate 2, Corner of Kadar Colony, Khajrana. Dine in with family or order piping hot packed degh containers for home feast.
           </p>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', justifyContent: 'center' }}>
             <Link
               href="/menu"
               style={{
-                padding: '15px 36px',
+                padding: '14px 32px',
                 background: 'linear-gradient(135deg, #FCE8A6 0%, #D4AF37 50%, #9E7D23 100%)',
                 color: '#1A0709',
                 borderRadius: '8px',
                 fontWeight: 800,
-                fontSize: '0.95rem',
+                fontSize: '0.92rem',
                 textTransform: 'uppercase',
-                boxShadow: '0 4px 20px rgba(212, 175, 55, 0.35)'
+                boxShadow: '0 4px 20px rgba(212, 175, 55, 0.35)',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minWidth: '220px'
               }}
             >
               Order Online via WhatsApp
@@ -309,13 +397,17 @@ export default function HomePage() {
             <a
               href={`tel:${RESTAURANT_INFO.phone}`}
               style={{
-                padding: '15px 32px',
+                padding: '14px 28px',
                 background: 'rgba(255,255,255,0.06)',
                 border: '1px solid rgba(212,175,55,0.4)',
                 color: '#FAF7F2',
                 borderRadius: '8px',
                 fontWeight: 700,
-                fontSize: '0.95rem'
+                fontSize: '0.92rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                minWidth: '180px'
               }}
             >
               Call {RESTAURANT_INFO.phone}
