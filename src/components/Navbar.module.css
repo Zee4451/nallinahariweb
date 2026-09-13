@@ -1,0 +1,237 @@
+.navbar {
+  background-color: rgba(10, 8, 7, 0.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  color: #FDFBF7;
+  padding: 0 24px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 76px;
+  z-index: 1000;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+  transition: all 0.3s ease;
+}
+
+.navbarScrolled {
+  background-color: rgba(8, 6, 5, 0.98);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+  border-bottom-color: rgba(212, 175, 55, 0.45);
+}
+
+.navbarContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  max-width: 1320px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.crownIcon {
+  font-size: 1.85rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 10px rgba(212, 175, 55, 0.65));
+}
+
+.logoTextContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.restaurantName {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  background: linear-gradient(90deg, #FFFFFF 0%, #D4AF37 50%, #FAF7F2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-transform: uppercase;
+  line-height: 1.15;
+}
+
+.locationBadge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.locationText {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: #D4AF37;
+  text-transform: uppercase;
+}
+
+.ratingTag {
+  font-size: 0.62rem;
+  color: #F59E0B;
+  background: rgba(245, 158, 11, 0.12);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-weight: 700;
+  border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.navLinks {
+  list-style: none;
+  display: flex;
+  gap: 28px;
+  margin: 0;
+  padding: 0;
+}
+
+.navLink {
+  position: relative;
+  text-decoration: none;
+  color: #D1C7BA;
+  font-size: 0.88rem;
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 8px 0;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover {
+  color: #FAF7F2;
+}
+
+.navLinkActive {
+  color: #D4AF37;
+  font-weight: 700;
+}
+
+.activeIndicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, #D4AF37, transparent);
+  box-shadow: 0 0 10px #D4AF37;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.callButton {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  color: #FAF7F2;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  transition: all 0.2s ease;
+}
+
+.callButton:hover {
+  background: rgba(212, 175, 55, 0.15);
+  border-color: #D4AF37;
+}
+
+.bookButton {
+  padding: 9px 18px;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #120F0D;
+  background: linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #B89025 100%);
+  border-radius: 8px;
+  text-decoration: none;
+  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.28);
+  transition: transform 0.2s ease;
+}
+
+.bookButton:hover {
+  transform: translateY(-1px);
+}
+
+.cartButton {
+  position: relative;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  border-radius: 8px;
+  width: 42px;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #D4AF37;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cartButton:hover {
+  background: rgba(212, 175, 55, 0.12);
+}
+
+.cartBadge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background: #8E2020;
+  color: #FAF7F2;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #D4AF37;
+}
+
+.mobileMenuToggle {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  color: #FAF7F2;
+}
+
+.mobileDrawer {
+  background: #120F0D;
+  border-bottom: 1px solid rgba(212, 175, 55, 0.35);
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.85);
+}
+
+@media (max-width: 960px) {
+  .navLinks {
+    display: none;
+  }
+  .callButton {
+    display: none;
+  }
+  .mobileMenuToggle {
+    display: block;
+  }
+}

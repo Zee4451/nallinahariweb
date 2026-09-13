@@ -1,0 +1,231 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { useCart } from "@/components/CartContext";
+import { RESTAURANT_INFO, MENU_ITEMS } from "@/data/restaurantData";
+
+export function HeroSection() {
+  const { addToCart } = useCart();
+  const [activeTab, setActiveTab] = useState("special-nalli");
+
+  const tabLabels = ["Special Nalli Nihari", "Mutton Paye", "₹799 Grand Thaal"];
+  const tabKeys = ["special-nalli", "mutton-paye", "grand-thaal"];
+
+  const targetItem = MENU_ITEMS.find(
+    (item) =>
+      item.name === "Special Nalli Nihari" ||
+      item.name === "Mutton Paye" ||
+      item.name === "₹799 Grand Thaal"
+  ) || MENU_ITEMS[0];
+
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "1fr 1fr",
+        gap: "2rem",
+        background: "#0A0807",
+        color: "#FFFFFF",
+        minHeight: "420px",
+        padding: "2rem",
+        alignItems: "center",
+      }}
+    >
+      <div style={{ padding: "1.5rem" }}>
+        <h1
+          style={{
+            fontSize: "2.5rem",
+            fontWeight: "800",
+            color: "#D4AF37",
+            marginBottom: "0.5rem",
+          }}
+        >
+          {RESTAURANT_INFO.name}
+          <span
+            style={{
+              color: "#FFC107",
+              fontSize: "0.9rem",
+              marginLeft: "0.3rem",
+            }}
+          >
+            | Indore Khajrana
+          </span>
+        </h1>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.4rem",
+            marginTop: "0.8rem",
+          }}
+        >
+          <span
+            style={{
+              background: "#FFC107",
+              color: "#0A0807",
+              padding: "0.3rem 0.5rem",
+              borderRadius: "8px",
+              fontSize: "0.65rem",
+              fontWeight: "600",
+            }}
+          >
+            Live
+          </span>
+          <span style={{ fontSize: "0.75rem", opacity: 0.6 }}>Radar Active</span>
+        </div>
+        <div style={{ marginTop: "1rem", display: "flex", gap: "0.4rem" }}>
+          {[1, 2].map((i) => (
+            <span
+              key={i}
+              style={{
+                background: "rgba(212,175,55,0.15)",
+                color: "#D4AF37",
+                padding: "0.4rem 0.7rem",
+                borderRadius: "20px",
+                fontSize: "0.7rem",
+                border: "1px solid rgba(212,175,55,0.3)",
+              }}
+            >
+              Signature
+            </span>
+          ))}
+        </div>
+        <div style={{ marginTop: "1.5rem" }}>
+          <Link
+            href="/menu"
+            style={{
+              background: "#D4AF37",
+              color: "#0A0807",
+              padding: "0.7rem 1.3rem",
+              borderRadius: "4px",
+              fontWeight: "600",
+              textDecoration: "none",
+              fontSize: "0.95rem",
+              transition: "background 0.3s",
+            }}
+          >
+            Order Now
+          </Link>
+          <Link
+            href="/contact"
+            style={{
+              background: "transparent",
+              color: "#D4AF37",
+              padding: "0.7rem 1.3rem",
+              borderRadius: "4px",
+              fontWeight: "600",
+              border: "1px solid #D4AF37",
+              textDecoration: "none",
+              fontSize: "0.95rem",
+              marginLeft: "0.8rem",
+              transition: "all 0.3s",
+            }}
+          >
+            Reserve Table
+          </Link>
+        </div>
+      </div>
+
+      <div style={{ padding: "1.5rem" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            gap: "0.3rem",
+            marginBottom: "1.2rem",
+          }}
+        >
+          {tabLabels.map((label, i) => (
+            <button
+              key={label}
+              style={{
+                background:
+                  activeTab === tabKeys[i]
+                    ? "#D4AF37"
+                    : "rgba(212,175,55,0.08)",
+                color:
+                  activeTab === tabKeys[i]
+                    ? "#0A0807"
+                    : "#D4AF37",
+                border: "none",
+                padding: "0.6rem 1rem",
+                borderRadius: "4px",
+                fontWeight: "500",
+                fontSize: "0.85rem",
+                cursor: "pointer",
+                transition: "all 0.3s",
+              }}
+              onClick={() => setActiveTab(tabKeys[i])}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+
+        <div
+          style={{
+            background: "rgba(255,193,7,0.03)",
+            border: "1px solid rgba(212,175,55,0.2)",
+            borderRadius: "8px",
+            padding: "1.5rem",
+          }}
+        >
+          <img
+            src={targetItem.image}
+            alt={targetItem.name}
+            style={{
+              width: "100%",
+              height: "180px",
+              objectFit: "cover",
+              borderRadius: "4px",
+              marginBottom: "1rem",
+            }}
+          />
+          <h3
+            style={{
+              color: "#D4AF37",
+              fontSize: "1.3rem",
+              marginBottom: "0.3rem",
+            }}
+          >
+            {targetItem.name}
+          </h3>
+          <p
+            style={{
+              color: "#FFC107",
+              fontSize: "1.1rem",
+              marginBottom: "0.8rem",
+            }}
+          >
+            {targetItem.price}
+          </p>
+          <button
+            style={{
+              width: "100%",
+              background: "#FFC107",
+              color: "#0A0807",
+              border: "none",
+              padding: "0.6rem",
+              borderRadius: "4px",
+              fontWeight: "600",
+              fontSize: "0.85rem",
+              marginTop: "0.4rem",
+              cursor: "pointer",
+            }}
+            onClick={() =>
+              addToCart({
+                id: targetItem.id,
+                name: targetItem.name,
+                price: targetItem.price,
+                quantity: 1,
+              })
+            }
+          >
+            + Add to Order
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
