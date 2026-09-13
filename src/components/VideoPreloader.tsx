@@ -39,8 +39,8 @@ export default function VideoPreloader({
     }, 600);
   };
 
+  // Check synchronously on initial client render before paint
   useEffect(() => {
-    // Check if user already saw the loader in this session
     try {
       if (sessionStorage.getItem('nahari_loader_seen') === 'true') {
         setIsMounted(false);
@@ -77,6 +77,18 @@ export default function VideoPreloader({
   return (
     <div
       className={`preloader-overlay ${isExiting ? 'preloader-exit' : ''}`}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        width: '100vw',
+        height: '100vh',
+        zIndex: 2147483647,
+        backgroundColor: '#080605',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
       aria-label="Website loading preview"
       role="dialog"
       aria-modal="true"
