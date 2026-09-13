@@ -1409,8 +1409,8 @@ export default function InstagramReelsSection() {
           }
 
           .nk-crest-wrap {
-            width: 70px;
-            height: 84px;
+            width: 60px;
+            height: 60px;
           }
 
           .nk-crest {
@@ -1682,9 +1682,6 @@ export default function InstagramReelsSection() {
       <div className="nk-shell">
         <header className="nk-header">
           <div className="nk-brand-lockup">
-            <div className="nk-crest-wrap" aria-hidden="true">
-              <CrestLogo />
-            </div>
             <div>
               <p className="nk-eyebrow">The royal feed · Indore</p>
               <h2 className="nk-display-title" id="nk-reels-title">
@@ -1693,6 +1690,9 @@ export default function InstagramReelsSection() {
               <p className="nk-brand-intro">
                 Slow-cooked drama, royal portions, and the finishes people replay before booking a table.
               </p>
+            </div>
+            <div className="nk-crest-wrap" aria-hidden="true">
+              <CrestLogo />
             </div>
           </div>
 
