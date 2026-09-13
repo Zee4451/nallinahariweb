@@ -228,6 +228,11 @@ export default function HeroSection() {
 
     const updateTilt = () => {
       frameId = 0;
+      if (window.innerWidth <= 1080) {
+        card.style.transform = 'none';
+        return;
+      }
+
       const rect = card.getBoundingClientRect();
       const viewportHeight = Math.max(1, window.innerHeight);
 
@@ -1288,9 +1293,16 @@ export default function HeroSection() {
           .showcase-wrap {
             width: 100%;
             max-width: 440px;
+            margin: 0 auto;
+            justify-self: center;
+            perspective: none;
           }
 
           .showcase-card {
+            width: 100%;
+            max-width: 100%;
+            margin: 0 auto;
+            transform: none !important;
             padding: 14px;
             border-radius: 20px;
           }
