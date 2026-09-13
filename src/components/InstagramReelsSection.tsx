@@ -13,48 +13,53 @@ type Reel = {
   variant: ReelVariant;
   description: string;
   instagramUrl: string;
+  videoSrc: string;
 };
 
 const reels: Reel[] = [
   {
-    id: "nalli-marrow-tap",
-    title: "Nalli Marrow Tap in Slow Motion",
+    id: "best-nihari-offer",
+    title: "Best Nihari in Indore with Special Offer",
     views: "580K",
-    badge: "Trending",
+    badge: "Special Offer",
     duration: 24,
     variant: "marrow",
-    description: "A slow-motion finish that makes the royal marrow the star of the plate.",
+    description: "Best non veg, best Nihari with best offer only at @thenahariking indore.",
     instagramUrl: "https://www.instagram.com/reel/DcqJao4zXWH/",
+    videoSrc: "/reels/reel-1.mp4",
+  },
+  {
+    id: "delhi-asli-swad",
+    title: "Delhi Ka Asli Swad - Nalli Nihari",
+    views: "860K",
+    badge: "Trending",
+    duration: 29,
+    variant: "nihari",
+    description: "Delhi ka asli swad right here in Indore opposite dargah gate, Nahari King.",
+    instagramUrl: "https://www.instagram.com/reel/DcS9_mruNS6/",
+    videoSrc: "/reels/reel-2.mp4",
   },
   {
     id: "grand-thaal-feast",
-    title: "799 Grand Non-Veg Thaal Feast",
+    title: "Indore Ki Best Nihari & Paye Ki Thaal",
     views: "1.2M",
     badge: "1M+ Views",
     duration: 31,
     variant: "thaal",
-    description: "A grand royal spread made for sharing, savoring, and coming back for more.",
-    instagramUrl: "https://www.instagram.com/reel/DcS9_mruNS6/",
+    description: "Indore ki best nihari & paye ki non veg thaal special festive offer spread.",
+    instagramUrl: "https://www.instagram.com/reel/DbGksWkz7HK/",
+    videoSrc: "/reels/reel-3.mp4",
   },
   {
-    id: "midnight-degh",
-    title: "12-Hour Midnight Degh Unsealing",
-    views: "240K",
-    badge: "Khajrana Special",
+    id: "non-veg-lovers-dhamaka",
+    title: "Non-Veg Lovers Ke Liye Sabse Bada Dhamaka",
+    views: "740K",
+    badge: "Viral Hit",
     duration: 27,
     variant: "degh",
-    description: "The midnight reveal our Khajrana guests wait for after twelve slow hours.",
-    instagramUrl: "https://www.instagram.com/reel/DbGksWkz7HK/",
-  },
-  {
-    id: "old-delhi-nihari",
-    title: "Old Delhi Style Jama Masjid Nihari in Indore",
-    views: "860K",
-    badge: "Food Vlogger Pick",
-    duration: 29,
-    variant: "nihari",
-    description: "Deep, slow-cooked comfort with Old Delhi soul and an Indore heartbeat.",
+    description: "10 zaiqe se bharpoor nalli nihari feast for genuine royal meat connoisseurs.",
     instagramUrl: "https://www.instagram.com/reel/DSwdwWpjMOf/",
+    videoSrc: "/reels/reel-4.mp4",
   },
 ];
 
@@ -420,6 +425,7 @@ export default function InstagramReelsSection() {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
   const previouslyFocusedRef = useRef<HTMLElement | null>(null);
+  const modalVideoRef = useRef<HTMLVideoElement | null>(null);
 
   const updateScrollState = useCallback(() => {
     const track = trackRef.current;
@@ -444,7 +450,11 @@ export default function InstagramReelsSection() {
   }, []);
 
   const closeReel = useCallback(() => {
+    if (modalVideoRef.current) {
+      modalVideoRef.current.pause();
+    }
     setSelectedReel(null);
+    setIsPlaying(false);
     window.requestAnimationFrame(() => {
       if (previouslyFocusedRef.current?.isConnected) {
         previouslyFocusedRef.current.focus();
@@ -452,19 +462,31 @@ export default function InstagramReelsSection() {
     });
   }, []);
 
+  // Sync play/pause with video element
   useEffect(() => {
-    if (!selectedReel || !isPlaying) return;
-    const timer = window.setInterval(() => {
-      setProgress((current) => Math.min(current + 0.25, selectedReel.duration));
-    }, 250);
-    return () => window.clearInterval(timer);
+    const video = modalVideoRef.current;
+    if (!video) return;
+
+    if (isPlaying) {
+      const promise = video.play();
+      if (promise !== undefined) {
+        promise.catch(() => {
+          // Auto-play was prevented; fallback
+          setIsPlaying(false);
+        });
+      }
+    } else {
+      video.pause();
+    }
   }, [isPlaying, selectedReel]);
 
+  // Sync volume and mute with video element
   useEffect(() => {
-    if (selectedReel && isPlaying && progress >= selectedReel.duration) {
-      setIsPlaying(false);
-    }
-  }, [isPlaying, progress, selectedReel]);
+    const video = modalVideoRef.current;
+    if (!video) return;
+    video.volume = volume;
+    video.muted = isMuted;
+  }, [volume, isMuted, selectedReel]);
 
   useEffect(() => {
     if (!selectedReel) return;
@@ -916,6 +938,32 @@ export default function InstagramReelsSection() {
           inset: 38% 0 0;
           background: linear-gradient(180deg, transparent, rgba(10, 4, 5, 0.16) 38%, rgba(10, 4, 5, 0.96));
           pointer-events: none;
+        }
+
+        .nk-thumb-video {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          transition: transform 420ms ease, filter 420ms ease;
+        }
+
+        .nk-card:hover .nk-thumb-video,
+        .nk-card:focus-visible .nk-thumb-video {
+          filter: saturate(1.1) brightness(1.05);
+          transform: scale(1.05);
+        }
+
+        .nk-video-media {
+          position: absolute;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          display: block;
+          background: #000;
         }
 
         .nk-reel-art {
@@ -1829,7 +1877,22 @@ export default function InstagramReelsSection() {
               aria-label={`Play reel preview: ${reel.title}`}
             >
               <span className="nk-thumb">
-                <ReelArtwork variant={reel.variant} label={reel.title} />
+                <video
+                  src={reel.videoSrc}
+                  className="nk-thumb-video"
+                  muted
+                  playsInline
+                  loop
+                  preload="metadata"
+                  onMouseEnter={(e) => {
+                    const promise = e.currentTarget.play();
+                    if (promise !== undefined) promise.catch(() => {});
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.pause();
+                    e.currentTarget.currentTime = 0;
+                  }}
+                />
                 <span className="nk-card-badge">{reel.badge}</span>
                 <span className="nk-card-views">
                   <IconEye size={14} />
@@ -1884,8 +1947,26 @@ export default function InstagramReelsSection() {
 
             <div className="nk-modal-grid">
               <div className="nk-player">
-                <ReelArtwork variant={selectedReel.variant} label={selectedReel.title} />
-                <div className="nk-modal-art" aria-hidden="true" />
+                <video
+                  ref={modalVideoRef}
+                  src={selectedReel.videoSrc}
+                  className="nk-video-media"
+                  playsInline
+                  onTimeUpdate={(e) => {
+                    setProgress(e.currentTarget.currentTime);
+                  }}
+                  onLoadedMetadata={(e) => {
+                    if (e.currentTarget.duration) {
+                      // Keep reel duration accurate
+                      selectedReel.duration = Math.round(e.currentTarget.duration);
+                    }
+                  }}
+                  onEnded={() => {
+                    setIsPlaying(false);
+                    setProgress(0);
+                  }}
+                  onClick={() => setIsPlaying((current) => !current)}
+                />
                 <div className="nk-stage-vignette" aria-hidden="true" />
 
                 {!isPlaying && (
@@ -1909,7 +1990,13 @@ export default function InstagramReelsSection() {
                       max={selectedReel.duration}
                       step="0.1"
                       value={Math.min(progress, selectedReel.duration)}
-                      onChange={(event) => setProgress(Number(event.currentTarget.value))}
+                      onChange={(event) => {
+                        const nextTime = Number(event.currentTarget.value);
+                        setProgress(nextTime);
+                        if (modalVideoRef.current) {
+                          modalVideoRef.current.currentTime = nextTime;
+                        }
+                      }}
                       style={{
                         background: `linear-gradient(90deg, #d4af37 ${progressPercent}%, rgba(255, 240, 205, 0.2) ${progressPercent}%)`,
                       }}
