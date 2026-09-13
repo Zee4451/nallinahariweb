@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { MENU_ITEMS, REVIEWS, RESTAURANT_INFO } from '@/data/restaurantData';
 import { useCart } from '@/components/CartContext';
 import HeroSection from '@/components/HeroSection';
+import InstagramReelsSection from '@/components/InstagramReelsSection';
 
 export default function HomePage() {
   const { addToCart } = useCart();
@@ -273,7 +274,10 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* 4. Food Vlogger & Google Reviews Section */}
+      {/* 4. Viral Instagram Food Reels Showcase */}
+      <InstagramReelsSection />
+
+      {/* 5. Food Vlogger & Google Reviews Section */}
       <section style={{
         background: 'linear-gradient(180deg, #140809 0%, #1D090B 50%, #120607 100%)',
         borderTop: '1px solid rgba(212, 175, 55, 0.22)',
