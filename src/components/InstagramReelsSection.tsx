@@ -1108,20 +1108,26 @@ export default function InstagramReelsSection() {
           position: fixed;
           z-index: 10000;
           inset: 0;
-          display: grid;
-          place-items: center;
-          padding: clamp(8px, 3vw, 32px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: clamp(12px, 3vw, 36px);
           background: rgba(7, 2, 3, 0.88);
           animation: nk-fade-in 180ms ease both;
           backdrop-filter: blur(16px);
+          overflow-x: hidden;
+          overflow-y: auto;
+          -webkit-overflow-scrolling: touch;
         }
 
         .nk-modal {
           position: relative;
           width: min(920px, 100%);
-          max-height: calc(100vh - 24px);
-          max-height: calc(100dvh - 24px);
-          overflow: auto;
+          margin: auto;
+          max-height: min(90vh, 90dvh);
+          overflow-x: hidden;
+          overflow-y: auto;
+          overscroll-behavior: contain;
           color: #f8ead2;
           border: 1px solid rgba(212, 175, 55, 0.36);
           border-radius: 24px;
@@ -1131,7 +1137,7 @@ export default function InstagramReelsSection() {
           box-shadow: 0 36px 110px rgba(0, 0, 0, 0.62), 0 0 0 1px rgba(212, 175, 55, 0.06);
           animation: nk-modal-in 220ms ease both;
           scrollbar-width: thin;
-          scrollbar-color: #7a5b22 #211013;
+          scrollbar-color: #d4af37 rgba(18, 7, 9, 0.7);
         }
 
         .nk-modal-close {
@@ -1630,13 +1636,14 @@ export default function InstagramReelsSection() {
           }
 
           .nk-modal-backdrop {
-            padding: 7px;
+            padding: 8px;
+            align-items: flex-start;
           }
 
           .nk-modal {
-            max-height: calc(100vh - 14px);
-            max-height: calc(100dvh - 14px);
-            border-radius: 18px;
+            max-height: calc(100vh - 16px);
+            max-height: calc(100dvh - 16px);
+            border-radius: 20px;
           }
 
           .nk-modal-grid {
@@ -1644,8 +1651,9 @@ export default function InstagramReelsSection() {
           }
 
           .nk-player {
-            height: min(68dvh, 680px);
-            min-height: 410px;
+            height: 52vh;
+            max-height: 480px;
+            min-height: 320px;
           }
 
           .nk-modal-info {
