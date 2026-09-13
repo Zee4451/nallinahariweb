@@ -222,24 +222,6 @@ function IconUsers({ size = 16 }: { size?: number }) {
   );
 }
 
-function CrestLogo() {
-  return (
-    <img
-      src="/nahari-king-crest.png"
-      alt="Nahari King Official Logo"
-      width={70}
-      height={70}
-      style={{
-        width: '100%',
-        height: '100%',
-        borderRadius: '50%',
-        objectFit: 'cover',
-        display: 'block'
-      }}
-    />
-  );
-}
-
 function ReelArtwork({ variant, label }: { variant: ReelVariant; label: string }) {
   const rawId = useId().replace(/[^a-zA-Z0-9]/g, "");
   const background = `nk-reel-bg-${rawId}`;
@@ -672,22 +654,56 @@ export default function InstagramReelsSection() {
         }
 
         .nk-social-panel {
-          min-width: 250px;
-          padding: 16px;
-          border: 1px solid rgba(212, 175, 55, 0.24);
+          min-width: 270px;
+          padding: 18px;
+          border: 1px solid rgba(212, 175, 55, 0.28);
           border-radius: 20px;
-          background: linear-gradient(145deg, rgba(255, 244, 218, 0.075), rgba(122, 12, 14, 0.12));
-          box-shadow: 0 22px 60px rgba(0, 0, 0, 0.24);
+          background: linear-gradient(145deg, rgba(255, 244, 218, 0.08), rgba(122, 12, 14, 0.14));
+          box-shadow: 0 22px 60px rgba(0, 0, 0, 0.3);
           backdrop-filter: blur(14px);
+        }
+
+        .nk-profile-header {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding-bottom: 12px;
+          border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .nk-profile-avatar-wrap {
+          width: 46px;
+          height: 46px;
+          border-radius: 50%;
+          padding: 2px;
+          background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+          box-shadow: 0 0 14px rgba(220, 39, 67, 0.35);
+          flex-shrink: 0;
+        }
+
+        .nk-profile-avatar {
+          width: 100%;
+          height: 100%;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 1.5px solid #140809;
+          display: block;
+        }
+
+        .nk-profile-meta {
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          min-width: 0;
         }
 
         .nk-handle {
           min-width: 0;
           display: inline-flex;
-          gap: 8px;
+          gap: 6px;
           align-items: center;
           color: #f8ead2;
-          font-size: 0.88rem;
+          font-size: 0.92rem;
           font-weight: 800;
           letter-spacing: -0.02em;
           text-decoration: none;
@@ -697,6 +713,26 @@ export default function InstagramReelsSection() {
         .nk-handle svg {
           flex: 0 0 auto;
           color: #d4af37;
+        }
+
+        .nk-verified-badge {
+          background: #3897f0;
+          color: #fff;
+          font-size: 0.65rem;
+          width: 15px;
+          height: 15px;
+          border-radius: 50%;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          font-weight: 900;
+          margin-left: 3px;
+        }
+
+        .nk-handle-sub {
+          font-size: 0.72rem;
+          color: #cbb394;
+          letter-spacing: 0.02em;
         }
 
         .nk-social-actions {
@@ -1691,22 +1727,35 @@ export default function InstagramReelsSection() {
                 Slow-cooked drama, royal portions, and the finishes people replay before booking a table.
               </p>
             </div>
-            <div className="nk-crest-wrap" aria-hidden="true">
-              <CrestLogo />
-            </div>
           </div>
 
           <div className="nk-social-panel" aria-label="Nahari King Instagram account">
-            <a
-              className="nk-handle"
-              href={instagramUrl}
-              target="_blank"
-              rel="noreferrer"
-              aria-label="Open @thenahariking on Instagram"
-            >
-              <IconInstagram size={18} />
-              <span>@thenahariking</span>
-            </a>
+            <div className="nk-profile-header">
+              <div className="nk-profile-avatar-wrap">
+                <img
+                  src="/nahari-king-crest.png"
+                  alt="Nahari King Official Profile"
+                  className="nk-profile-avatar"
+                  width={48}
+                  height={48}
+                />
+              </div>
+              <div className="nk-profile-meta">
+                <a
+                  className="nk-handle"
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Open @thenahariking on Instagram"
+                >
+                  <IconInstagram size={18} />
+                  <span>@thenahariking</span>
+                  <span className="nk-verified-badge" title="Verified">✓</span>
+                </a>
+                <span className="nk-handle-sub">Official Restaurant Page</span>
+              </div>
+            </div>
+
             <div className="nk-social-actions">
               <a
                 className="nk-follow"
