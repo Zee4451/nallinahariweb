@@ -359,12 +359,30 @@ export default function HeritagePage() {
             ))}
           </div>
 
-          <div style={{ textAlign: 'center', marginTop: 'clamp(28px, 4vw, 40px)' }}>
+          <div style={{ textAlign: 'center', marginTop: 'clamp(32px, 4vw, 44px)', width: '100%' }}>
             <Link
               href="/menu"
               className="cta-btn-link"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '10px',
+                padding: '16px clamp(24px, 4vw, 36px)',
+                background: 'linear-gradient(135deg, #FCE8A6 0%, #D4AF37 50%, #9E7D23 100%)',
+                color: '#140506',
+                borderRadius: '10px',
+                fontWeight: 800,
+                fontSize: 'clamp(0.92rem, 2vw, 1.05rem)',
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                boxShadow: '0 8px 25px rgba(212, 175, 55, 0.4), 0 0 15px rgba(212, 175, 55, 0.25)',
+                border: '1px solid #FFE082',
+                textDecoration: 'none',
+                cursor: 'pointer'
+              }}
             >
-              Taste The Heritage Menu 🍲
+              <span>Taste The Heritage Menu 🍲</span>
             </Link>
           </div>
         </section>
