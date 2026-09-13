@@ -1,28 +1,34 @@
 @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Royal Palette */
-  --bg-dark: #0A0807;
-  --bg-surface: #14110F;
-  --bg-card: #1A1613;
-  --bg-card-hover: #221C18;
+  /* Royal Logo-Inspired Palette (Nahari King Signature) */
+  --bg-dark: #090404;
+  --bg-surface: #140809;
+  --bg-card: #1C0C0E;
+  --bg-card-hover: #261013;
   
   --gold-primary: #D4AF37;
-  --gold-light: #F3E5AB;
-  --gold-dark: #997B20;
-  --gold-glow: rgba(212, 175, 55, 0.25);
+  --gold-light: #FCE8A6;
+  --gold-dark: #9E7D23;
+  --gold-glow: rgba(212, 175, 55, 0.32);
   
-  --crimson-accent: #8E2020;
-  --crimson-light: #B83232;
-  --amber-accent: #D97706;
+  /* Logo Official Crimson & Ruby Tones */
+  --crimson-royal: #7A0C0E;
+  --crimson-deep: #4A0507;
+  --crimson-accent: #9A1417;
+  --crimson-light: #C02629;
+  --crimson-glow: rgba(154, 20, 23, 0.35);
+  --amber-accent: #E08A1E;
   
-  --text-main: #FDFBF7;
-  --text-muted: #B8B0A5;
-  --text-dim: #7A7269;
+  --text-main: #FFFDF9;
+  --text-cream: #F5ECD9;
+  --text-muted: #C4B9AA;
+  --text-dim: #8C8072;
   
-  --border-gold: rgba(212, 175, 55, 0.2);
-  --border-gold-hover: rgba(212, 175, 55, 0.5);
-  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-gold: rgba(212, 175, 55, 0.26);
+  --border-gold-hover: rgba(212, 175, 55, 0.65);
+  --border-crimson: rgba(154, 20, 23, 0.45);
+  --border-subtle: rgba(255, 240, 220, 0.08);
 
   --font-serif: 'Cinzel', serif;
   --font-sans: 'Plus Jakarta Sans', sans-serif;
@@ -32,8 +38,8 @@
   --radius-lg: 20px;
   --radius-full: 9999px;
   
-  --shadow-lux: 0 10px 30px -10px rgba(0, 0, 0, 0.7), 0 0 20px rgba(212, 175, 55, 0.08);
-  --shadow-glow: 0 0 25px rgba(212, 175, 55, 0.3);
+  --shadow-lux: 0 10px 30px -10px rgba(0, 0, 0, 0.8), 0 0 24px rgba(122, 12, 14, 0.22);
+  --shadow-glow: 0 0 28px rgba(212, 175, 55, 0.35);
 }
 
 * {

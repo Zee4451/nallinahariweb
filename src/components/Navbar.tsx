@@ -338,12 +338,13 @@ export default function Navbar({ setIsCartOpen: propSetIsCartOpen }: NavbarProps
           border: 1px solid rgba(212, 175, 55, 0.25);
           border-radius: 999px;
           background:
-            linear-gradient(135deg, rgba(29, 21, 13, 0.94), rgba(14, 11, 9, 0.84) 42%, rgba(24, 17, 10, 0.92)),
-            rgba(14, 11, 9, 0.82);
+            linear-gradient(135deg, rgba(34, 12, 16, 0.94), rgba(16, 6, 8, 0.88) 42%, rgba(28, 10, 13, 0.92)),
+            rgba(16, 6, 8, 0.85);
           box-shadow:
-            0 14px 36px rgba(0, 0, 0, 0.46),
-            inset 0 1px 0 rgba(255, 255, 255, 0.045),
-            0 0 0 1px rgba(0, 0, 0, 0.12);
+            0 14px 36px rgba(0, 0, 0, 0.55),
+            0 0 20px rgba(122, 12, 14, 0.12),
+            inset 0 1px 0 rgba(255, 235, 175, 0.08),
+            0 0 0 1px rgba(0, 0, 0, 0.2);
           -webkit-backdrop-filter: blur(24px) saturate(145%);
           backdrop-filter: blur(24px) saturate(145%);
           transition:

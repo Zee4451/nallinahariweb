@@ -303,9 +303,10 @@ export default function HeroSection() {
           isolation: isolate;
           color: #f5eee2;
           background:
-            radial-gradient(circle at 78% 12%, rgba(137, 67, 20, 0.2), transparent 28%),
-            radial-gradient(circle at 8% 92%, rgba(126, 62, 23, 0.12), transparent 26%),
-            #080706;
+            radial-gradient(circle at 82% 14%, rgba(142, 20, 24, 0.28), transparent 35%),
+            radial-gradient(circle at 10% 88%, rgba(94, 10, 13, 0.24), transparent 32%),
+            radial-gradient(circle at 50% 50%, rgba(184, 134, 40, 0.08), transparent 50%),
+            #090404;
         }
 
         .hero-section,
@@ -755,16 +756,17 @@ export default function HeroSection() {
           max-width: 480px;
           padding: 18px;
           overflow: hidden;
-          border: 1px solid rgba(224, 184, 105, 0.18);
+          border: 1px solid rgba(224, 184, 105, 0.28);
           border-radius: 24px;
           background: linear-gradient(
             145deg,
-            rgba(43, 30, 19, 0.96),
-            rgba(17, 13, 10, 0.94)
+            rgba(46, 16, 20, 0.96),
+            rgba(20, 8, 10, 0.94)
           );
           box-shadow:
-            0 28px 70px rgba(0, 0, 0, 0.34),
-            inset 0 1px 0 rgba(255, 255, 255, 0.045);
+            0 28px 70px rgba(0, 0, 0, 0.55),
+            0 0 35px rgba(142, 20, 24, 0.18),
+            inset 0 1px 0 rgba(255, 255, 255, 0.07);
           transform-style: preserve-3d;
           transition:
             transform 220ms ease-out,

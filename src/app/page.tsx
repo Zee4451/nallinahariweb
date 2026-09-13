@@ -11,26 +11,27 @@ export default function HomePage() {
   const signatureDishes = MENU_ITEMS.filter((item) => item.isSignature);
 
   return (
-    <div style={{ background: '#0A0807', color: '#FDFBF7' }}>
+    <div style={{ background: 'var(--bg-dark)', color: 'var(--text-main)' }}>
       {/* 1. Cinematic Interactive Split-Screen Hero Section */}
       <HeroSection />
 
       {/* 2. Viral Offers Banner */}
       <section style={{
-        background: 'linear-gradient(90deg, #1C1510 0%, #2A1A14 50%, #1C1510 100%)',
-        borderBottom: '1px solid rgba(212, 175, 55, 0.25)',
+        background: 'linear-gradient(90deg, #1C0709 0%, #360A0E 50%, #1C0709 100%)',
+        borderBottom: '1px solid rgba(212, 175, 55, 0.35)',
+        boxShadow: 'inset 0 1px 0 rgba(212, 175, 55, 0.15), 0 10px 25px rgba(0,0,0,0.5)',
         padding: '24px',
         textAlign: 'center'
       }}>
         <div style={{ maxWidth: '1000px', margin: '0 auto', display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
           <div style={{ textAlign: 'left' }}>
-            <span style={{ color: '#EF4444', fontWeight: 700, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            <span style={{ color: '#F87171', fontWeight: 800, fontSize: '0.8rem', textTransform: 'uppercase', letterSpacing: '0.12em' }}>
               ★ Limited Khajrana Special Offer
             </span>
             <h3 style={{ fontFamily: 'var(--font-serif)', color: '#FAF7F2', fontSize: '1.35rem', marginTop: '2px' }}>
               Indore Ki Best Nihari & Paye Non-Veg Thaal — Sirf ₹799 Mein!
             </h3>
-            <p style={{ color: '#B8B0A5', fontSize: '0.88rem' }}>
+            <p style={{ color: '#D4C9BC', fontSize: '0.88rem' }}>
               Nalli Nihari + Mutton Paye + Seekh Kebabs + Dum Biryani + 4 Tandoor Rotis + Raita.
             </p>
           </div>
@@ -39,12 +40,13 @@ export default function HomePage() {
             href="/menu"
             style={{
               padding: '12px 28px',
-              background: '#D4AF37',
-              color: '#0A0807',
-              borderRadius: '6px',
+              background: 'linear-gradient(135deg, #FCE8A6 0%, #D4AF37 50%, #9E7D23 100%)',
+              color: '#1A0709',
+              borderRadius: '8px',
               fontWeight: 800,
               fontSize: '0.9rem',
-              whiteSpace: 'nowrap'
+              whiteSpace: 'nowrap',
+              boxShadow: '0 4px 15px rgba(212, 175, 55, 0.35)'
             }}
           >
             Order Thaal Now →
@@ -80,13 +82,13 @@ export default function HomePage() {
             <div
               key={dish.id}
               style={{
-                background: '#14110F',
-                border: '1px solid rgba(212, 175, 55, 0.22)',
-                borderRadius: '16px',
+                background: 'linear-gradient(160deg, #1C0C0E 0%, #120607 100%)',
+                border: '1px solid rgba(212, 175, 55, 0.28)',
+                borderRadius: '18px',
                 overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
-                boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+                boxShadow: '0 12px 36px rgba(0,0,0,0.65), 0 0 20px rgba(122, 12, 14, 0.2)'
               }}
             >
               {/* Dish Visual */}
@@ -100,7 +102,7 @@ export default function HomePage() {
                 <div style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'linear-gradient(to top, #14110F 0%, transparent 60%)'
+                  background: 'linear-gradient(to top, #1C0C0E 0%, transparent 60%)'
                 }} />
 
                 {dish.tag && (
@@ -197,9 +199,9 @@ export default function HomePage() {
 
       {/* 4. Food Vlogger & Google Reviews Section */}
       <section style={{
-        background: '#120F0D',
-        borderTop: '1px solid rgba(212, 175, 55, 0.18)',
-        borderBottom: '1px solid rgba(212, 175, 55, 0.18)',
+        background: 'linear-gradient(180deg, #140809 0%, #1D090B 50%, #120607 100%)',
+        borderTop: '1px solid rgba(212, 175, 55, 0.22)',
+        borderBottom: '1px solid rgba(212, 175, 55, 0.22)',
         padding: '80px 24px'
       }}>
         <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
@@ -226,13 +228,14 @@ export default function HomePage() {
               <div
                 key={rev.id}
                 style={{
-                  background: '#161310',
-                  border: '1px solid rgba(212, 175, 55, 0.2)',
+                  background: 'linear-gradient(145deg, #1C0C0E 0%, #15080A 100%)',
+                  border: '1px solid rgba(212, 175, 55, 0.24)',
                   borderRadius: '16px',
                   padding: '30px',
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'space-between'
+                  justifyContent: 'space-between',
+                  boxShadow: '0 10px 25px rgba(0,0,0,0.5)'
                 }}
               >
                 <div>
@@ -267,7 +270,9 @@ export default function HomePage() {
       <section style={{
         padding: '70px 24px',
         textAlign: 'center',
-        background: 'linear-gradient(135deg, #1C1510 0%, #0E0B0A 100%)'
+        background: 'linear-gradient(135deg, #24080A 0%, #150607 60%, #0A0405 100%)',
+        borderTop: '1px solid rgba(212, 175, 55, 0.25)',
+        boxShadow: 'inset 0 1px 0 rgba(255, 235, 175, 0.1)'
       }}>
         <div style={{ maxWidth: '800px', margin: '0 auto' }}>
           <span style={{ color: '#D4AF37', fontSize: '0.8rem', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
@@ -290,12 +295,13 @@ export default function HomePage() {
               href="/menu"
               style={{
                 padding: '15px 36px',
-                background: 'linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #B89025 100%)',
-                color: '#120F0D',
+                background: 'linear-gradient(135deg, #FCE8A6 0%, #D4AF37 50%, #9E7D23 100%)',
+                color: '#1A0709',
                 borderRadius: '8px',
                 fontWeight: 800,
                 fontSize: '0.95rem',
-                textTransform: 'uppercase'
+                textTransform: 'uppercase',
+                boxShadow: '0 4px 20px rgba(212, 175, 55, 0.35)'
               }}
             >
               Order Online via WhatsApp

@@ -5,8 +5,9 @@ import { RESTAURANT_INFO } from '@/data/restaurantData';
 export default function Footer() {
   return (
     <footer style={{
-      background: '#080605',
-      borderTop: '1px solid rgba(212, 175, 55, 0.25)',
+      background: 'linear-gradient(180deg, #110507 0%, #080304 100%)',
+      borderTop: '1px solid rgba(212, 175, 55, 0.35)',
+      boxShadow: '0 -10px 30px rgba(0, 0, 0, 0.6), 0 0 30px rgba(122, 12, 14, 0.15)',
       padding: '60px 20px 48px',
       color: '#B8B0A5'
     }}>
