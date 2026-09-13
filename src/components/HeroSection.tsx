@@ -1203,49 +1203,104 @@ export default function HeroSection() {
         }
 
         @media (max-width: 640px) {
+          .hero-section {
+            min-height: auto;
+          }
+
           .hero-container {
-            padding: 110px 18px 44px;
+            padding: 92px 16px 40px;
           }
 
           .hero-grid {
-            gap: 42px;
+            gap: 32px;
           }
 
           .brand-tag {
             max-width: 100%;
-            letter-spacing: 0.2em;
+            padding: 5px 10px;
+            font-size: 9.5px;
+            letter-spacing: 0.14em;
+          }
+
+          .hero-title {
+            margin: 16px 0 0;
+            font-size: clamp(2rem, 8.5vw, 2.7rem);
+            line-height: 1.14;
+            letter-spacing: -0.025em;
           }
 
           .hero-description {
-            margin-top: 19px;
+            margin: 14px 0 0;
+            font-size: 13.5px;
+            line-height: 1.6;
           }
 
           .hero-actions {
-            align-items: stretch;
-            flex-direction: column;
+            margin-top: 22px;
+            gap: 12px;
+            width: 100%;
           }
 
           .primary-cta,
           .secondary-cta {
             width: 100%;
+            min-height: 48px;
+            font-size: 13.5px;
           }
 
           .bento-grid {
-            grid-template-columns: 1fr;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 8px;
             max-width: none;
+            margin-top: 20px;
           }
 
           .bento-card {
-            min-height: 54px;
+            padding: 10px 12px;
+            min-height: 48px;
+            border-radius: 12px;
+          }
+
+          .bento-card:last-child {
+            grid-column: 1 / -1;
+          }
+
+          .bento-icon {
+            width: 26px;
+            height: 26px;
+            border-radius: 7px;
+          }
+
+          .bento-icon svg {
+            width: 13px;
+            height: 13px;
+          }
+
+          .bento-copy strong {
+            font-size: 12px;
+          }
+
+          .bento-copy span {
+            font-size: 9.5px;
+          }
+
+          .showcase-wrap {
+            width: 100%;
+            max-width: 440px;
           }
 
           .showcase-card {
-            padding: 15px;
-            border-radius: 22px;
+            padding: 14px;
+            border-radius: 20px;
           }
 
           .showcase-top {
             gap: 8px;
+          }
+
+          .showcase-heading span {
+            font-size: 9px;
           }
 
           .showcase-heading strong {
@@ -1253,44 +1308,89 @@ export default function HeroSection() {
           }
 
           .degh-badge {
-            padding: 6px 7px;
-          }
-
-          .degh-badge > span:nth-child(2) {
-            display: none;
+            padding: 5px 8px;
+            font-size: 9px;
           }
 
           .dish-stage {
-            height: 260px;
+            height: 210px;
+            margin-top: 10px;
+            border-radius: 14px;
+          }
+
+          .dish-summary {
+            margin: 12px 2px 0;
+            gap: 8px;
           }
 
           .dish-name {
-            font-size: 19px;
+            font-size: 18px;
+          }
+
+          .dish-price {
+            font-size: 14px;
           }
 
           .dish-description {
-            font-size: 12.5px;
+            font-size: 12px;
+            line-height: 1.5;
+            margin: 6px 2px 0;
           }
 
           .dish-selector {
-            gap: 5px;
+            gap: 6px;
+            margin: 12px 0;
           }
 
           .dish-tab {
-            min-height: 50px;
-            padding: 7px 4px;
+            min-height: 44px;
+            padding: 6px 3px;
+            border-radius: 12px;
           }
 
           .tab-label {
-            font-size: 10.5px;
+            font-size: 10px;
           }
 
           .tab-price {
-            font-size: 11px;
+            font-size: 10.5px;
+            margin-top: 2px;
           }
 
           .order-button {
-            min-height: 46px;
+            min-height: 44px;
+            font-size: 12.5px;
+          }
+        }
+
+        @media (max-width: 380px) {
+          .hero-container {
+            padding: 86px 12px 32px;
+          }
+
+          .hero-title {
+            font-size: 1.85rem;
+          }
+
+          .bento-grid {
+            grid-template-columns: 1fr;
+          }
+
+          .bento-card:last-child {
+            grid-column: auto;
+          }
+
+          .dish-stage {
+            height: 185px;
+          }
+
+          .dish-tab {
+            min-height: 42px;
+            padding: 5px 2px;
+          }
+
+          .tab-label {
+            font-size: 9.5px;
           }
         }
 
