@@ -28,9 +28,20 @@ export default function Footer() {
             marginBottom: '10px',
             display: 'flex',
             alignItems: 'center',
-            gap: '8px'
+            gap: '12px'
           }}>
-            <span>👑</span>
+            <img
+              src="/nahari-king-crest.png"
+              alt="Nahari King Official Logo"
+              width={42}
+              height={42}
+              style={{
+                borderRadius: '50%',
+                border: '1px solid rgba(212, 175, 55, 0.45)',
+                boxShadow: '0 0 16px rgba(212, 175, 55, 0.25)',
+                objectFit: 'cover'
+              }}
+            />
             <span>{RESTAURANT_INFO.name}</span>
           </div>
           <p style={{ fontSize: '0.9rem', lineHeight: 1.7, color: '#9E9489', marginBottom: '16px' }}>

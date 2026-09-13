@@ -11,10 +11,22 @@ export const metadata: Metadata = {
   title: 'Nahari King Indore 👑 — Delhi Ka Asli Swad | Nalli Nihari, Paye & Non-Veg Thaal',
   description: 'Welcome to Nahari King (Khajrana, Indore). Authentic slow-cooked Nalli Nihari, Mutton Paye, viral ₹799 Non-Veg Thaal, and Khamiri Roti. Open till 12 AM midnight.',
   keywords: 'Nahari King, Nahari King Indore, Nalli Nihari Khajrana, Indore best nihari, Mutton Paye Indore, ₹799 non veg thaal, thenahariking, Khajrana food',
+  icons: {
+    icon: '/nahari-king-crest.png',
+    apple: '/nahari-king-crest.png',
+  },
   openGraph: {
     title: 'Nahari King 👑 — Indore’s Most Famous Nalli Nihari & Paye',
     description: 'Delhi ka asli swaad, ab Indore ke Khajrana mein! Chota Gate, Opp. Dargah Gate 2, Kadar Colony.',
-    type: 'website'
+    type: 'website',
+    images: [
+      {
+        url: '/nahari-king-logo.png',
+        width: 1024,
+        height: 1024,
+        alt: 'Nahari King Indore Official Royal Logo',
+      }
+    ]
   }
 };
 

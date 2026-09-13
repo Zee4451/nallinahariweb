@@ -57,41 +57,13 @@ export default function Navbar({ setIsCartOpen: propSetIsCartOpen }: NavbarProps
       <div className="nk-navbar-inner">
         <Link href="/" className="nk-brand" aria-label="Nahari King home" onClick={() => setMenuOpen(false)}>
           <span className="nk-brand-mark" aria-hidden="true">
-            <svg viewBox="0 0 56 56" role="img">
-              <defs>
-                <linearGradient id="nk-gold-seal" x1="10" y1="8" x2="46" y2="48" gradientUnits="userSpaceOnUse">
-                  <stop offset="0" stopColor="#fff1b0" />
-                  <stop offset="0.28" stopColor="#e8bd55" />
-                  <stop offset="0.62" stopColor="#9c6b19" />
-                  <stop offset="1" stopColor="#ffe69a" />
-                </linearGradient>
-                <radialGradient id="nk-seal-glow" cx="30%" cy="24%" r="70%">
-                  <stop offset="0" stopColor="#ffdf78" stopOpacity="0.35" />
-                  <stop offset="1" stopColor="#ffdf78" stopOpacity="0" />
-                </radialGradient>
-              </defs>
-              <circle cx="28" cy="28" r="26" fill="#171009" stroke="rgba(226,184,79,0.42)" />
-              <circle cx="28" cy="28" r="23.5" fill="url(#nk-seal-glow)" />
-              <path
-                d="M37.2 12.8a14.3 14.3 0 1 0 6.8 26.1 16.1 16.1 0 0 1-6.8-26.1Z"
-                fill="url(#nk-gold-seal)"
-                opacity="0.92"
-              />
-              <path
-                d="m15.8 34.5-2.2-10.4 7.2 5.1 7.2-9.8 7.2 9.8 7.2-5.1-2.2 10.4Z"
-                fill="#171009"
-                stroke="url(#nk-gold-seal)"
-                strokeWidth="1.5"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M17 38.2h22M20 34.7h16"
-                stroke="url(#nk-gold-seal)"
-                strokeWidth="1.7"
-                strokeLinecap="round"
-              />
-              <path d="m40 13 1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1Z" fill="#ffe69a" />
-            </svg>
+            <img
+              src="/nahari-king-crest.png"
+              alt="Nahari King Royal Crest"
+              className="nk-brand-logo-img"
+              width={48}
+              height={48}
+            />
             <span className="nk-seal-glint" />
           </span>
 
@@ -195,18 +167,13 @@ export default function Navbar({ setIsCartOpen: propSetIsCartOpen }: NavbarProps
         >
           <div className="nk-mobile-drawer-head">
             <span className="nk-mobile-seal" aria-hidden="true">
-              <svg viewBox="0 0 56 56">
-                <defs>
-                  <linearGradient id="nk-gold-mobile" x1="10" y1="8" x2="46" y2="48" gradientUnits="userSpaceOnUse">
-                    <stop offset="0" stopColor="#fff1b0" />
-                    <stop offset="0.5" stopColor="#d8a93e" />
-                    <stop offset="1" stopColor="#ffe69a" />
-                  </linearGradient>
-                </defs>
-                <circle cx="28" cy="28" r="25" fill="#171009" stroke="rgba(226,184,79,0.4)" />
-                <path d="m15.8 34.5-2.2-10.4 7.2 5.1 7.2-9.8 7.2 9.8 7.2-5.1-2.2 10.4Z" fill="none" stroke="url(#nk-gold-mobile)" strokeWidth="1.8" strokeLinejoin="round" />
-                <path d="M17 38.2h22M20 34.7h16" stroke="url(#nk-gold-mobile)" strokeWidth="1.7" strokeLinecap="round" />
-              </svg>
+              <img
+                src="/nahari-king-crest.png"
+                alt="Nahari King Royal Crest"
+                width={40}
+                height={40}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '50%' }}
+              />
             </span>
             <div>
               <strong>NAHARI KING</strong>
@@ -432,12 +399,16 @@ export default function Navbar({ setIsCartOpen: propSetIsCartOpen }: NavbarProps
           opacity: 0.34;
         }
 
-        .nk-brand-mark svg {
+        .nk-brand-mark svg,
+        .nk-brand-mark img,
+        .nk-brand-logo-img {
           position: relative;
           z-index: 1;
           display: block;
-          width: 48px;
-          height: 48px;
+          width: 46px;
+          height: 46px;
+          border-radius: 50%;
+          object-fit: cover;
           filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.45));
         }
 
@@ -1313,9 +1284,11 @@ export default function Navbar({ setIsCartOpen: propSetIsCartOpen }: NavbarProps
             height: 42px;
           }
 
-          .nk-brand-mark svg {
-            width: 39px;
-            height: 39px;
+          .nk-brand-mark svg,
+          .nk-brand-mark img,
+          .nk-brand-logo-img {
+            width: 38px;
+            height: 38px;
           }
 
           .nk-brand-copy {
