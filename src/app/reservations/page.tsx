@@ -225,6 +225,21 @@ export default function ReservationsPage() {
           width: 100%;
         }
 
+        .voucher-btn-row {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 14px;
+          justify-content: center;
+          width: 100%;
+        }
+
+        .voucher-action-btn {
+          flex: 1 1 auto;
+          min-width: 200px;
+          text-align: center;
+          justify-content: center;
+        }
+
         @media (max-width: 640px) {
           .seating-grid {
             grid-template-columns: 1fr;
@@ -240,6 +255,14 @@ export default function ReservationsPage() {
 
           .voucher-grid {
             grid-template-columns: 1fr;
+          }
+
+          .voucher-btn-row {
+            flex-direction: column;
+          }
+
+          .voucher-action-btn {
+            width: 100%;
           }
         }
       `}</style>
@@ -337,17 +360,18 @@ export default function ReservationsPage() {
             </div>
 
             {/* Action Buttons */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '16px', justifyContent: 'center' }}>
+            <div className="voucher-btn-row">
               <button
                 onClick={handleShareWhatsApp}
+                className="voucher-action-btn"
                 style={{
-                  padding: '14px 28px',
+                  padding: '14px 24px',
                   background: 'linear-gradient(135deg, #25D366 0%, #128C7E 100%)',
                   color: '#FFFFFF',
                   borderRadius: '8px',
                   fontWeight: 600,
-                  fontSize: '0.95rem',
-                  display: 'flex',
+                  fontSize: '0.92rem',
+                  display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
                   border: 'none',
@@ -355,19 +379,20 @@ export default function ReservationsPage() {
                   boxShadow: '0 4px 15px rgba(37, 211, 102, 0.3)'
                 }}
               >
-                <span>💬 Send Confirmation to WhatsApp</span>
+                <span>💬 Send to WhatsApp</span>
               </button>
 
               <button
                 onClick={() => window.print()}
+                className="voucher-action-btn"
                 style={{
-                  padding: '14px 28px',
+                  padding: '14px 24px',
                   background: 'rgba(255, 255, 255, 0.05)',
                   border: '1px solid rgba(212, 175, 55, 0.4)',
                   color: '#FAF7F2',
                   borderRadius: '8px',
                   fontWeight: 600,
-                  fontSize: '0.95rem',
+                  fontSize: '0.92rem',
                   cursor: 'pointer'
                 }}
               >
@@ -376,13 +401,14 @@ export default function ReservationsPage() {
 
               <button
                 onClick={() => setBookingPass(null)}
+                className="voucher-action-btn"
                 style={{
-                  padding: '14px 28px',
+                  padding: '14px 24px',
                   background: 'transparent',
                   border: '1px solid rgba(255, 255, 255, 0.15)',
                   color: '#A89F93',
                   borderRadius: '8px',
-                  fontSize: '0.95rem',
+                  fontSize: '0.92rem',
                   cursor: 'pointer'
                 }}
               >

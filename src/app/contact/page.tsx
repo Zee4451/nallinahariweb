@@ -36,54 +36,195 @@ export default function ContactPage() {
   };
 
   return (
-    <div style={{ background: '#0A0807', color: '#FDFBF7', minHeight: '100vh', padding: '60px 24px 100px' }}>
-      <div style={{ maxWidth: '1200px', margin: '0 auto' }}>
+    <div className="location-root">
+      <style jsx>{`
+        .location-root {
+          background: #0A0807;
+          color: #FDFBF7;
+          min-height: 100vh;
+          padding: clamp(36px, 6vw, 60px) clamp(16px, 4vw, 24px) 100px;
+          overflow-x: hidden;
+          width: 100%;
+        }
+
+        .location-container {
+          max-width: 1200px;
+          margin: 0 auto;
+          width: 100%;
+        }
+
+        .location-header {
+          text-align: center;
+          margin-bottom: clamp(32px, 5vw, 50px);
+        }
+
+        .location-eyebrow {
+          font-size: 0.78rem;
+          letter-spacing: 0.25em;
+          text-transform: uppercase;
+          color: #D4AF37;
+          display: block;
+        }
+
+        .location-title {
+          font-family: var(--font-serif);
+          font-size: clamp(2rem, 5vw, 3.5rem);
+          color: #FAF7F2;
+          margin-top: 8px;
+          margin-bottom: 12px;
+          line-height: 1.2;
+        }
+
+        .location-subtitle {
+          color: #B8B0A5;
+          font-size: clamp(0.92rem, 2vw, 1.05rem);
+          max-width: 640px;
+          margin: 0 auto;
+          line-height: 1.6;
+        }
+
+        .location-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+          gap: clamp(24px, 3.5vw, 36px);
+          margin-bottom: clamp(36px, 5vw, 50px);
+          width: 100%;
+        }
+
+        .details-col {
+          display: flex;
+          flex-direction: column;
+          gap: 24px;
+          width: 100%;
+        }
+
+        .info-card {
+          background: #14110F;
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          border-radius: 16px;
+          padding: clamp(22px, 3.5vw, 32px);
+          width: 100%;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        .form-card {
+          background: #14110F;
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          border-radius: 16px;
+          padding: clamp(24px, 4vw, 36px) clamp(18px, 3.5vw, 32px);
+          width: 100%;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        .form-input {
+          width: 100%;
+          padding: 12px 14px;
+          background: #1A1613;
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          border-radius: 8px;
+          color: #FAF7F2;
+          font-size: 0.95rem;
+          outline: none;
+          transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+          border-color: #D4AF37;
+        }
+
+        .submit-btn {
+          width: 100%;
+          padding: 15px;
+          background: linear-gradient(135deg, #FCE8A6 0%, #D4AF37 50%, #9E7D23 100%);
+          color: #160608;
+          border-radius: 8px;
+          font-weight: 800;
+          font-size: clamp(0.88rem, 2vw, 0.96rem);
+          text-transform: uppercase;
+          letter-spacing: 0.05em;
+          border: none;
+          cursor: pointer;
+          box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+          transition: transform 0.2s ease;
+        }
+
+        .submit-btn:active {
+          transform: scale(0.98);
+        }
+
+        .maps-card {
+          background: #14110F;
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          border-radius: 16px;
+          padding: clamp(24px, 4vw, 36px);
+          text-align: center;
+          width: 100%;
+          box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        .maps-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+          padding: 14px clamp(20px, 4vw, 32px);
+          background: linear-gradient(135deg, #FCE8A6 0%, #D4AF37 100%);
+          color: #120F0D;
+          border-radius: 8px;
+          font-weight: 800;
+          font-size: clamp(0.88rem, 2vw, 0.95rem);
+          text-transform: uppercase;
+          letter-spacing: 0.04em;
+          transition: transform 0.2s ease;
+        }
+
+        .maps-btn:active {
+          transform: scale(0.98);
+        }
+
+        @media (max-width: 640px) {
+          .location-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+          }
+
+          .maps-btn {
+            width: 100%;
+          }
+        }
+      `}</style>
+
+      <div className="location-container">
         {/* Header */}
-        <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-          <span style={{ fontSize: '0.8rem', letterSpacing: '0.25em', textTransform: 'uppercase', color: '#D4AF37' }}>
+        <div className="location-header">
+          <span className="location-eyebrow">
             Khajrana, Indore
           </span>
-          <h1 style={{
-            fontFamily: 'var(--font-serif)',
-            fontSize: 'clamp(2.2rem, 4vw, 3.5rem)',
-            color: '#FAF7F2',
-            marginTop: '8px',
-            marginBottom: '12px'
-          }}>
+          <h1 className="location-title">
             Visit {RESTAURANT_INFO.name} 👑
           </h1>
-          <p style={{ color: '#B8B0A5', fontSize: '1.05rem', maxWidth: '640px', margin: '0 auto' }}>
+          <p className="location-subtitle">
             Chota Gate, Kadar Colony, Opp. Dargah Gate 2, Khajrana, Indore.
           </p>
         </div>
 
         {/* 2 Columns Grid */}
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))',
-          gap: '36px',
-          marginBottom: '50px'
-        }}>
+        <div className="location-grid">
           {/* Left Column: Address & Details */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="details-col">
             {/* Address Card */}
-            <div style={{
-              background: '#14110F',
-              border: '1px solid rgba(212, 175, 55, 0.25)',
-              borderRadius: '16px',
-              padding: '32px'
-            }}>
-              <span style={{ color: '#D4AF37', fontSize: '0.8rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+            <div className="info-card">
+              <span style={{ color: '#D4AF37', fontSize: '0.8rem', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'block' }}>
                 Restaurant Details
               </span>
-              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', color: '#FAF7F2', marginTop: '6px', marginBottom: '14px' }}>
+              <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', color: '#FAF7F2', marginTop: '6px', marginBottom: '14px' }}>
                 {RESTAURANT_INFO.brandTitle}
               </h3>
-              <p style={{ color: '#C4BBB0', fontSize: '0.95rem', lineHeight: 1.7, marginBottom: '20px' }}>
+              <p style={{ color: '#C4BBB0', fontSize: '0.92rem', lineHeight: 1.7, marginBottom: '20px' }}>
                 📍 <strong>Address:</strong> {RESTAURANT_INFO.address}
               </p>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.9rem', color: '#9E9489', borderTop: '1px solid rgba(255,255,255,0.06)', paddingTop: '16px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '0.88rem', color: '#9E9489', borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '16px' }}>
                 <div>📞 <strong>Phone:</strong> <a href={`tel:${RESTAURANT_INFO.phone}`} style={{ color: '#FAF7F2', textDecoration: 'underline' }}>{RESTAURANT_INFO.phone}</a></div>
                 <div>💬 <strong>WhatsApp Ordering:</strong> <a href={`https://wa.me/${RESTAURANT_INFO.whatsapp}`} style={{ color: '#25D366' }}>Chat on WhatsApp</a></div>
                 <div>📸 <strong>Instagram:</strong> <a href={RESTAURANT_INFO.instagram} target="_blank" rel="noreferrer" style={{ color: '#F472B6' }}>{RESTAURANT_INFO.instagramHandle}</a></div>
@@ -92,19 +233,14 @@ export default function ContactPage() {
             </div>
 
             {/* Timings Card */}
-            <div style={{
-              background: '#14110F',
-              border: '1px solid rgba(212, 175, 55, 0.25)',
-              borderRadius: '16px',
-              padding: '32px'
-            }}>
+            <div className="info-card">
               <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.25rem', color: '#FAF7F2', marginBottom: '16px' }}>
                 Operational Hours
               </h3>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
                 <div style={{ padding: '12px 16px', background: 'rgba(212, 175, 55, 0.08)', borderRadius: '8px', border: '1px solid rgba(212, 175, 55, 0.2)' }}>
-                  <div style={{ color: '#D4AF37', fontWeight: 700, fontSize: '0.85rem' }}>
+                  <div style={{ color: '#D4AF37', fontWeight: 700, fontSize: '0.82rem', textTransform: 'uppercase' }}>
                     🌅 Morning Nihari & Khamiri
                   </div>
                   <div style={{ color: '#FAF7F2', fontSize: '0.95rem', marginTop: '2px', fontWeight: 600 }}>
@@ -113,7 +249,7 @@ export default function ContactPage() {
                 </div>
 
                 <div style={{ padding: '12px 16px', background: 'rgba(34, 197, 94, 0.08)', borderRadius: '8px', border: '1px solid rgba(34, 197, 94, 0.25)' }}>
-                  <div style={{ color: '#4ADE80', fontWeight: 700, fontSize: '0.85rem' }}>
+                  <div style={{ color: '#4ADE80', fontWeight: 700, fontSize: '0.82rem', textTransform: 'uppercase' }}>
                     🌙 Evening & Midnight Feast
                   </div>
                   <div style={{ color: '#FAF7F2', fontSize: '0.95rem', marginTop: '2px', fontWeight: 600 }}>
@@ -128,19 +264,14 @@ export default function ContactPage() {
           </div>
 
           {/* Right Column: Inquiry & Bulk Order Form */}
-          <div style={{
-            background: '#14110F',
-            border: '1px solid rgba(212, 175, 55, 0.25)',
-            borderRadius: '16px',
-            padding: '36px 32px'
-          }}>
-            <span style={{ color: '#D4AF37', fontSize: '0.8rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
+          <div className="form-card">
+            <span style={{ color: '#D4AF37', fontSize: '0.8rem', letterSpacing: '0.1em', textTransform: 'uppercase', display: 'block' }}>
               Orders & Enquiries
             </span>
-            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', color: '#FAF7F2', marginTop: '6px', marginBottom: '8px' }}>
+            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.35rem', color: '#FAF7F2', marginTop: '6px', marginBottom: '8px' }}>
               Message Nahari King Team
             </h3>
-            <p style={{ color: '#9E9489', fontSize: '0.9rem', marginBottom: '24px' }}>
+            <p style={{ color: '#9E9489', fontSize: '0.88rem', marginBottom: '24px' }}>
               For bulk degh orders, party packs, or table booking in Khajrana.
             </p>
 
@@ -172,7 +303,8 @@ export default function ContactPage() {
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '8px'
+                    gap: '8px',
+                    boxShadow: '0 4px 15px rgba(37, 211, 102, 0.3)'
                   }}
                 >
                   <span>💬 Open in WhatsApp</span>
@@ -190,16 +322,7 @@ export default function ContactPage() {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     placeholder="e.g. Rizwan Bhai / Rahul"
-                    style={{
-                      width: '100%',
-                      padding: '12px 14px',
-                      background: '#1A1613',
-                      border: '1px solid rgba(212, 175, 55, 0.25)',
-                      borderRadius: '8px',
-                      color: '#FAF7F2',
-                      fontSize: '0.92rem',
-                      outline: 'none'
-                    }}
+                    className="form-input"
                   />
                 </div>
 
@@ -213,16 +336,7 @@ export default function ContactPage() {
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="099775 71717"
-                    style={{
-                      width: '100%',
-                      padding: '12px 14px',
-                      background: '#1A1613',
-                      border: '1px solid rgba(212, 175, 55, 0.25)',
-                      borderRadius: '8px',
-                      color: '#FAF7F2',
-                      fontSize: '0.92rem',
-                      outline: 'none'
-                    }}
+                    className="form-input"
                   />
                 </div>
 
@@ -233,16 +347,7 @@ export default function ContactPage() {
                   <select
                     value={formData.inquiryType}
                     onChange={(e) => setFormData({ ...formData, inquiryType: e.target.value })}
-                    style={{
-                      width: '100%',
-                      padding: '12px 14px',
-                      background: '#1A1613',
-                      border: '1px solid rgba(212, 175, 55, 0.25)',
-                      borderRadius: '8px',
-                      color: '#FAF7F2',
-                      fontSize: '0.92rem',
-                      outline: 'none'
-                    }}
+                    className="form-input"
                   >
                     <option value="Family Dastarkhwan Booking">Family Dastarkhwan Booking</option>
                     <option value="₹799 Non-Veg Thaal Pre-order">₹799 Non-Veg Thaal Pre-order</option>
@@ -260,34 +365,14 @@ export default function ContactPage() {
                     value={formData.message}
                     onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                     placeholder="No. of guests, date, or specific Nihari cut preferences..."
-                    style={{
-                      width: '100%',
-                      padding: '12px 14px',
-                      background: '#1A1613',
-                      border: '1px solid rgba(212, 175, 55, 0.25)',
-                      borderRadius: '8px',
-                      color: '#FAF7F2',
-                      fontSize: '0.92rem',
-                      outline: 'none',
-                      resize: 'vertical'
-                    }}
+                    className="form-input"
+                    style={{ resize: 'vertical' }}
                   />
                 </div>
 
                 <button
                   type="submit"
-                  style={{
-                    padding: '14px',
-                    background: 'linear-gradient(135deg, #F3E5AB 0%, #D4AF37 50%, #B89025 100%)',
-                    color: '#120F0D',
-                    borderRadius: '8px',
-                    fontWeight: 700,
-                    fontSize: '0.95rem',
-                    textTransform: 'uppercase',
-                    border: 'none',
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 15px rgba(212, 175, 55, 0.25)'
-                  }}
+                  className="submit-btn"
                 >
                   Send Message ✉️
                 </button>
@@ -297,20 +382,14 @@ export default function ContactPage() {
         </div>
 
         {/* Google Maps Directions Card */}
-        <div style={{
-          background: '#14110F',
-          border: '1px solid rgba(212, 175, 55, 0.25)',
-          borderRadius: '16px',
-          padding: '36px',
-          textAlign: 'center'
-        }}>
-          <span style={{ fontSize: '0.78rem', color: '#D4AF37', textTransform: 'uppercase', letterSpacing: '0.15em' }}>
+        <div className="maps-card">
+          <span style={{ fontSize: '0.78rem', color: '#D4AF37', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'block' }}>
             Khajrana Navigation
           </span>
-          <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.7rem', color: '#FAF7F2', marginTop: '6px', marginBottom: '10px' }}>
+          <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3.5vw, 1.7rem)', color: '#FAF7F2', marginTop: '6px', marginBottom: '10px' }}>
             Reach Nahari King Khajrana
           </h3>
-          <p style={{ color: '#A89F93', fontSize: '0.95rem', maxWidth: '650px', margin: '0 auto 20px' }}>
+          <p style={{ color: '#A89F93', fontSize: '0.92rem', maxWidth: '650px', margin: '0 auto 20px', lineHeight: 1.6 }}>
             Opposite Dargah Gate 2, Chota Gate, 56 Kadar Colony, Dargah Pakiza Road, Khajrana, Indore.
           </p>
 
@@ -318,17 +397,7 @@ export default function ContactPage() {
             href="https://maps.google.com/?q=Nahari+King+Khajrana+Indore"
             target="_blank"
             rel="noopener noreferrer"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '14px 28px',
-              background: '#D4AF37',
-              color: '#120F0D',
-              borderRadius: '8px',
-              fontWeight: 700,
-              fontSize: '0.92rem'
-            }}
+            className="maps-btn"
           >
             <span>🗺️ Open in Google Maps (Directions)</span>
           </a>
