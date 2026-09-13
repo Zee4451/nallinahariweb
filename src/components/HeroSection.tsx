@@ -1352,7 +1352,7 @@ export default function HeroSection() {
             </p>
 
             <div className="hero-actions">
-              <Link className="primary-cta" href="/#menu">
+              <Link className="primary-cta" href="/menu">
                 <span className="btn-glow-layer" aria-hidden="true" />
                 <span className="btn-label">Explore Menu</span>
                 <span className="btn-icon-wrap" aria-hidden="true">

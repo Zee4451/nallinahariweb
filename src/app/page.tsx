@@ -53,7 +53,7 @@ export default function HomePage() {
       </section>
 
       {/* 3. Signature Dishes Spotlight */}
-      <section style={{ padding: '80px 24px', maxWidth: '1280px', margin: '0 auto' }}>
+      <section id="menu" style={{ padding: '80px 24px', maxWidth: '1280px', margin: '0 auto', scrollMarginTop: '80px' }}>
         <div style={{ textAlign: 'center', marginBottom: '50px' }}>
           <span style={{ fontSize: '0.8rem', letterSpacing: '0.2em', textTransform: 'uppercase', color: '#D4AF37' }}>
             Khajrana&apos;s Crowning Flavors
