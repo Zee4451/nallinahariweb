@@ -19,6 +19,7 @@ export const metadata: Metadata = {
 };
 
 import GradualBlur from '@/components/GradualBlur';
+import VideoPreloader from '@/components/VideoPreloader';
 
 export default function RootLayout({
   children,
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <VideoPreloader />
         <SmoothScrollProvider>
           <CartProvider>
             <Navbar />
