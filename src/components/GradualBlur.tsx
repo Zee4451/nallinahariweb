@@ -187,7 +187,9 @@ const GradualBlur: React.FC<PropsWithChildren<GradualBlurProps>> = props => {
       return;
     }
 
+    let rafId = 0;
     const checkScrollPosition = () => {
+      rafId = 0;
       const scrollY = window.scrollY || window.pageYOffset || document.documentElement.scrollTop;
       const windowHeight = window.innerHeight;
       const documentHeight = Math.max(
@@ -202,13 +204,20 @@ const GradualBlur: React.FC<PropsWithChildren<GradualBlurProps>> = props => {
       setIsNearBottom(distanceToBottom <= threshold);
     };
 
+    const scheduleCheck = () => {
+      if (!rafId) {
+        rafId = window.requestAnimationFrame(checkScrollPosition);
+      }
+    };
+
     checkScrollPosition();
-    window.addEventListener('scroll', checkScrollPosition, { passive: true });
-    window.addEventListener('resize', checkScrollPosition);
+    window.addEventListener('scroll', scheduleCheck, { passive: true });
+    window.addEventListener('resize', scheduleCheck, { passive: true });
 
     return () => {
-      window.removeEventListener('scroll', checkScrollPosition);
-      window.removeEventListener('resize', checkScrollPosition);
+      if (rafId) window.cancelAnimationFrame(rafId);
+      window.removeEventListener('scroll', scheduleCheck);
+      window.removeEventListener('resize', scheduleCheck);
     };
   }, [config.autoHideAtBottom, config.position, config.target, config.bottomThreshold]);
 
@@ -254,6 +263,10 @@ const GradualBlur: React.FC<PropsWithChildren<GradualBlurProps>> = props => {
         WebkitMaskImage: `linear-gradient(${direction}, ${gradient})`,
         backdropFilter: `blur(${blurValue.toFixed(3)}rem)`,
         WebkitBackdropFilter: `blur(${blurValue.toFixed(3)}rem)`,
+        transform: 'translateZ(0)',
+        WebkitTransform: 'translateZ(0)',
+        backfaceVisibility: 'hidden',
+        WebkitBackfaceVisibility: 'hidden',
         opacity: config.opacity,
         transition:
           config.animated && config.animated !== 'scroll'

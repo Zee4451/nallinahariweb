@@ -40,12 +40,11 @@ export default function RootLayout({
             <GradualBlur
               target="page"
               position="bottom"
-              height="4rem"
-              strength={2}
-              divCount={5}
-              curve="bezier"
-              exponential
-              opacity={0.8}
+              height="3.5rem"
+              strength={1.5}
+              divCount={3}
+              curve="linear"
+              opacity={0.75}
               zIndex={950}
             />
             <CartDrawer />

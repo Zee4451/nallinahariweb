@@ -926,14 +926,15 @@ export default function HeroSection() {
           border-radius: 50%;
           background: radial-gradient(
             circle at 50% 50%,
-            rgba(255, 255, 255, 0.92) 0%,
-            rgba(255, 248, 230, 0.75) 35%,
-            rgba(245, 220, 165, 0.35) 60%,
+            rgba(255, 255, 255, 0.88) 0%,
+            rgba(255, 248, 230, 0.7) 35%,
+            rgba(245, 220, 165, 0.3) 60%,
             transparent 75%
           );
-          filter: blur(14px);
+          filter: blur(6px);
           opacity: 0;
           mix-blend-mode: screen;
+          transform: translateZ(0);
           will-change: transform, opacity;
           animation: steam-pop-rise infinite cubic-bezier(0.2, 0.8, 0.25, 1);
         }
