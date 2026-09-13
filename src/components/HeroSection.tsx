@@ -529,51 +529,257 @@ export default function HeroSection() {
         .hero-actions {
           display: flex;
           align-items: center;
-          gap: 11px;
-          margin-top: 29px;
-        }
-
-        .primary-cta,
-        .secondary-cta {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          gap: 9px;
-          min-height: 44px;
-          padding: 0 18px;
-          border-radius: 999px;
-          font-size: 13px;
-          font-weight: 650;
-          text-decoration: none;
-          transition:
-            transform 180ms ease,
-            border-color 180ms ease,
-            background 180ms ease,
-            box-shadow 180ms ease;
+          gap: 14px;
+          margin-top: 32px;
+          flex-wrap: wrap;
         }
 
         .primary-cta {
-          color: #171009;
-          background: linear-gradient(135deg, #f0d393, #bd7c2e);
-          box-shadow: 0 10px 28px rgba(153, 91, 25, 0.2);
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          min-height: 52px;
+          padding: 6px 8px 6px 20px;
+          border-radius: 999px;
+          color: #1a1106;
+          font-family: inherit;
+          font-size: 14px;
+          font-weight: 700;
+          letter-spacing: 0.01em;
+          text-decoration: none;
+          background: linear-gradient(135deg, #fae2a6 0%, #e5b34a 52%, #c98b28 100%);
+          box-shadow:
+            0 0 0 1px rgba(255, 230, 160, 0.4) inset,
+            0 8px 24px -4px rgba(229, 179, 74, 0.4),
+            0 16px 36px -8px rgba(0, 0, 0, 0.5);
+          overflow: hidden;
+          transition:
+            transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+            box-shadow 220ms cubic-bezier(0.16, 1, 0.3, 1),
+            filter 220ms ease;
+          cursor: pointer;
+        }
+
+        .cta-shimmer {
+          position: absolute;
+          top: -50%;
+          left: -100%;
+          width: 60%;
+          height: 200%;
+          background: linear-gradient(
+            90deg,
+            transparent,
+            rgba(255, 255, 255, 0.45) 50%,
+            transparent
+          );
+          transform: rotate(25deg);
+          animation: cta-shimmer-pass 3.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+          pointer-events: none;
+        }
+
+        @keyframes cta-shimmer-pass {
+          0%, 65% {
+            left: -100%;
+          }
+          100% {
+            left: 200%;
+          }
+        }
+
+        .cta-content {
+          position: relative;
+          z-index: 2;
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .cta-crown {
+          font-size: 15px;
+          filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+        }
+
+        .cta-text {
+          color: #170f05;
+          font-weight: 700;
+          letter-spacing: 0.015em;
+        }
+
+        .cta-badge {
+          display: inline-flex;
+          align-items: center;
+          padding: 2px 7px;
+          border-radius: 999px;
+          font-size: 10px;
+          font-weight: 750;
+          letter-spacing: 0.04em;
+          text-transform: uppercase;
+          color: #fff9e6;
+          background: rgba(26, 17, 6, 0.88);
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
+        }
+
+        .cta-arrow-wrap {
+          position: relative;
+          z-index: 2;
+          display: grid;
+          place-items: center;
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          background: rgba(26, 17, 6, 0.92);
+          color: #f7d277;
+          transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1), background 220ms ease;
+        }
+
+        .cta-arrow {
+          width: 16px;
+          height: 16px;
+          transition: transform 220ms ease;
         }
 
         .primary-cta:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 14px 32px rgba(153, 91, 25, 0.28);
+          transform: translateY(-2px) scale(1.015);
+          filter: brightness(1.05);
+          box-shadow:
+            0 0 0 1px rgba(255, 240, 180, 0.6) inset,
+            0 12px 32px -4px rgba(229, 179, 74, 0.55),
+            0 20px 42px -6px rgba(0, 0, 0, 0.55);
+        }
+
+        .primary-cta:hover .cta-arrow-wrap {
+          transform: translateX(2px);
+          background: #000;
+        }
+
+        .primary-cta:hover .cta-arrow {
+          transform: translateX(1px);
+        }
+
+        .primary-cta:active {
+          transform: translateY(0) scale(0.99);
         }
 
         .secondary-cta {
-          color: rgba(245, 238, 226, 0.78);
-          border: 1px solid rgba(245, 238, 226, 0.14);
-          background: rgba(255, 255, 255, 0.025);
+          position: relative;
+          display: inline-flex;
+          align-items: center;
+          gap: 14px;
+          min-height: 52px;
+          padding: 6px 20px 6px 8px;
+          border-radius: 999px;
+          text-decoration: none;
+          background: rgba(24, 18, 14, 0.72);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border: 1px solid rgba(229, 179, 74, 0.32);
+          box-shadow:
+            0 8px 24px -4px rgba(0, 0, 0, 0.45),
+            0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+          overflow: hidden;
+          transition:
+            transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+            border-color 220ms ease,
+            background 220ms ease,
+            box-shadow 220ms ease;
+        }
+
+        .cta-glass-sheen {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            180deg,
+            rgba(255, 255, 255, 0.07) 0%,
+            transparent 60%
+          );
+          pointer-events: none;
+        }
+
+        .cta-phone-indicator {
+          position: relative;
+          display: grid;
+          place-items: center;
+          width: 38px;
+          height: 38px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, rgba(229, 179, 74, 0.22), rgba(229, 179, 74, 0.08));
+          border: 1px solid rgba(229, 179, 74, 0.4);
+          color: #fce39f;
+          flex-shrink: 0;
+        }
+
+        .pulse-ping {
+          position: absolute;
+          inset: -3px;
+          border-radius: 50%;
+          border: 1px solid rgba(74, 222, 128, 0.6);
+          animation: phone-ping 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
+          pointer-events: none;
+        }
+
+        .pulse-core {
+          position: absolute;
+          top: 3px;
+          right: 3px;
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #4ade80;
+          box-shadow: 0 0 6px #4ade80;
+        }
+
+        @keyframes phone-ping {
+          0% {
+            transform: scale(0.9);
+            opacity: 0.8;
+          }
+          70%, 100% {
+            transform: scale(1.4);
+            opacity: 0;
+          }
+        }
+
+        .cta-phone-icon {
+          width: 16px;
+          height: 16px;
+        }
+
+        .secondary-cta-copy {
+          display: flex;
+          flex-direction: column;
+          gap: 1px;
+          text-align: left;
+        }
+
+        .secondary-cta-label {
+          color: #fbf5eb;
+          font-size: 13.5px;
+          font-weight: 650;
+          letter-spacing: 0.01em;
+          line-height: 1.2;
+        }
+
+        .secondary-cta-sub {
+          color: #cca457;
+          font-size: 10.5px;
+          font-weight: 500;
+          letter-spacing: 0.03em;
+          line-height: 1.2;
         }
 
         .secondary-cta:hover {
-          transform: translateY(-2px);
-          color: #f7efdf;
-          border-color: rgba(219, 178, 94, 0.38);
-          background: rgba(219, 178, 94, 0.07);
+          transform: translateY(-2px) scale(1.015);
+          background: rgba(36, 26, 18, 0.88);
+          border-color: rgba(229, 179, 74, 0.65);
+          box-shadow:
+            0 12px 30px -4px rgba(0, 0, 0, 0.55),
+            0 0 16px rgba(229, 179, 74, 0.2);
+        }
+
+        .secondary-cta:active {
+          transform: translateY(0) scale(0.99);
         }
 
         .primary-cta:focus-visible,
@@ -582,12 +788,6 @@ export default function HeroSection() {
         .order-button:focus-visible {
           outline: 2px solid rgba(235, 198, 119, 0.9);
           outline-offset: 3px;
-        }
-
-        .cta-icon {
-          width: 15px;
-          height: 15px;
-          flex: 0 0 auto;
         }
 
         .bento-grid {
@@ -1277,39 +1477,52 @@ export default function HeroSection() {
 
             <div className="hero-actions">
               <Link className="primary-cta" href="/#menu">
-                Explore the menu
-                <svg
-                  className="cta-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M7 17 17 7M9 7h8v8"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                <span className="cta-shimmer" aria-hidden="true" />
+                <span className="cta-content">
+                  <span className="cta-crown" aria-hidden="true">👑</span>
+                  <span className="cta-text">Explore the Menu</span>
+                  <span className="cta-badge">Fresh Dum</span>
+                </span>
+                <span className="cta-arrow-wrap" aria-hidden="true">
+                  <svg
+                    className="cta-arrow"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M5 12h14M13 6l6 6-6 6"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
               </Link>
 
               <Link className="secondary-cta" href={contactHref}>
-                <svg
-                  className="cta-icon"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M20 16.9v2.6a1.8 1.8 0 0 1-2 1.8 19.8 19.8 0 0 1-8.6-3.1 19.3 19.3 0 0 1-5.9-5.9A19.8 19.8 0 0 1 1.7 4.2 1.8 1.8 0 0 1 3.5 2.2h2.6a1.8 1.8 0 0 1 1.8 1.5c.1.9.4 1.8.7 2.6a1.8 1.8 0 0 1-.4 1.9L7 9.4a16.2 16.2 0 0 0 5.9 5.9l1.2-1.2a1.8 1.8 0 0 1 1.9-.4c.8.3 1.7.6 2.6.7a1.8 1.8 0 0 1 1.4 1.5Z"
-                    stroke="currentColor"
-                    strokeWidth="1.7"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                {contactLabel}
+                <span className="cta-glass-sheen" aria-hidden="true" />
+                <span className="cta-phone-indicator" aria-hidden="true">
+                  <span className="pulse-ping" />
+                  <span className="pulse-core" />
+                  <svg
+                    className="cta-phone-icon"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                  >
+                    <path
+                      d="M20 16.9v2.6a1.8 1.8 0 0 1-2 1.8 19.8 19.8 0 0 1-8.6-3.1 19.3 19.3 0 0 1-5.9-5.9A19.8 19.8 0 0 1 1.7 4.2 1.8 1.8 0 0 1 3.5 2.2h2.6a1.8 1.8 0 0 1 1.8 1.5c.1.9.4 1.8.7 2.6a1.8 1.8 0 0 1-.4 1.9L7 9.4a16.2 16.2 0 0 0 5.9 5.9l1.2-1.2a1.8 1.8 0 0 1 1.9-.4c.8.3 1.7.6 2.6.7a1.8 1.8 0 0 1 1.4 1.5Z"
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </span>
+                <span className="secondary-cta-copy">
+                  <span className="secondary-cta-label">{contactLabel}</span>
+                  <span className="secondary-cta-sub">099775 71717 · Live</span>
+                </span>
               </Link>
             </div>
 
