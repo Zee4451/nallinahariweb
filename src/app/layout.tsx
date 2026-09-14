@@ -1,37 +1,146 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 import './globals.css';
 import { CartProvider } from '@/components/CartContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
 import SmoothScrollProvider from '@/components/SmoothScrollProvider';
+import GradualBlur from '@/components/GradualBlur';
+import VideoPreloader from '@/components/VideoPreloader';
 import { RESTAURANT_INFO } from '@/data/restaurantData';
 
+export const metadataBase = new URL(
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://thenahariking.com'
+);
+
+const siteUrl = metadataBase.href;
+const logoUrl = new URL('/nahari-king-logo.png', metadataBase).href;
+const siteDescription =
+  'Slow-cooked Nalli Nihari, Mutton Paye and Khamiri Roti at Nahari King in Khajrana, Indore. Enjoy our viral ₹799 Non-Veg Thaal, open until midnight.';
+
 export const metadata: Metadata = {
-  title: 'Nahari King Indore 👑 — Delhi Ka Asli Swad | Nalli Nihari, Paye & Non-Veg Thaal',
-  description: 'Welcome to Nahari King (Khajrana, Indore). Authentic slow-cooked Nalli Nihari, Mutton Paye, viral ₹799 Non-Veg Thaal, and Khamiri Roti. Open till 12 AM midnight.',
-  keywords: 'Nahari King, Nahari King Indore, Nalli Nihari Khajrana, Indore best nihari, Mutton Paye Indore, ₹799 non veg thaal, thenahariking, Khajrana food',
-  icons: {
-    icon: '/nahari-king-crest.png',
-    apple: '/nahari-king-crest.png',
+  metadataBase,
+  title: {
+    default: 'Nahari King Indore 👑 | Nalli Nihari, Paye & ₹799 Non-Veg Thaal',
+    template: '%s | Nahari King Indore',
+  },
+  description: siteDescription,
+  keywords: [
+    'Nahari King',
+    'Nahari King Indore',
+    'Nahari King Khajrana',
+    'The Nahari King',
+    'Nalli Nihari Indore',
+    'Mutton Nihari Khajrana',
+    'Mutton Paye Indore',
+    'Khamiri Roti Indore',
+    'non-veg thaal Indore',
+    '799 non-veg thaal',
+    'best nihari in Indore',
+    'late night non-veg Indore',
+  ],
+  authors: [{ name: 'Nahari King', url: siteUrl }],
+  applicationName: 'Nahari King',
+  other: {
+    creator: 'Nahari King',
+    publisher: 'Nahari King',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+      'max-video-preview': -1,
+    },
+  },
+  alternates: {
+    canonical: '/',
+    languages: {
+      'en-IN': '/',
+    },
   },
   openGraph: {
-    title: 'Nahari King 👑 — Indore’s Most Famous Nalli Nihari & Paye',
-    description: 'Delhi ka asli swaad, ab Indore ke Khajrana mein! Chota Gate, Opp. Dargah Gate 2, Kadar Colony.',
+    title: 'Nahari King Indore — Nalli Nihari, Mutton Paye & Non-Veg Thaal',
+    description: siteDescription,
+    url: '/',
+    siteName: 'Nahari King',
+    locale: 'en_IN',
     type: 'website',
     images: [
       {
         url: '/nahari-king-logo.png',
         width: 1024,
         height: 1024,
-        alt: 'Nahari King Indore Official Royal Logo',
-      }
-    ]
-  }
+        alt: 'Nahari King Indore - Royal Nalli Nihari',
+        type: 'image/png',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Nahari King Indore — Nalli Nihari, Paye & Non-Veg Thaal',
+    description: siteDescription,
+    creator: '@thenahariking',
+    site: '@thenahariking',
+    images: ['/nahari-king-logo.png'],
+  },
+  icons: {
+    icon: '/nahari-king-crest.png',
+    apple: '/nahari-king-crest.png',
+  },
 };
 
-import GradualBlur from '@/components/GradualBlur';
-import VideoPreloader from '@/components/VideoPreloader';
+const restaurantJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Restaurant',
+  '@id': `${siteUrl}#restaurant`,
+  name: 'Nahari King',
+  url: siteUrl,
+  image: logoUrl,
+  logo: logoUrl,
+  description: siteDescription,
+  telephone: RESTAURANT_INFO.phone,
+  priceRange: '₹₹',
+  servesCuisine: 'Mughlai / Nihari',
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: 'Chota Gate, Opp. Dargah Gate 2, Kadar Colony, Khajrana',
+    addressLocality: 'Indore',
+    addressRegion: 'Madhya Pradesh',
+    addressCountry: 'IN',
+  },
+  openingHours: ['Mo-Su 12:00-24:00'],
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: [
+        'Monday',
+        'Tuesday',
+        'Wednesday',
+        'Thursday',
+        'Friday',
+        'Saturday',
+        'Sunday',
+      ],
+      opens: '12:00',
+      closes: '24:00',
+    },
+  ],
+  publisher: {
+    '@type': 'Organization',
+    name: 'Nahari King',
+    url: siteUrl,
+  },
+};
+
+const restaurantJsonLdString = JSON.stringify(restaurantJsonLd).replace(
+  /</g,
+  '\\u003c'
+);
 
 export default function RootLayout({
   children,
@@ -41,6 +150,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
+        <Script
+          id="restaurant-json-ld"
+          type="application/ld+json"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: restaurantJsonLdString }}
+        />
         <VideoPreloader />
         <SmoothScrollProvider>
           <CartProvider>
