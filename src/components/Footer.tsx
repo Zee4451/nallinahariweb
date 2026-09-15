@@ -97,6 +97,7 @@ export default function Footer() {
             <li><Link href="/heritage" style={{ color: '#B8B0A5' }}>Delhi Simmer Secret</Link></li>
             <li><Link href="/reservations" style={{ color: '#B8B0A5' }}>Table Reservation</Link></li>
             <li><Link href="/contact" style={{ color: '#B8B0A5' }}>Khajrana Location & Map</Link></li>
+            <li><Link href="/admin" style={{ color: '#D4AF37', fontSize: '0.85rem', opacity: 0.85 }}>👑 Kitchen & Staff Portal</Link></li>
           </ul>
         </div>
 
