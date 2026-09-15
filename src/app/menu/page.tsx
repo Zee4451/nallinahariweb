@@ -1,11 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { MENU_ITEMS } from '@/data/restaurantData';
 import { useCart } from '@/components/CartContext';
+import { useCMS } from '@/components/CMSContext';
 import type { Category, SpiceLevel, PortionOption, MenuItem } from '@/types/restaurant';
 
 export default function MenuPage() {
+  const { state: cmsState } = useCMS();
+  const menuItems = cmsState?.menuItems || [];
+
   const [selectedCategory, setSelectedCategory] = useState<'all' | Category>('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedPortions, setSelectedPortions] = useState<{ [dishId: string]: PortionOption }>({});
@@ -31,7 +34,7 @@ export default function MenuPage() {
     { level: 'royal-fiery', label: 'Royal Fiery', color: '#991B1B' }
   ];
 
-  const filteredDishes = MENU_ITEMS.filter((item) => {
+  const filteredDishes = menuItems.filter((item) => {
     const matchesCat = selectedCategory === 'all' || item.category === selectedCategory;
     const q = searchQuery.toLowerCase();
     const matchesSearch = !q || item.name.toLowerCase().includes(q) || item.description.toLowerCase().includes(q) || item.urduName.includes(q);

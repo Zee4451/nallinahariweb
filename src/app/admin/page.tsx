@@ -8,6 +8,12 @@ import {
   type ChangeEvent,
   type FormEvent,
 } from "react";
+import { useCMS } from "@/components/CMSContext";
+import {
+  MENU_ITEMS as DEFAULT_MENU_ITEMS,
+  RESTAURANT_INFO as DEFAULT_RESTAURANT_INFO,
+} from "@/data/restaurantData";
+import type { MenuItem as GlobalMenuItem } from "@/types/restaurant";
 
 type OrderStatus =
   | "Pending"
@@ -28,7 +34,7 @@ type Portion =
   | "Single Serving"
   | "Glass";
 type SpiceLevel = "Mild" | "Medium" | "Royal Hot" | "Extra Hot";
-type AdminTab = "orders" | "reservations" | "inventory" | "reviews";
+type AdminTab = "orders" | "reservations" | "inventory" | "reviews" | "banners" | "settings";
 type ReviewFilter = "all" | "featured";
 
 interface OrderItem {
@@ -81,9 +87,9 @@ interface Reservation {
   timeSlot: string;
   guests: number;
   seatingType:
-    | "Traditional Diwan"
-    | "Royal Dining Table"
-    | "Shahi Majlis VIP";
+  | "Traditional Diwan"
+  | "Royal Dining Table"
+  | "Shahi Majlis VIP";
   status: "Confirmed" | "Seated" | "Completed" | "Cancelled";
   notes?: string;
 }
@@ -321,11 +327,13 @@ const NAV_ITEMS: ReadonlyArray<{
   icon: string;
   kicker: string;
 }> = [
-  { id: "orders", label: "Live Orders", icon: "", kicker: "Kitchen Display" },
-  { id: "reservations", label: "Reservations", icon: "", kicker: "Guest Book" },
-  { id: "inventory", label: "Menu & Degh", icon: "", kicker: "Inventory" },
-  { id: "reviews", label: "Reviews", icon: "", kicker: "Moderation" },
-];
+    { id: "orders", label: "Live Orders", icon: "🍲", kicker: "Kitchen Display" },
+    { id: "reservations", label: "Reservations", icon: "📅", kicker: "Guest Book" },
+    { id: "inventory", label: "Menu & Degh", icon: "🥘", kicker: "Dishes & Images CMS" },
+    { id: "banners", label: "Viral Offers", icon: "🏷️", kicker: "Homepage Banners" },
+    { id: "settings", label: "Profile & Timings", icon: "🏢", kicker: "Store Info CMS" },
+    { id: "reviews", label: "Reviews", icon: "⭐", kicker: "Moderation" },
+  ];
 
 function pad(value: number): string {
   return value.toString().padStart(2, "0");
@@ -1152,6 +1160,31 @@ export default function AdminDashboardPage() {
     useState<ReservationDraft>(createEmptyReservationDraft);
   const [orderFormError, setOrderFormError] = useState("");
   const [reservationFormError, setReservationFormError] = useState("");
+  const {
+    state: cmsState,
+    updateDish,
+    addDish,
+    deleteDish,
+    updateViralOffer,
+    updateRestaurantInfo,
+    resetToDefaults,
+    exportDataJson,
+    importDataJson,
+  } = useCMS();
+
+  const [editingDish, setEditingDish] = useState<GlobalMenuItem | null>(null);
+  const [isAddDishModalOpen, setIsAddDishModalOpen] = useState(false);
+  const [newDishDraft, setNewDishDraft] = useState<Partial<GlobalMenuItem>>({
+    id: "",
+    name: "",
+    urduName: "",
+    description: "",
+    price: 350,
+    category: "nihari",
+    tag: "👑 Indore Special",
+    image: "/images/dishes/special-nalli-nihari.jpg",
+    isSignature: true,
+  });
 
   const [tickerIndex, setTickerIndex] = useState(0);
   const [toast, setToast] = useState<string | null>(null);
@@ -1173,7 +1206,7 @@ export default function AdminDashboardPage() {
   const averageRating =
     approvedReviews.length > 0
       ? approvedReviews.reduce((sum, review) => sum + review.rating, 0) /
-        approvedReviews.length
+      approvedReviews.length
       : 0;
   const featuredReviews = reviews.filter((review) => review.featured).length;
 
@@ -1607,10 +1640,10 @@ export default function AdminDashboardPage() {
         quantity: 1,
         items: existing
           ? current.items.map((item) =>
-              item === existing
-                ? { ...item, quantity: item.quantity + line.quantity }
-                : item,
-            )
+            item === existing
+              ? { ...item, quantity: item.quantity + line.quantity }
+              : item,
+          )
           : [...current.items, line],
       };
     });
@@ -1768,6 +1801,15 @@ export default function AdminDashboardPage() {
       ),
     );
 
+    // Sync to global CMS
+    const targetCmsDish = cmsState.menuItems.find((d) => d.id === item.id || d.name.toLowerCase() === item.name.toLowerCase());
+    if (targetCmsDish) {
+      updateDish({
+        ...targetCmsDish,
+        tag: shouldBeInStock ? (targetCmsDish.tag || "In Stock") : "Sold Out",
+      });
+    }
+
     if (!shouldBeInStock) notify(`${item.name} marked sold out`);
   }
 
@@ -1779,7 +1821,7 @@ export default function AdminDashboardPage() {
 
     if (!Number.isFinite(nextPrice) || nextPrice < 10) {
       event.currentTarget.value = String(item.price);
-      notify("Enter a valid price of10 or more");
+      notify("Enter a valid price of 10 or more");
       return;
     }
 
@@ -1791,6 +1833,16 @@ export default function AdminDashboardPage() {
           : menuItem,
       ),
     );
+
+    // Sync to global CMS
+    const targetCmsDish = cmsState.menuItems.find((d) => d.id === item.id || d.name.toLowerCase() === item.name.toLowerCase());
+    if (targetCmsDish) {
+      updateDish({
+        ...targetCmsDish,
+        price: roundedPrice,
+      });
+    }
+
     notify(`${item.name} price updated to ${formatINR(roundedPrice)}`);
   }
 
@@ -1944,7 +1996,7 @@ export default function AdminDashboardPage() {
                 aria-label="Logout of admin dashboard"
                 title="Logout"
               >
-                
+
               </button>
             </div>
           </header>
@@ -1957,7 +2009,7 @@ export default function AdminDashboardPage() {
                 className="ticker-message"
                 aria-hidden="true"
               >
-                 {tickerMessages[tickerIndex]}
+                {tickerMessages[tickerIndex]}
               </span>
             </div>
             <span className="ticker-hint">Indore • Royal Kitchen</span>
@@ -2084,7 +2136,7 @@ export default function AdminDashboardPage() {
                         </p>
                       </div>
                       <span className="section-emblem" aria-hidden="true">
-                        
+
                       </span>
                     </div>
 
@@ -2162,7 +2214,7 @@ export default function AdminDashboardPage() {
                             <div>
                               <strong>{order.customerName}</strong>
                               <a href={`tel:${getPhoneDigits(order.phone)}`}>
-                                 {order.phone}
+                                {order.phone}
                               </a>
                             </div>
                           </div>
@@ -2255,7 +2307,7 @@ export default function AdminDashboardPage() {
                         </p>
                       </div>
                       <span className="section-emblem" aria-hidden="true">
-                        
+
                       </span>
                     </div>
 
@@ -2333,10 +2385,10 @@ export default function AdminDashboardPage() {
                           </div>
                           <div className="reservation-details">
                             <span>
-                               {formatDate(reservation.date)}
+                              {formatDate(reservation.date)}
                             </span>
                             <span>
-                               {formatTime(
+                              {formatTime(
                                 `${reservation.date}T${reservation.timeSlot}:00`,
                               )}
                             </span>
@@ -2373,7 +2425,7 @@ export default function AdminDashboardPage() {
                               type="button"
                               onClick={() => openWhatsApp(reservation)}
                             >
-                               WhatsApp
+                              WhatsApp
                             </button>
                           </div>
                         </article>
@@ -2403,7 +2455,7 @@ export default function AdminDashboardPage() {
                           Control live pricing, availability and remaining stock.
                         </p>
                       </div>
-                      <div className="inventory-heading-stats">
+                      <div className="inventory-heading-stats" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
                         <span>
                           <i className="stock-dot in-stock" />
                           {menu.length - soldOutItems.length} in stock
@@ -2412,6 +2464,36 @@ export default function AdminDashboardPage() {
                           <i className="stock-dot sold-out" />
                           {soldOutItems.length} sold out
                         </span>
+                        <button
+                          type="button"
+                          className="primary-button"
+                          style={{
+                            padding: '8px 16px',
+                            fontSize: '0.85rem',
+                            fontWeight: 700,
+                            borderRadius: '8px',
+                            background: 'linear-gradient(135deg, #D4AF37, #AA7C11)',
+                            color: '#090404',
+                            border: 'none',
+                            cursor: 'pointer'
+                          }}
+                          onClick={() => {
+                            setNewDishDraft({
+                              id: `dish-${Date.now()}`,
+                              name: '',
+                              urduName: '',
+                              description: '',
+                              price: 350,
+                              category: 'nihari',
+                              tag: '👑 Indore Special',
+                              image: '/images/dishes/special-nalli-nihari.jpg',
+                              isSignature: true
+                            });
+                            setIsAddDishModalOpen(true);
+                          }}
+                        >
+                          + Add New Dish
+                        </button>
                       </div>
                     </div>
 
@@ -2455,9 +2537,8 @@ export default function AdminDashboardPage() {
                       {visibleMenu.map((item) => (
                         <article
                           key={item.id}
-                          className={`menu-card ${
-                            item.stockStatus === "Sold Out" ? "is-sold-out" : ""
-                          }`}
+                          className={`menu-card ${item.stockStatus === "Sold Out" ? "is-sold-out" : ""
+                            }`}
                         >
                           <div className="menu-thumb">
                             <span aria-hidden="true">{item.emoji}</span>
@@ -2470,9 +2551,8 @@ export default function AdminDashboardPage() {
                                 type="button"
                                 role="switch"
                                 aria-checked={item.stockStatus === "In Stock"}
-                                className={`stock-switch ${
-                                  item.stockStatus === "In Stock" ? "on" : ""
-                                }`}
+                                className={`stock-switch ${item.stockStatus === "In Stock" ? "on" : ""
+                                  }`}
                                 onClick={() =>
                                   handleStockToggle(
                                     item,
@@ -2514,7 +2594,7 @@ export default function AdminDashboardPage() {
                                   disabled={item.stockCount <= 0}
                                   aria-label={`Decrease ${item.name} stock`}
                                 >
-                                 
+
                                 </button>
                                 <span className="stock-count">
                                   {item.stockCount} {item.stockUnit}
@@ -2524,13 +2604,41 @@ export default function AdminDashboardPage() {
                                   onClick={() => handleAdjustStock(item, 1)}
                                   aria-label={`Increase ${item.name} stock`}
                                 >
-                                  
+
                                 </button>
                               </div>
                             </div>
-                            <div className="menu-card-footer">
-                              <span>{item.category}</span>
-                              <span>{item.id}</span>
+                            <div className="menu-card-footer" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '12px', paddingTop: '10px', borderTop: '1px solid rgba(212,175,55,0.15)' }}>
+                              <span style={{ fontSize: '0.78rem', color: '#BFA888' }}>{item.category} • {item.id}</span>
+                              <button
+                                type="button"
+                                style={{
+                                  padding: '5px 12px',
+                                  fontSize: '0.78rem',
+                                  fontWeight: 700,
+                                  background: 'rgba(212,175,55,0.12)',
+                                  border: '1px solid rgba(212,175,55,0.35)',
+                                  color: '#D4AF37',
+                                  borderRadius: '6px',
+                                  cursor: 'pointer'
+                                }}
+                                onClick={() => {
+                                  const matchingCmsDish = cmsState.menuItems.find((d) => d.id === item.id || d.name.toLowerCase() === item.name.toLowerCase()) || {
+                                    id: item.id,
+                                    name: item.name,
+                                    urduName: "",
+                                    description: item.description,
+                                    price: item.price,
+                                    category: "nihari",
+                                    tag: item.tag,
+                                    image: "/images/dishes/special-nalli-nihari.jpg",
+                                    isSignature: true,
+                                  };
+                                  setEditingDish(matchingCmsDish);
+                                }}
+                              >
+                                ✏️ Edit Dish & Image
+                              </button>
                             </div>
                           </div>
                         </article>
@@ -2616,7 +2724,7 @@ export default function AdminDashboardPage() {
                                   className={star <= review.rating ? "filled" : ""}
                                   aria-hidden="true"
                                 >
-                                 
+
                                 </span>
                               ))}
                             </span>
@@ -2624,15 +2732,14 @@ export default function AdminDashboardPage() {
                           <blockquote>“{review.quote}”</blockquote>
                           <div className="review-card-footer">
                             <span className="recommended-dish">
-                               Recommended: {review.dish}
+                              Recommended: {review.dish}
                             </span>
                             <button
                               type="button"
                               role="switch"
                               aria-checked={review.approved && review.featured}
-                              className={`feature-switch ${
-                                review.approved && review.featured ? "on" : ""
-                              }`}
+                              className={`feature-switch ${review.approved && review.featured ? "on" : ""
+                                }`}
                               onClick={() =>
                                 handleReviewFeatureToggle(review.id)
                               }
@@ -2656,6 +2763,194 @@ export default function AdminDashboardPage() {
                         <p>Switch to All Reviews to moderate guest feedback.</p>
                       </div>
                     )}
+                  </section>
+                )}
+
+                {activeTab === "banners" && (
+                  <section className="section-panel" aria-labelledby="banners-title">
+                    <div className="section-heading">
+                      <div>
+                        <p className="eyebrow">Marketing &amp; Promotions</p>
+                        <h2 id="banners-title">Viral Offers &amp; Homepage Banners</h2>
+                        <p>Live edits reflect instantly across the homepage promotional thaal banner.</p>
+                      </div>
+                      <button
+                        type="button"
+                        className="primary-button"
+                        style={{
+                          padding: '10px 20px',
+                          fontSize: '0.88rem',
+                          fontWeight: 700,
+                          borderRadius: '8px',
+                          background: 'linear-gradient(135deg, #D4AF37, #AA7C11)',
+                          color: '#090404',
+                          border: 'none',
+                          cursor: 'pointer'
+                        }}
+                        onClick={() => notify("Promotional banner saved & broadcasted live")}
+                      >
+                        ✓ Changes Auto-Saved
+                      </button>
+                    </div>
+
+                    <div style={{ background: '#120607', border: '1px solid rgba(212,175,55,0.25)', borderRadius: '12px', padding: '24px', maxWidth: '750px' }}>
+                      <h3 style={{ color: '#D4AF37', marginBottom: '18px', fontSize: '1.2rem' }}>₹799 Non-Veg Royal Thaal Banner Settings</h3>
+                      
+                      <label className="field" style={{ marginBottom: '16px', display: 'block' }}>
+                        <span style={{ display: 'block', color: '#BFA888', marginBottom: '6px', fontSize: '0.85rem' }}>Banner Badge / Tagline</span>
+                        <input
+                          type="text"
+                          value={cmsState.viralOffer?.tag || ""}
+                          onChange={(e) => updateViralOffer({ tag: e.target.value })}
+                          style={{ padding: '12px', background: '#1A0709', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '8px', color: '#FAF7F2' }}
+                        />
+                      </label>
+
+                      <label className="field" style={{ marginBottom: '16px', display: 'block' }}>
+                        <span style={{ display: 'block', color: '#BFA888', marginBottom: '6px', fontSize: '0.85rem' }}>Offer Headline</span>
+                        <input
+                          type="text"
+                          value={cmsState.viralOffer?.title || ""}
+                          onChange={(e) => updateViralOffer({ title: e.target.value })}
+                          style={{ padding: '12px', background: '#1A0709', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '8px', color: '#FAF7F2' }}
+                        />
+                      </label>
+
+                      <label className="field" style={{ marginBottom: '16px', display: 'block' }}>
+                        <span style={{ display: 'block', color: '#BFA888', marginBottom: '6px', fontSize: '0.85rem' }}>Description &amp; Inclusions</span>
+                        <textarea
+                          rows={3}
+                          value={cmsState.viralOffer?.description || ""}
+                          onChange={(e) => updateViralOffer({ description: e.target.value })}
+                          style={{ padding: '12px', background: '#1A0709', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '8px', color: '#FAF7F2' }}
+                        />
+                      </label>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                        <label className="field">
+                          <span style={{ display: 'block', color: '#BFA888', marginBottom: '6px', fontSize: '0.85rem' }}>CTA Button Text</span>
+                          <input
+                            type="text"
+                            value={cmsState.viralOffer?.ctaText || ""}
+                            onChange={(e) => updateViralOffer({ ctaText: e.target.value })}
+                            style={{ padding: '12px', background: '#1A0709', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '8px', color: '#FAF7F2' }}
+                          />
+                        </label>
+                        <label className="field">
+                          <span style={{ display: 'block', color: '#BFA888', marginBottom: '6px', fontSize: '0.85rem' }}>Price Tag</span>
+                          <input
+                            type="text"
+                            value={cmsState.viralOffer?.priceTag || "₹799"}
+                            onChange={(e) => updateViralOffer({ priceTag: e.target.value })}
+                            style={{ padding: '12px', background: '#1A0709', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '8px', color: '#FAF7F2' }}
+                          />
+                        </label>
+                      </div>
+
+                      <div style={{ marginTop: '20px', padding: '14px', background: 'rgba(212,175,55,0.06)', borderRadius: '8px', borderLeft: '3px solid #D4AF37' }}>
+                        <span style={{ color: '#D4AF37', fontWeight: 600, fontSize: '0.85rem' }}>Live Preview: </span>
+                        <span style={{ color: '#FAF7F2', fontSize: '0.85rem' }}>{cmsState.viralOffer?.title}</span>
+                      </div>
+                    </div>
+                  </section>
+                )}
+
+                {activeTab === "settings" && (
+                  <section className="section-panel" aria-labelledby="settings-title">
+                    <div className="section-heading">
+                      <div>
+                        <p className="eyebrow">Restaurant Identity &amp; CMS</p>
+                        <h2 id="settings-title">Restaurant Profile &amp; Timings</h2>
+                        <p>Manage WhatsApp contact number, address, timings, and backup data.</p>
+                      </div>
+                      <div style={{ display: 'flex', gap: '10px' }}>
+                        <button
+                          type="button"
+                          className="ghost-button"
+                          style={{ padding: '8px 14px', fontSize: '0.85rem' }}
+                          onClick={() => {
+                            const json = exportDataJson();
+                            const blob = new Blob([json], { type: 'application/json' });
+                            const url = URL.createObjectURL(blob);
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `nahari_king_backup_${todayISO()}.json`;
+                            a.click();
+                            notify("CMS Data Exported successfully");
+                          }}
+                        >
+                          ⬇ Export JSON
+                        </button>
+                        <button
+                          type="button"
+                          className="ghost-button"
+                          style={{ padding: '8px 14px', fontSize: '0.85rem', color: '#EF4444', borderColor: 'rgba(239,68,68,0.4)' }}
+                          onClick={() => {
+                            if (window.confirm("Restore all dishes and info to factory defaults?")) {
+                              resetToDefaults();
+                              notify("Reset to original factory data");
+                            }
+                          }}
+                        >
+                          Reset Defaults
+                        </button>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '20px', maxWidth: '900px' }}>
+                      <div style={{ background: '#120607', border: '1px solid rgba(212,175,55,0.25)', borderRadius: '12px', padding: '20px' }}>
+                        <h3 style={{ color: '#D4AF37', marginBottom: '14px', fontSize: '1.05rem' }}>Contact &amp; Ordering</h3>
+                        <label className="field" style={{ marginBottom: '12px', display: 'block' }}>
+                          <span style={{ display: 'block', color: '#BFA888', marginBottom: '4px', fontSize: '0.8rem' }}>Direct Calling Phone</span>
+                          <input
+                            type="text"
+                            value={cmsState.restaurantInfo?.phone || ""}
+                            onChange={(e) => updateRestaurantInfo({ phone: e.target.value })}
+                            style={{ padding: '10px', background: '#1A0709', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '8px', color: '#FAF7F2' }}
+                          />
+                        </label>
+                        <label className="field" style={{ marginBottom: '12px', display: 'block' }}>
+                          <span style={{ display: 'block', color: '#BFA888', marginBottom: '4px', fontSize: '0.8rem' }}>WhatsApp Ordering (Without +)</span>
+                          <input
+                            type="text"
+                            value={cmsState.restaurantInfo?.whatsapp || ""}
+                            onChange={(e) => updateRestaurantInfo({ whatsapp: e.target.value })}
+                            style={{ padding: '10px', background: '#1A0709', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '8px', color: '#FAF7F2' }}
+                          />
+                        </label>
+                        <label className="field" style={{ marginBottom: '12px', display: 'block' }}>
+                          <span style={{ display: 'block', color: '#BFA888', marginBottom: '4px', fontSize: '0.8rem' }}>Email Address</span>
+                          <input
+                            type="text"
+                            value={cmsState.restaurantInfo?.email || ""}
+                            onChange={(e) => updateRestaurantInfo({ email: e.target.value })}
+                            style={{ padding: '10px', background: '#1A0709', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '8px', color: '#FAF7F2' }}
+                          />
+                        </label>
+                      </div>
+
+                      <div style={{ background: '#120607', border: '1px solid rgba(212,175,55,0.25)', borderRadius: '12px', padding: '20px' }}>
+                        <h3 style={{ color: '#D4AF37', marginBottom: '14px', fontSize: '1.05rem' }}>Location &amp; Landmark</h3>
+                        <label className="field" style={{ marginBottom: '12px', display: 'block' }}>
+                          <span style={{ display: 'block', color: '#BFA888', marginBottom: '4px', fontSize: '0.8rem' }}>Full Address</span>
+                          <textarea
+                            rows={3}
+                            value={cmsState.restaurantInfo?.address || ""}
+                            onChange={(e) => updateRestaurantInfo({ address: e.target.value })}
+                            style={{ padding: '10px', background: '#1A0709', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '8px', color: '#FAF7F2' }}
+                          />
+                        </label>
+                        <label className="field" style={{ display: 'block' }}>
+                          <span style={{ display: 'block', color: '#BFA888', marginBottom: '4px', fontSize: '0.8rem' }}>Landmark</span>
+                          <input
+                            type="text"
+                            value={cmsState.restaurantInfo?.landmark || ""}
+                            onChange={(e) => updateRestaurantInfo({ landmark: e.target.value })}
+                            style={{ padding: '10px', background: '#1A0709', border: '1px solid rgba(212,175,55,0.3)', borderRadius: '8px', color: '#FAF7F2' }}
+                          />
+                        </label>
+                      </div>
+                    </div>
                   </section>
                 )}
 
@@ -2718,14 +3013,14 @@ export default function AdminDashboardPage() {
                   }
                 />
                 <span className="custom-checkbox" aria-hidden="true">
-                 
+
                 </span>
                 Remember session on this device
               </label>
 
               {loginError && (
                 <p className="login-error" role="alert">
-                   {loginError}
+                  {loginError}
                 </p>
               )}
 
@@ -2893,7 +3188,7 @@ export default function AdminDashboardPage() {
                     type="button"
                     onClick={handleAddDraftItem}
                   >
-                     Add Item
+                    Add Item
                   </button>
                 </div>
                 <div className="picker-options">
@@ -2990,7 +3285,7 @@ export default function AdminDashboardPage() {
 
               {orderFormError && (
                 <p className="form-error" role="alert">
-                   {orderFormError}
+                  {orderFormError}
                 </p>
               )}
 
@@ -3163,7 +3458,7 @@ export default function AdminDashboardPage() {
 
               {reservationFormError && (
                 <p className="form-error" role="alert">
-                   {reservationFormError}
+                  {reservationFormError}
                 </p>
               )}
 
@@ -3177,6 +3472,376 @@ export default function AdminDashboardPage() {
                 </button>
                 <button type="submit" className="primary-button">
                   Confirm Reservation
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Dish Modal */}
+      {editingDish && (
+        <div
+          className="modal-backdrop"
+          onMouseDown={(e) => {
+            if (e.currentTarget === e.target) setEditingDish(null);
+          }}
+        >
+          <div className="modal" style={{ maxWidth: '560px' }}>
+            <div className="modal-header">
+              <div>
+                <p className="eyebrow">CMS Dish Editor</p>
+                <h2>Edit Dish &amp; Image</h2>
+                <p>Changes will update live across the website menu and cards.</p>
+              </div>
+              <button
+                type="button"
+                className="close-button"
+                onClick={() => setEditingDish(null)}
+              >
+                ×
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                updateDish(editingDish);
+                // Also update local menu representation
+                setMenu((cur) =>
+                  cur.map((m) =>
+                    m.id === editingDish.id
+                      ? {
+                          ...m,
+                          name: editingDish.name,
+                          description: editingDish.description,
+                          price: editingDish.price,
+                          tag: editingDish.tag || m.tag,
+                        }
+                      : m
+                  )
+                );
+                notify(`${editingDish.name} details & image saved`);
+                setEditingDish(null);
+              }}
+            >
+              <div className="form-grid">
+                <label className="field field-wide">
+                  <span>Dish Name *</span>
+                  <input
+                    type="text"
+                    required
+                    value={editingDish.name}
+                    onChange={(e) =>
+                      setEditingDish({ ...editingDish, name: e.target.value })
+                    }
+                  />
+                </label>
+
+                <label className="field field-wide">
+                  <span>Urdu Calligraphy Name</span>
+                  <input
+                    type="text"
+                    value={editingDish.urduName || ""}
+                    onChange={(e) =>
+                      setEditingDish({ ...editingDish, urduName: e.target.value })
+                    }
+                    placeholder="e.g. نہاری کنگ سپیشل نلی نہاری"
+                  />
+                </label>
+
+                <label className="field">
+                  <span>Price (₹) *</span>
+                  <input
+                    type="number"
+                    min="10"
+                    required
+                    value={editingDish.price}
+                    onChange={(e) =>
+                      setEditingDish({
+                        ...editingDish,
+                        price: Number(e.target.value),
+                      })
+                    }
+                  />
+                </label>
+
+                <label className="field">
+                  <span>Category *</span>
+                  <select
+                    value={editingDish.category}
+                    onChange={(e) =>
+                      setEditingDish({
+                        ...editingDish,
+                        category: e.target.value as GlobalMenuItem["category"],
+                      })
+                    }
+                  >
+                    <option value="nihari">nihari</option>
+                    <option value="biryani">biryani</option>
+                    <option value="kebabs">kebabs</option>
+                    <option value="breads">breads</option>
+                    <option value="desserts">desserts</option>
+                    <option value="beverages">beverages</option>
+                  </select>
+                </label>
+
+                <label className="field field-wide">
+                  <span>Tag / Badge (e.g. 👑 Indore Bestseller, 🔥 Viral Special)</span>
+                  <input
+                    type="text"
+                    value={editingDish.tag || ""}
+                    onChange={(e) =>
+                      setEditingDish({ ...editingDish, tag: e.target.value })
+                    }
+                  />
+                </label>
+
+                <label className="field field-wide">
+                  <span>Image URL / Asset Path *</span>
+                  <input
+                    type="text"
+                    required
+                    value={editingDish.image || ""}
+                    onChange={(e) =>
+                      setEditingDish({ ...editingDish, image: e.target.value })
+                    }
+                    placeholder="/images/dishes/special-nalli-nihari.jpg or https://..."
+                  />
+                </label>
+
+                <label className="field field-wide">
+                  <span>Description *</span>
+                  <textarea
+                    rows={3}
+                    required
+                    value={editingDish.description}
+                    onChange={(e) =>
+                      setEditingDish({
+                        ...editingDish,
+                        description: e.target.value,
+                      })
+                    }
+                  />
+                </label>
+
+                <label className="field field-wide" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={Boolean(editingDish.isSignature)}
+                    onChange={(e) =>
+                      setEditingDish({ ...editingDish, isSignature: e.target.checked })
+                    }
+                    style={{ width: 'auto', margin: 0 }}
+                  />
+                  <span>Show as Signature Dish on Homepage</span>
+                </label>
+              </div>
+
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="ghost-button"
+                  onClick={() => setEditingDish(null)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="primary-button">
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add New Dish Modal */}
+      {isAddDishModalOpen && (
+        <div
+          className="modal-backdrop"
+          onMouseDown={(e) => {
+            if (e.currentTarget === e.target) setIsAddDishModalOpen(false);
+          }}
+        >
+          <div className="modal" style={{ maxWidth: '560px' }}>
+            <div className="modal-header">
+              <div>
+                <p className="eyebrow">Menu Expansion</p>
+                <h2>+ Add New Dish to Live Menu</h2>
+                <p>Add a new Awadhi recipe with image path and pricing.</p>
+              </div>
+              <button
+                type="button"
+                className="close-button"
+                onClick={() => setIsAddDishModalOpen(false)}
+              >
+                ×
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!newDishDraft.name || !newDishDraft.price) return;
+                const newDish: GlobalMenuItem = {
+                  id: newDishDraft.id || `dish-${Date.now()}`,
+                  name: newDishDraft.name,
+                  urduName: newDishDraft.urduName || "",
+                  description: newDishDraft.description || "",
+                  price: Number(newDishDraft.price) || 350,
+                  category: (newDishDraft.category as GlobalMenuItem["category"]) || "nihari",
+                  tag: newDishDraft.tag || "👑 Royal Fare",
+                  image: newDishDraft.image || "/images/dishes/special-nalli-nihari.jpg",
+                  isSignature: Boolean(newDishDraft.isSignature),
+                };
+
+                addDish(newDish);
+                // Also update local inventory list
+                setMenu((cur) => [
+                  {
+                    id: newDish.id,
+                    name: newDish.name,
+                    description: newDish.description,
+                    price: newDish.price,
+                    category: newDish.category,
+                    tag: newDish.tag || "",
+                    emoji: "🥘",
+                    stockStatus: "In Stock",
+                    stockCount: 20,
+                    stockUnit: "bowls",
+                  },
+                  ...cur,
+                ]);
+
+                notify(`${newDish.name} added to the royal menu!`);
+                setIsAddDishModalOpen(false);
+              }}
+            >
+              <div className="form-grid">
+                <label className="field field-wide">
+                  <span>Dish Name *</span>
+                  <input
+                    type="text"
+                    required
+                    value={newDishDraft.name || ""}
+                    onChange={(e) =>
+                      setNewDishDraft({ ...newDishDraft, name: e.target.value })
+                    }
+                    placeholder="e.g. Shahi Mutton Dum Qorma"
+                  />
+                </label>
+
+                <label className="field field-wide">
+                  <span>Urdu Calligraphy Name</span>
+                  <input
+                    type="text"
+                    value={newDishDraft.urduName || ""}
+                    onChange={(e) =>
+                      setNewDishDraft({ ...newDishDraft, urduName: e.target.value })
+                    }
+                    placeholder="e.g. شاہی قورمہ"
+                  />
+                </label>
+
+                <label className="field">
+                  <span>Price (₹) *</span>
+                  <input
+                    type="number"
+                    min="10"
+                    required
+                    value={newDishDraft.price || 350}
+                    onChange={(e) =>
+                      setNewDishDraft({
+                        ...newDishDraft,
+                        price: Number(e.target.value),
+                      })
+                    }
+                  />
+                </label>
+
+                <label className="field">
+                  <span>Category *</span>
+                  <select
+                    value={newDishDraft.category || "nihari"}
+                    onChange={(e) =>
+                      setNewDishDraft({
+                        ...newDishDraft,
+                        category: e.target.value as GlobalMenuItem["category"],
+                      })
+                    }
+                  >
+                    <option value="nihari">nihari</option>
+                    <option value="biryani">biryani</option>
+                    <option value="kebabs">kebabs</option>
+                    <option value="breads">breads</option>
+                    <option value="desserts">desserts</option>
+                    <option value="beverages">beverages</option>
+                  </select>
+                </label>
+
+                <label className="field field-wide">
+                  <span>Tag / Badge (e.g. 👑 Indore Special, 🌟 New Arrival)</span>
+                  <input
+                    type="text"
+                    value={newDishDraft.tag || ""}
+                    onChange={(e) =>
+                      setNewDishDraft({ ...newDishDraft, tag: e.target.value })
+                    }
+                  />
+                </label>
+
+                <label className="field field-wide">
+                  <span>Image URL / Asset Path *</span>
+                  <input
+                    type="text"
+                    required
+                    value={newDishDraft.image || ""}
+                    onChange={(e) =>
+                      setNewDishDraft({ ...newDishDraft, image: e.target.value })
+                    }
+                    placeholder="/images/dishes/special-nalli-nihari.jpg"
+                  />
+                </label>
+
+                <label className="field field-wide">
+                  <span>Description *</span>
+                  <textarea
+                    rows={3}
+                    required
+                    value={newDishDraft.description || ""}
+                    onChange={(e) =>
+                      setNewDishDraft({
+                        ...newDishDraft,
+                        description: e.target.value,
+                      })
+                    }
+                    placeholder="Slow cooked with Awadhi herbs and spices..."
+                  />
+                </label>
+
+                <label className="field field-wide" style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={Boolean(newDishDraft.isSignature)}
+                    onChange={(e) =>
+                      setNewDishDraft({ ...newDishDraft, isSignature: e.target.checked })
+                    }
+                    style={{ width: 'auto', margin: 0 }}
+                  />
+                  <span>Show as Signature Dish on Homepage</span>
+                </label>
+              </div>
+
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="ghost-button"
+                  onClick={() => setIsAddDishModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="primary-button">
+                  Add to Menu
                 </button>
               </div>
             </form>

@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { TIME_SLOTS, RESTAURANT_INFO } from '@/data/restaurantData';
+import { TIME_SLOTS as DEFAULT_TIME_SLOTS, RESTAURANT_INFO as DEFAULT_RESTAURANT_INFO } from '@/data/restaurantData';
+import { useCMS } from '@/components/CMSContext';
 
 type SeatingType = 'diwan' | 'table' | 'majlis';
 
@@ -15,11 +16,15 @@ interface SeatingOption {
 }
 
 export default function ReservationsPage() {
+  const { state: cmsState } = useCMS();
+  const restaurantInfo = cmsState?.restaurantInfo || DEFAULT_RESTAURANT_INFO;
+  const timeSlots = cmsState?.timeSlots || DEFAULT_TIME_SLOTS;
+
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
   const [email, setEmail] = useState('');
   const [date, setDate] = useState('');
-  const [timeSlot, setTimeSlot] = useState(TIME_SLOTS[4] || '');
+  const [timeSlot, setTimeSlot] = useState(timeSlots[4] || timeSlots[0] || '');
   const [guests, setGuests] = useState(2);
   const [seatingType, setSeatingType] = useState<SeatingType>('diwan');
   const [specialRequests, setSpecialRequests] = useState('');
@@ -79,12 +84,36 @@ export default function ReservationsPage() {
     };
 
     setBookingPass(pass);
+
+    // Save to admin dashboard reservations in localStorage
+    try {
+      const DATA_STORAGE_KEY = 'nahari-king-admin-data-v1';
+      const existing = localStorage.getItem(DATA_STORAGE_KEY);
+      if (existing) {
+        const parsed = JSON.parse(existing);
+        const newBooking = {
+          id: pass.id,
+          guestName: pass.fullName,
+          contact: phone,
+          date: pass.date,
+          timeSlot: pass.timeSlot,
+          guests: pass.guests,
+          seatingType: pass.seatingType === 'Shahi Majlis (Private Chamber)' ? 'Shahi Majlis VIP' : pass.seatingType === 'Royal Dining Table' ? 'Royal Dining Table' : 'Traditional Diwan',
+          status: 'Confirmed',
+          notes: pass.specialRequests || 'Website online booking'
+        };
+        parsed.reservations = [newBooking, ...(parsed.reservations || [])];
+        localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(parsed));
+      }
+    } catch {
+      // ignore
+    }
   };
 
   const handleShareWhatsApp = () => {
     if (!bookingPass) return;
     const msg =
-      `*Dastarkhwan Reservation Pass — ${RESTAURANT_INFO.name}*\n\n` +
+      `*Dastarkhwan Reservation Pass — ${restaurantInfo.name}*\n\n` +
       `⚜️ *Pass ID:* ${bookingPass.id}\n` +
       `👤 *Guest Name:* ${bookingPass.fullName}\n` +
       `📅 *Date:* ${bookingPass.date}\n` +
@@ -94,7 +123,7 @@ export default function ReservationsPage() {
       (bookingPass.specialRequests ? `📝 *Notes:* ${bookingPass.specialRequests}\n\n` : '\n') +
       `Please confirm my reservation. Looking forward to the feast!`;
 
-    window.open(`https://wa.me/${RESTAURANT_INFO.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
+    window.open(`https://wa.me/${restaurantInfo.whatsapp}?text=${encodeURIComponent(msg)}`, '_blank');
   };
 
   const today = new Date().toISOString().split('T')[0];
@@ -545,7 +574,7 @@ export default function ReservationsPage() {
                       outline: 'none'
                     }}
                   >
-                    {TIME_SLOTS.map((slot) => (
+                    {timeSlots.map((slot: string) => (
                       <option key={slot} value={slot} style={{ background: '#1A1613', color: '#FAF7F2' }}>
                         {slot}
                       </option>

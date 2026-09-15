@@ -1,0 +1,68 @@
+﻿Create a unified, complete, production-grade Web CMS & Restaurant Management Admin Terminal for 'The Nahari King' (Indore).
+Target File: src/app/admin/page.tsx
+Use 'use client'; at the top.
+
+The Admin Panel must allow full manipulation and live control of website content, cards, dishes, offers, images, and settings, synced with localStorage ('nahari_king_live_cms_v1') and broadcast across open tabs.
+
+AESTHETICS:
+- Deep Royal Awadhi & Mughal Luxury Dark Theme (#090404, #120607, #18090B, #1A0709)
+- Glowing Imperial Gold (#D4AF37, #FCE8A6, #9E7D23), Crimson / Maroon (#7A0C0E, #EF4444), Emerald Green (#10B981)
+- Rich Glassmorphism, smooth animations, luxury micro-interactions, responsive on mobile/tablet/desktop.
+- Default Login Passcode: 'nahari786' (with quick hint, remember session toggle, and logout button).
+
+PRIMARY NAVIGATION TABS:
+1. 🍲 Live Kitchen Orders (KDS & POS Terminal)
+   - Real-time orders list with Order ID, customer name, items, portion, spice, total, payment status.
+   - Status transitions: Cooking in Degh ➔ Ready for Pickup ➔ Out for Delivery ➔ Completed ➔ Cancelled.
+   - 1-Click order status change, search, filters.
+   - Simulate New Live Order button and + Manual Order Creation modal.
+
+2. 🥘 Menu Dishes & Cards CMS (Full Content & Image Control)
+   - Real-time list of all website dishes from restaurantData.
+   - Edit any dish:
+     * Dish Name & Urdu Calligraphy Name
+     * Description text
+     * Price & Portion pricing
+     * Category ('nihari', 'biryani', 'kebabs', 'breads', 'desserts', 'beverages')
+     * Tag / Badge (e.g. '👑 Indore Bestseller', '🔥 Viral Vlog Special')
+     * Image URL / Path (e.g. '/images/dishes/special-nalli-nihari.jpg' or external URL)
+     * Stock Toggle: In Stock / Sold Out (hides or shows sold out badge on customer menu)
+     * Signature Dish Toggle (shows on Homepage Signature Dishes)
+   - + Add New Dish to Menu modal with all fields.
+   - Delete / Archive Dish with confirmation.
+
+3. 🏷️ Viral Banners & Hero Offers CMS
+   - Edit Homepage ₹799 Viral Thaal Offer Banner:
+     * Banner Tag (e.g. '★ Limited Khajrana Special Offer')
+     * Title (e.g. 'Indore Ki Best Nihari & Paye Non-Veg Thaal — Sirf ₹799 Mein!')
+     * Description & Inclusions
+     * CTA Button Text & Link
+   - Edit Hero Section Taglines & Subtitle.
+
+4. 🏢 Restaurant Profile & Timings CMS
+   - Phone number, WhatsApp ordering number, Email
+   - Address & Landmark (Khajrana Indore)
+   - Google Rating & Review count
+   - Kitchen Timings: Fajr Morning Nihari, Lunch, Midnight Nihari hours.
+
+5. 📅 Table Bookings & Majlis Reservations
+   - View all customer reservations from the booking form.
+   - 1-Click Confirm via WhatsApp prefilled message button.
+   - Manual walk-in / VIP Majlis reservation form.
+
+6. ⭐ Reviews & Testimonials Moderation
+   - List customer reviews, ratings, and quotes.
+   - Featured on Homepage toggle.
+   - + Add New Verified Review modal.
+
+7. ⚙️ Data Backup & Live Sync
+   - Export All Website Content (JSON)
+   - Import Content from JSON
+   - Reset to Factory Defaults (Restores original restaurantData in 1 click).
+
+TECHNICAL SPECS:
+- TypeScript strict typing without compilation errors.
+- Self-contained styled JSX or CSS.
+- Persist everything to localStorage key: 'nahari_king_live_cms_v1' and dispatch custom window events so other tabs/components update automatically.
+- Import default seed constants from '@/data/restaurantData' (MENU_ITEMS, RESTAURANT_INFO, REVIEWS).
+- Output ONLY pure, runnable TypeScript code without markdown code fences.

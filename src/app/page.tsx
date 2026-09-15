@@ -2,14 +2,24 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { MENU_ITEMS, REVIEWS, RESTAURANT_INFO } from '@/data/restaurantData';
 import { useCart } from '@/components/CartContext';
+import { useCMS } from '@/components/CMSContext';
 import HeroSection from '@/components/HeroSection';
 import InstagramReelsSection from '@/components/InstagramReelsSection';
 
 export default function HomePage() {
   const { addToCart } = useCart();
-  const signatureDishes = MENU_ITEMS.filter((item) => item.isSignature);
+  const { state: cmsState } = useCMS();
+
+  const signatureDishes = (cmsState?.menuItems || []).filter((item) => item.isSignature);
+  const offer = cmsState?.viralOffer || {
+    tag: '★ Limited Khajrana Special Offer',
+    title: 'Indore Ki Best Nihari & Paye Non-Veg Thaal — Sirf ₹799 Mein!',
+    description: 'Nalli Nihari + Mutton Paye + Seekh Kebabs + Dum Biryani + 4 Tandoor Rotis + Raita.',
+    ctaText: 'Order Thaal Now →',
+    ctaLink: '/menu'
+  };
+  const reviews = cmsState?.reviews || [];
 
   return (
     <div style={{ background: 'var(--bg-dark)', color: 'var(--text-main)' }}>
@@ -110,21 +120,21 @@ export default function HomePage() {
         <div className="offers-container">
           <div className="offers-content">
             <span className="offers-tag">
-              ★ Limited Khajrana Special Offer
+              {offer.tag}
             </span>
             <h3 className="offers-title">
-              Indore Ki Best Nihari & Paye Non-Veg Thaal — Sirf ₹799 Mein!
+              {offer.title}
             </h3>
             <p className="offers-desc">
-              Nalli Nihari + Mutton Paye + Seekh Kebabs + Dum Biryani + 4 Tandoor Rotis + Raita.
+              {offer.description}
             </p>
           </div>
 
           <Link
-            href="/menu"
+            href={offer.ctaLink || '/menu'}
             className="offers-cta"
           >
-            Order Thaal Now →
+            {offer.ctaText || 'Order Thaal Now →'}
           </Link>
         </div>
       </section>
@@ -308,7 +318,7 @@ export default function HomePage() {
             gap: 'clamp(18px, 3vw, 28px)',
             width: '100%'
           }}>
-            {REVIEWS.map((rev) => (
+            {reviews.map((rev) => (
               <div
                 key={rev.id}
                 style={{
@@ -399,7 +409,7 @@ export default function HomePage() {
               Order Online via WhatsApp
             </Link>
             <a
-              href={`tel:${RESTAURANT_INFO.phone}`}
+              href={`tel:${cmsState?.restaurantInfo?.phone || '+91 98765 43210'}`}
               style={{
                 padding: '14px 28px',
                 background: 'rgba(255,255,255,0.06)',
@@ -414,7 +424,7 @@ export default function HomePage() {
                 minWidth: '180px'
               }}
             >
-              Call {RESTAURANT_INFO.phone}
+              Call {cmsState?.restaurantInfo?.phone || '+91 98765 43210'}
             </a>
           </div>
         </div>

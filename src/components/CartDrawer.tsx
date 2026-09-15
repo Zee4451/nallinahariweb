@@ -2,17 +2,60 @@
 
 import React from 'react';
 import { useCart } from '@/components/CartContext';
-import { RESTAURANT_INFO } from '@/data/restaurantData';
+import { useCMS } from '@/components/CMSContext';
+import { RESTAURANT_INFO as DEFAULT_RESTAURANT_INFO } from '@/data/restaurantData';
 
 export default function CartDrawer() {
   const { cart, isCartOpen, setIsCartOpen, clearCart, updateQuantity, cartTotal, totalCount } = useCart();
+  const { state: cmsState } = useCMS();
+  const restaurantInfo = cmsState?.restaurantInfo || DEFAULT_RESTAURANT_INFO;
 
   if (!isCartOpen) return null;
 
   const handleWhatsAppOrder = () => {
     if (cart.length === 0) return;
 
-    let text = `*New Royal Order from Nalli Nahari Web*\n\n`;
+    const orderId = `NK-${Math.floor(100000 + Math.random() * 900000)}`;
+
+    // Push order into Admin Dashboard KDS in localStorage
+    try {
+      const DATA_STORAGE_KEY = 'nahari-king-admin-data-v1';
+      const existing = localStorage.getItem(DATA_STORAGE_KEY);
+      if (existing) {
+        const parsed = JSON.parse(existing);
+        const newOrder = {
+          id: orderId,
+          customerName: 'Online Web Guest',
+          phone: '+91 WhatsApp Order',
+          items: cart.map((ci, idx) => ({
+            id: `item-${Date.now()}-${idx}`,
+            menuItemId: ci.item.id,
+            name: ci.item.name,
+            quantity: ci.quantity,
+            unitPrice: ci.selectedPortion ? ci.selectedPortion.price : ci.item.price,
+            portion: (ci.selectedPortion?.name || 'Single Serving') as any,
+            spiceLevel: (ci.selectedSpice || 'Medium') as any
+          })),
+          totalAmount: cartTotal,
+          paymentMethod: 'UPI' as const,
+          status: 'Cooking in Degh' as const,
+          createdAt: new Date().toISOString(),
+          notes: 'Customer online order via website Dastarkhwan Cart'
+        };
+
+        parsed.orders = [newOrder, ...(parsed.orders || [])];
+        if (parsed.dailyStats) {
+          parsed.dailyStats.grossRevenue = (parsed.dailyStats.grossRevenue || 0) + cartTotal;
+          parsed.dailyStats.totalOrders = (parsed.dailyStats.totalOrders || 0) + 1;
+        }
+        localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(parsed));
+      }
+    } catch {
+      // ignore
+    }
+
+    let text = `*New Royal Order from ${restaurantInfo.name}*\n`;
+    text += `*Order ID:* ${orderId}\n\n`;
     cart.forEach((ci, idx) => {
       const p = ci.selectedPortion ? ci.selectedPortion.price : ci.item.price;
       const portionText = ci.selectedPortion ? ` [${ci.selectedPortion.name}]` : '';
@@ -23,7 +66,7 @@ export default function CartDrawer() {
     text += `\nPlease confirm preparation and delivery/pickup availability.`;
 
     const encoded = encodeURIComponent(text);
-    window.open(`https://wa.me/${RESTAURANT_INFO.whatsapp}?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/${restaurantInfo.whatsapp}?text=${encoded}`, '_blank');
   };
 
   return (

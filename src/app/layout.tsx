@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import './globals.css';
 import { CartProvider } from '@/components/CartContext';
+import { CMSProvider } from '@/components/CMSContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import CartDrawer from '@/components/CartDrawer';
@@ -158,24 +159,26 @@ export default function RootLayout({
         />
         <VideoPreloader />
         <SmoothScrollProvider>
-          <CartProvider>
-            <Navbar />
-            <main style={{ minHeight: '80vh', paddingTop: '76px' }}>
-              {children}
-            </main>
-            <Footer />
-            <GradualBlur
-              target="page"
-              position="bottom"
-              height="3.5rem"
-              strength={1.5}
-              divCount={3}
-              curve="linear"
-              opacity={0.75}
-              zIndex={950}
-            />
-            <CartDrawer />
-          </CartProvider>
+          <CMSProvider>
+            <CartProvider>
+              <Navbar />
+              <main style={{ minHeight: '80vh', paddingTop: '76px' }}>
+                {children}
+              </main>
+              <Footer />
+              <GradualBlur
+                target="page"
+                position="bottom"
+                height="3.5rem"
+                strength={1.5}
+                divCount={3}
+                curve="linear"
+                opacity={0.75}
+                zIndex={950}
+              />
+              <CartDrawer />
+            </CartProvider>
+          </CMSProvider>
         </SmoothScrollProvider>
       </body>
     </html>

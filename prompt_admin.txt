@@ -1,0 +1,58 @@
+﻿Create a comprehensive, visually stunning, state-of-the-art Next.js React TypeScript client component for the Admin Dashboard of 'Nahari King' (Indore's celebrated slow-cooked Nalli Nihari restaurant).
+
+Target File: src/app/admin/page.tsx
+Use 'use client'; at the top.
+
+AESTHETICS & THEME:
+- Royal Awadhi & Mughal Luxury Dark Palette: Deep charcoal black (#090404, #120607, #18090B), Imperial Gold accents (#D4AF37, #FCE8A6, #9E7D23), Crimson / Maroon glow (#7A0C0E, #360A0E, #EF4444), Emerald green (#10B981) for confirmed / positive statuses.
+- Glassmorphism, smooth gradients, sleek cards, glowing KPI badges, luxury micro-interactions.
+- Fully responsive on mobile, tablet, and desktop with a clean sidebar or navigation tabs.
+
+CORE SECTIONS & FEATURES:
+1. SECURE PIN / PASSWORD LOGIN GATE:
+   - If not authenticated, show a sleek royal login modal / card with PIN / Passcode input (Default passcode: 'nahari786' or 'admin123', with a helper hint).
+   - 'Remember session' toggle using localStorage.
+   - Logout button in dashboard header.
+
+2. HEADER & REAL-TIME STATS TICKER:
+   - Restaurant Name: 'The Nahari King — Royal Kitchen Terminal & Management'
+   - Status badge: 'Kitchen Live • Deghs Active'
+   - Today's date, active shift indicator (Morning Fajr / Lunch / Midnight Nihari).
+   - Quick actions: 'Simulate Live Order', 'Export CSV', 'Reset Data'.
+
+3. KPI OVERVIEW METRIC CARDS:
+   - Today's Gross Revenue (₹42,850 + growth %)
+   - Total Orders Today (84 orders • 6 pending)
+   - Table Reservations (18 booked • 4 VIP Majlis)
+   - Degh Inventory Stock (Nalli Marrow Shanks: 24 left, Mutton Paye: 14 bowls, Biryani: 8 handis)
+
+4. LIVE ORDERS & KITCHEN DISPLAY (KDS) TAB:
+   - List of orders with Order ID, Guest name/phone, items (e.g., 'Nahari King Special Nalli Nihari', 'Old Delhi Khamiri Roti', 'Mutton Dum Biryani'), portions, spice level, total amount, payment method (Cash / UPI / Online), timestamp.
+   - Statuses: 'Cooking in Degh', 'Ready for Pickup', 'Out for Delivery', 'Completed', 'Cancelled'.
+   - Ability to change status with 1-click dropdown or buttons.
+   - Filter by status ('All', 'Pending', 'Cooking', 'Completed').
+   - Search orders by customer name or Order ID.
+   - Ability to add a new custom order manually with item picker and price calculation.
+
+5. TABLE RESERVATIONS MANAGEMENT TAB:
+   - List of guest bookings with Pass ID, Guest Name, Contact, Date, Time Slot, Guests count, Seating Type ('Traditional Diwan', 'Royal Dining Table', 'Shahi Majlis VIP'), Status ('Confirmed', 'Seated', 'Completed', 'Cancelled').
+   - Quick WhatsApp notification button (https://wa.me/...) to message the guest with 1-click confirmation text.
+   - Filter by date / seating type.
+   - Form to add a manual walk-in / VIP reservation.
+
+6. MENU INVENTORY & TOGGLE AVAILABILITY TAB:
+   - List all dishes from restaurantData with thumbnail, price, category, tag.
+   - Switch toggle: 'In Stock' / 'Sold Out' (e.g., when Nalli shanks run out for the day).
+   - Quick price update and stock status persisted to localStorage.
+
+7. REVIEWS & FEEDBACK MODERATION TAB:
+   - Customer ratings, review quotes, dish recommended.
+   - 'Approve / Feature on Homepage' toggle.
+
+TECHNICAL REQUIREMENTS:
+- TypeScript without any missing types or 'any' errors.
+- Self-contained styled JSX or CSS matching the site theme.
+- Persist state to localStorage with rich mock seed data so it is interactive and usable immediately.
+- Clean Next.js 15 App router compatible.
+- Include icons using Unicode emojis or SVG.
+- Output ONLY the complete, ready-to-run TypeScript code without markdown fences.
