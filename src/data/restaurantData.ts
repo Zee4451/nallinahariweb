@@ -44,7 +44,7 @@ export const MENU_ITEMS: MenuItem[] = [
     isSignature: true,
     spiceLevel: 'zesty',
     cookTimeHours: 10,
-    image: 'https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=800&q=80',
+    image: '/images/dishes/special-nalli-nihari.jpg',
     portionSizes: [
       { name: 'Half Nalli Nihari (1 Shank + Marrow)', price: 340, serves: '1 Person' },
       { name: 'Full King Nalli Nihari (2 ShOption)', price: 620, serves: '2 Persons' },
@@ -62,10 +62,44 @@ export const MENU_ITEMS: MenuItem[] = [
     isSignature: true,
     spiceLevel: 'classic',
     cookTimeHours: 12,
-    image: 'https://images.unsplash.com/photo-1541832676-9b763b0239ab?auto=format&fit=crop&w=800&q=80',
+    image: '/images/dishes/mutton-paye-nihari.jpg',
     portionSizes: [
       { name: 'Half Bowl (2 Paye)', price: 300, serves: '1 Person' },
       { name: 'Full Bowl (4 Paye)', price: 560, serves: '2 Persons' }
+    ]
+  },
+  {
+    id: 'shahi-mutton-korma-curry',
+    name: 'Purani Delhi Shahi Mutton Korma',
+    urduName: 'شاہی مٹن قورمہ',
+    description: 'Tender baby mutton simmered in a velvety golden-brown fried onion paste, yogurt, and aromatic nutmeg-mace roghan gravy.',
+    price: 320,
+    category: 'nihari',
+    tag: 'Chef Special',
+    isSignature: true,
+    spiceLevel: 'classic',
+    cookTimeHours: 4,
+    image: '/images/dishes/mutton-curry-korma.jpg',
+    portionSizes: [
+      { name: 'Half Bowl (2 Pcs)', price: 320, serves: '1 Person' },
+      { name: 'Full Bowl (4 Pcs)', price: 590, serves: '2 Persons' }
+    ]
+  },
+  {
+    id: 'royal-butter-mutton',
+    name: 'Royal Butter Mutton Gravy',
+    urduName: 'رائل بٹر مٹن گریوی',
+    description: 'Succulent slow-braised mutton finished with pure butter, fresh cream, roasted fenugreek (kasuri methi), served best with layered parathas.',
+    price: 350,
+    category: 'nihari',
+    tag: 'Rich & Creamy',
+    isSignature: true,
+    spiceLevel: 'mild',
+    cookTimeHours: 4,
+    image: '/images/dishes/butter-mutton-gravy.jpg',
+    portionSizes: [
+      { name: 'Half Plate (2 Pcs)', price: 350, serves: '1 Person' },
+      { name: 'Full Plate (4 Pcs)', price: 640, serves: '2 Persons' }
     ]
   },
   {
@@ -130,15 +164,15 @@ export const MENU_ITEMS: MenuItem[] = [
   // --- BIRYANI & RICE ---
   {
     id: 'nalli-dum-biryani',
-    name: 'Nahari King Nalli Dum Biryani',
-    urduName: 'نلی دم بریانی',
-    description: 'Long-grain fragrant basmati rice layered with slow-cooked spiced mutton, topped with whole marrow bone shank.',
+    name: 'Nahari King Mutton Dum Biryani',
+    urduName: 'مٹن دم بریانی',
+    description: 'Long-grain fragrant basmati rice layered with slow-cooked spiced succulent mutton, topped with whole marrow bone and fresh mint.',
     price: 360,
     category: 'biryani',
-    tag: 'Marrow Dum',
+    tag: 'Mutton Dum Special',
     isSignature: true,
     spiceLevel: 'classic',
-    image: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0?auto=format&fit=crop&w=800&q=80',
+    image: '/images/dishes/mutton-dum-biryani.jpg',
     portionSizes: [
       { name: 'Half Handi', price: 360, serves: '1-2 Persons' },
       { name: 'Full Handi Platter', price: 650, serves: '2-3 Persons' }

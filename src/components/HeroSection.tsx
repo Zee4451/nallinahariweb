@@ -100,8 +100,7 @@ const DISH_DEFINITIONS: readonly DishDefinition[] = [
     keywords: ['special nalli nihari', 'nalli nihari', 'nalli-nihari', 'nihari'],
     fallbackDescription:
       'Tender shank and velvety overnight-spiced gravy, finished for a slow, satisfying bite.',
-    fallbackImage:
-      'https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?auto=format&fit=crop&w=1000&q=88',
+    fallbackImage: '/images/dishes/special-nalli-nihari.jpg',
   },
   {
     slug: 'mutton-paye',
@@ -111,8 +110,7 @@ const DISH_DEFINITIONS: readonly DishDefinition[] = [
     keywords: ['mutton paye', 'mutton paya', 'paye', 'paya'],
     fallbackDescription:
       'Melt-away mutton simmered in a silky spice broth, made for slow mornings and big appetites.',
-    fallbackImage:
-      'https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=1000&q=88',
+    fallbackImage: '/images/dishes/mutton-paye-nihari.jpg',
   },
   {
     slug: 'viral-thaal',
