@@ -1390,6 +1390,9 @@ export default function AdminDashboardPage() {
     setLoginError("");
     setPin("");
     setIsAuthenticated(true);
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
     notify("Royal kitchen terminal unlocked");
   }
 
@@ -1917,7 +1920,12 @@ export default function AdminDashboardPage() {
                 key={item.id}
                 type="button"
                 className={`nav-item ${activeTab === item.id ? "active" : ""}`}
-                onClick={() => setActiveTab(item.id)}
+                onClick={() => {
+                  setActiveTab(item.id);
+                  if (typeof window !== "undefined") {
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                  }
+                }}
                 aria-pressed={activeTab === item.id}
               >
                 <span className="nav-icon" aria-hidden="true">
@@ -3000,8 +3008,7 @@ export default function AdminDashboardPage() {
                 />
               </div>
               <p id="passcode-hint" className="login-hint">
-                Kitchen hint: <strong>nahari786</strong> • backup:{" "}
-                <strong>admin123</strong>
+                Private terminal • Authorized staff credentials only
               </p>
 
               <label className="session-row">
@@ -6329,7 +6336,8 @@ export default function AdminDashboardPage() {
           }
 
           .reservation-grid,
-          .menu-grid {
+          .menu-grid,
+          .order-grid {
             grid-template-columns: repeat(2, minmax(0, 1fr));
           }
         }
