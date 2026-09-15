@@ -5947,6 +5947,8 @@ export default function AdminDashboardPage() {
 
         .modal {
           width: min(100%, 760px);
+          max-height: calc(100vh - 40px);
+          overflow-y: auto;
           margin: auto;
           border: 1px solid rgba(212, 175, 55, 0.28);
           border-radius: 21px;
@@ -5956,12 +5958,6 @@ export default function AdminDashboardPage() {
             0 35px 110px rgba(0, 0, 0, 0.6),
             0 0 50px rgba(122, 12, 14, 0.12);
           animation: modalIn 0.35s cubic-bezier(0.2, 0.8, 0.2, 1) both;
-        }
-
-        .order-modal,
-        .reservation-modal {
-          max-height: calc(100vh - 40px);
-          overflow-y: auto;
         }
 
         .modal-header {
@@ -6430,7 +6426,9 @@ export default function AdminDashboardPage() {
           }
 
           .inventory-heading-stats {
-            display: none;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            width: 100%;
           }
         }
 
