@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import {
@@ -8,6 +8,7 @@ import {
   TIME_SLOTS as DEFAULT_TIME_SLOTS
 } from '@/data/restaurantData';
 import type { MenuItem, Review } from '@/types/restaurant';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export interface ViralOfferData {
   tag: string;
@@ -83,6 +84,34 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
       // ignore
     }
 
+    // Hydrate from Cloud Database (Supabase) if configured
+    if (isSupabaseConfigured && supabase) {
+      supabase
+        .from('site_cms')
+        .select('data')
+        .eq('id', 'live_content')
+        .single()
+        .then(
+          ({ data, error }) => {
+            if (!error && data?.data) {
+              const cloud = data.data as CMSState;
+              setState((prev) => ({
+                ...prev,
+                menuItems: Array.isArray(cloud.menuItems) ? cloud.menuItems : prev.menuItems,
+                restaurantInfo: cloud.restaurantInfo ? { ...prev.restaurantInfo, ...cloud.restaurantInfo } : prev.restaurantInfo,
+                reviews: Array.isArray(cloud.reviews) ? cloud.reviews : prev.reviews,
+                viralOffer: cloud.viralOffer ? { ...prev.viralOffer, ...cloud.viralOffer } : prev.viralOffer,
+                timeSlots: Array.isArray(cloud.timeSlots) ? cloud.timeSlots : prev.timeSlots
+              }));
+              try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(cloud));
+              } catch {}
+            }
+          },
+          () => {}
+        );
+    }
+
     // Cross-tab sync listener
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === STORAGE_KEY && e.newValue) {
@@ -110,12 +139,24 @@ export function CMSProvider({ children }: { children: React.ReactNode }) {
     };
   }, []);
 
-  // Sync to localStorage
+  // Sync to localStorage & Cloud Database
   const saveState = useCallback((newState: CMSState) => {
     setState(newState);
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(newState));
       window.dispatchEvent(new CustomEvent(CMS_SYNC_EVENT, { detail: newState }));
+
+      if (isSupabaseConfigured && supabase) {
+        supabase
+          .from('site_cms')
+          .upsert([{ id: 'live_content', data: newState, updated_at: new Date().toISOString() }])
+          .then(
+            ({ error }) => {
+              if (error) console.warn('Supabase CMS upsert error:', error.message);
+            },
+            () => {}
+          );
+      }
     } catch {
       // ignore
     }

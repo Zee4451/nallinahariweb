@@ -162,6 +162,16 @@ export default function ContactPage() {
           box-shadow: 0 8px 24px rgba(0,0,0,0.5);
         }
 
+        .map-embed-wrapper {
+          width: 100%;
+          height: clamp(280px, 42vw, 420px);
+          border-radius: 12px;
+          overflow: hidden;
+          border: 1px solid rgba(212, 175, 55, 0.35);
+          box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+          margin-bottom: 24px;
+        }
+
         .maps-btn {
           display: inline-flex;
           align-items: center;
@@ -381,17 +391,31 @@ export default function ContactPage() {
           </div>
         </div>
 
-        {/* Google Maps Directions Card */}
+        {/* Google Maps Interactive Embed & Directions Card */}
         <div className="maps-card">
           <span style={{ fontSize: '0.78rem', color: '#D4AF37', textTransform: 'uppercase', letterSpacing: '0.15em', display: 'block' }}>
-            Khajrana Navigation
+            Khajrana Live Location
           </span>
           <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: 'clamp(1.4rem, 3.5vw, 1.7rem)', color: '#FAF7F2', marginTop: '6px', marginBottom: '10px' }}>
-            Reach Nahari King Khajrana
+            Find {RESTAURANT_INFO.name} on Map
           </h3>
           <p style={{ color: '#A89F93', fontSize: '0.92rem', maxWidth: '650px', margin: '0 auto 20px', lineHeight: 1.6 }}>
             Opposite Dargah Gate 2, Chota Gate, 56 Kadar Colony, Dargah Pakiza Road, Khajrana, Indore.
           </p>
+
+          {/* Interactive Google Map with Exact Nahari King Pin Marker */}
+          <div className="map-embed-wrapper">
+            <iframe
+              title="Nahari King Khajrana Indore Interactive Map"
+              src="https://maps.google.com/maps?q=Nahari+King,+Chota+Gate,+56+Kadar+Colony,+Opp.+Dargah+Gate+2,+Khajrana,+Indore&t=&z=17&ie=UTF8&iwloc=B&output=embed"
+              width="100%"
+              height="100%"
+              style={{ border: 0, display: 'block' }}
+              allowFullScreen={true}
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
+          </div>
 
           <a
             href="https://maps.google.com/?q=Nahari+King+Khajrana+Indore"
@@ -399,7 +423,7 @@ export default function ContactPage() {
             rel="noopener noreferrer"
             className="maps-btn"
           >
-            <span>🗺️ Open in Google Maps (Directions)</span>
+            <span>🗺️ Open in Google Maps App (Directions)</span>
           </a>
         </div>
       </div>

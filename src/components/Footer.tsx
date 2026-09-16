@@ -101,41 +101,73 @@ export default function Footer() {
           </ul>
         </div>
 
-        {/* Contact info */}
+        {/* Contact info & Map Preview */}
         <div>
           <h4 style={{ fontFamily: 'var(--font-serif)', color: '#FAF7F2', fontSize: '1.1rem', marginBottom: '16px' }}>
-            Contact & Location
+            Location & Map
           </h4>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.88rem', color: '#9E9489' }}>
-            <p>📍 {RESTAURANT_INFO.address}</p>
-            <p>📞 Phone: <strong style={{ color: '#FAF7F2' }}>{RESTAURANT_INFO.phone}</strong></p>
-            <div style={{ display: 'flex', gap: '10px', marginTop: '8px' }}>
+            <p style={{ lineHeight: 1.5 }}>📍 {RESTAURANT_INFO.address}</p>
+            <p>📞 Concierge: <strong style={{ color: '#FAF7F2' }}>{RESTAURANT_INFO.phone}</strong></p>
+
+            {/* Embedded Live Google Map */}
+            <div style={{
+              width: '100%',
+              height: '140px',
+              borderRadius: '10px',
+              overflow: 'hidden',
+              border: '1px solid rgba(212, 175, 55, 0.35)',
+              boxShadow: '0 4px 16px rgba(0,0,0,0.5)',
+              marginTop: '4px',
+              position: 'relative'
+            }}>
+              <iframe
+                title="Nahari King Khajrana Indore Map"
+                src="https://maps.google.com/maps?q=Nahari+King,+Chota+Gate,+56+Kadar+Colony,+Opp.+Dargah+Gate+2,+Khajrana,+Indore&t=&z=17&ie=UTF8&iwloc=B&output=embed"
+                width="100%"
+                height="100%"
+                style={{ border: 0, filter: 'contrast(1.05) saturate(1.1)' }}
+                allowFullScreen={false}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px', marginTop: '6px' }}>
               <a
-                href={`tel:${RESTAURANT_INFO.phone}`}
+                href="https://maps.google.com/?q=Nahari+King+Khajrana+Indore"
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{
-                  padding: '8px 16px',
-                  background: 'rgba(255,255,255,0.06)',
-                  border: '1px solid rgba(212,175,55,0.3)',
-                  color: '#FAF7F2',
+                  flex: 1,
+                  textAlign: 'center',
+                  padding: '8px 12px',
+                  background: 'linear-gradient(135deg, rgba(212,175,55,0.2) 0%, rgba(212,175,55,0.05) 100%)',
+                  border: '1px solid rgba(212,175,55,0.4)',
+                  color: '#FCE8A6',
                   borderRadius: '6px',
-                  fontWeight: 600,
-                  fontSize: '0.82rem'
+                  fontWeight: 700,
+                  fontSize: '0.8rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '6px'
                 }}
               >
-                Call Now
+                🗺️ Directions
               </a>
               <a
                 href={`https://wa.me/${RESTAURANT_INFO.whatsapp}?text=Hello%20Nahari%20King%20Indore`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{
-                  padding: '8px 16px',
+                  padding: '8px 14px',
                   background: 'rgba(37, 211, 102, 0.15)',
                   border: '1px solid rgba(37, 211, 102, 0.4)',
                   color: '#25D366',
                   borderRadius: '6px',
                   fontWeight: 600,
-                  fontSize: '0.82rem'
+                  fontSize: '0.8rem'
                 }}
               >
                 WhatsApp

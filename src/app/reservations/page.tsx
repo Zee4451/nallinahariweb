@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { TIME_SLOTS as DEFAULT_TIME_SLOTS, RESTAURANT_INFO as DEFAULT_RESTAURANT_INFO } from '@/data/restaurantData';
 import { useCMS } from '@/components/CMSContext';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 type SeatingType = 'diwan' | 'table' | 'majlis';
 
@@ -87,23 +88,56 @@ export default function ReservationsPage() {
 
     // Save to admin dashboard reservations in localStorage
     try {
-      const DATA_STORAGE_KEY = 'nahari-king-admin-data-v1';
+      const DATA_STORAGE_KEY = 'nahari-king-admin-data-v2';
       const existing = localStorage.getItem(DATA_STORAGE_KEY);
-      if (existing) {
-        const parsed = JSON.parse(existing);
-        const newBooking = {
-          id: pass.id,
-          guestName: pass.fullName,
-          contact: phone,
-          date: pass.date,
-          timeSlot: pass.timeSlot,
-          guests: pass.guests,
-          seatingType: pass.seatingType === 'Shahi Majlis (Private Chamber)' ? 'Shahi Majlis VIP' : pass.seatingType === 'Royal Dining Table' ? 'Royal Dining Table' : 'Traditional Diwan',
-          status: 'Confirmed',
-          notes: pass.specialRequests || 'Website online booking'
+      let parsed = existing ? JSON.parse(existing) : null;
+      if (!parsed) {
+        parsed = {
+          version: 1,
+          orders: [],
+          dailyStats: { grossRevenue: 0, totalOrders: 0, pendingOrders: 0, previousRevenue: 0 },
+          menu: [],
+          reservations: [],
+          reviews: []
         };
-        parsed.reservations = [newBooking, ...(parsed.reservations || [])];
-        localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(parsed));
+      }
+
+      const newBooking = {
+        id: pass.id,
+        guestName: pass.fullName,
+        contact: phone,
+        date: pass.date,
+        timeSlot: pass.timeSlot,
+        guests: pass.guests,
+        seatingType: pass.seatingType === 'Shahi Majlis (Private Chamber)' ? 'Shahi Majlis VIP' : pass.seatingType === 'Royal Dining Table' ? 'Royal Dining Table' : 'Traditional Diwan',
+        status: 'Confirmed' as const,
+        notes: pass.specialRequests || 'Website online booking'
+      };
+      parsed.reservations = [newBooking, ...(parsed.reservations || [])];
+      localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(parsed));
+      window.dispatchEvent(new Event('storage'));
+
+      // Cloud Database Sync: Push to Supabase if configured
+      if (isSupabaseConfigured && supabase) {
+        supabase
+          .from('web_reservations')
+          .insert([{
+            id: newBooking.id,
+            guest_name: newBooking.guestName,
+            contact: newBooking.contact,
+            date: newBooking.date,
+            time_slot: newBooking.timeSlot,
+            guests: newBooking.guests,
+            seating_type: newBooking.seatingType,
+            status: newBooking.status,
+            notes: newBooking.notes
+          }])
+          .then(
+            ({ error }) => {
+              if (error) console.warn('Supabase reservation insert error:', error.message);
+            },
+            () => {}
+          );
       }
     } catch {
       // ignore

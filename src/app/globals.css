@@ -46,6 +46,15 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+*::selection,
+input::selection,
+textarea::selection,
+::selection {
+  background: rgba(212, 175, 55, 0.45);
+  color: #FFFDF9;
 }
 
 html,

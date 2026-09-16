@@ -4,6 +4,7 @@ import React from 'react';
 import { useCart } from '@/components/CartContext';
 import { useCMS } from '@/components/CMSContext';
 import { RESTAURANT_INFO as DEFAULT_RESTAURANT_INFO } from '@/data/restaurantData';
+import { supabase, isSupabaseConfigured } from '@/lib/supabase';
 
 export default function CartDrawer() {
   const { cart, isCartOpen, setIsCartOpen, clearCart, updateQuantity, cartTotal, totalCount } = useCart();
@@ -17,38 +18,71 @@ export default function CartDrawer() {
 
     const orderId = `NK-${Math.floor(100000 + Math.random() * 900000)}`;
 
-    // Push order into Admin Dashboard KDS in localStorage
+    // Push order into Admin Dashboard in localStorage
     try {
-      const DATA_STORAGE_KEY = 'nahari-king-admin-data-v1';
+      const DATA_STORAGE_KEY = 'nahari-king-admin-data-v2';
       const existing = localStorage.getItem(DATA_STORAGE_KEY);
-      if (existing) {
-        const parsed = JSON.parse(existing);
-        const newOrder = {
-          id: orderId,
-          customerName: 'Online Web Guest',
-          phone: '+91 WhatsApp Order',
-          items: cart.map((ci, idx) => ({
-            id: `item-${Date.now()}-${idx}`,
-            menuItemId: ci.item.id,
-            name: ci.item.name,
-            quantity: ci.quantity,
-            unitPrice: ci.selectedPortion ? ci.selectedPortion.price : ci.item.price,
-            portion: (ci.selectedPortion?.name || 'Single Serving') as any,
-            spiceLevel: (ci.selectedSpice || 'Medium') as any
-          })),
-          totalAmount: cartTotal,
-          paymentMethod: 'UPI' as const,
-          status: 'Cooking in Degh' as const,
-          createdAt: new Date().toISOString(),
-          notes: 'Customer online order via website Dastarkhwan Cart'
+      let parsed = existing ? JSON.parse(existing) : null;
+      if (!parsed) {
+        parsed = {
+          version: 1,
+          orders: [],
+          dailyStats: { grossRevenue: 0, totalOrders: 0, pendingOrders: 0, previousRevenue: 0 },
+          menu: [],
+          reservations: [],
+          reviews: []
         };
+      }
 
-        parsed.orders = [newOrder, ...(parsed.orders || [])];
-        if (parsed.dailyStats) {
-          parsed.dailyStats.grossRevenue = (parsed.dailyStats.grossRevenue || 0) + cartTotal;
-          parsed.dailyStats.totalOrders = (parsed.dailyStats.totalOrders || 0) + 1;
-        }
-        localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(parsed));
+      const newOrder = {
+        id: orderId,
+        customerName: 'Online Web Guest',
+        phone: '+91 WhatsApp Order',
+        items: cart.map((ci, idx) => ({
+          id: `item-${Date.now()}-${idx}`,
+          menuItemId: ci.item.id,
+          name: ci.item.name,
+          quantity: ci.quantity,
+          unitPrice: ci.selectedPortion ? ci.selectedPortion.price : ci.item.price,
+          portion: (ci.selectedPortion?.name || 'Single Serving') as any,
+          spiceLevel: (ci.selectedSpice || 'Medium') as any
+        })),
+        totalAmount: cartTotal,
+        paymentMethod: 'UPI' as const,
+        status: 'Pending' as const,
+        createdAt: new Date().toISOString(),
+        notes: 'Website Dastarkhwan Cart order'
+      };
+
+      parsed.orders = [newOrder, ...(parsed.orders || [])];
+      if (parsed.dailyStats) {
+        parsed.dailyStats.grossRevenue = (parsed.dailyStats.grossRevenue || 0) + cartTotal;
+        parsed.dailyStats.totalOrders = (parsed.dailyStats.totalOrders || 0) + 1;
+        parsed.dailyStats.pendingOrders = (parsed.dailyStats.pendingOrders || 0) + 1;
+      }
+      localStorage.setItem(DATA_STORAGE_KEY, JSON.stringify(parsed));
+      window.dispatchEvent(new Event('storage'));
+
+      // Cloud Database Sync: Push to Supabase if configured
+      if (isSupabaseConfigured && supabase) {
+        supabase
+          .from('web_orders')
+          .insert([{
+            id: orderId,
+            customer_name: newOrder.customerName,
+            phone: newOrder.phone,
+            items: newOrder.items,
+            total_amount: newOrder.totalAmount,
+            payment_method: newOrder.paymentMethod,
+            status: newOrder.status,
+            notes: newOrder.notes
+          }])
+          .then(
+            ({ error }) => {
+              if (error) console.warn('Supabase order insert error:', error.message);
+            },
+            () => {}
+          );
       }
     } catch {
       // ignore

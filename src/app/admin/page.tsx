@@ -9,11 +9,15 @@ import {
   type FormEvent,
 } from "react";
 import { useCMS } from "@/components/CMSContext";
+import { driver } from "driver.js";
+import "driver.js/dist/driver.css";
 import {
   MENU_ITEMS as DEFAULT_MENU_ITEMS,
   RESTAURANT_INFO as DEFAULT_RESTAURANT_INFO,
+  REVIEWS as DEFAULT_REVIEWS,
 } from "@/data/restaurantData";
-import type { MenuItem as GlobalMenuItem } from "@/types/restaurant";
+import type { MenuItem as GlobalMenuItem, Review as GlobalReview } from "@/types/restaurant";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 type OrderStatus =
   | "Pending"
@@ -145,7 +149,7 @@ interface ReservationDraft {
 type SeedItemSpec = readonly [string, number, Portion, SpiceLevel];
 
 const SESSION_STORAGE_KEY = "nahari-king-admin-session";
-const DATA_STORAGE_KEY = "nahari-king-admin-data-v1";
+const DATA_STORAGE_KEY = "nahari-king-admin-data-v2";
 
 const restaurantData: { menu: MenuItem[] } = {
   menu: [
@@ -498,7 +502,18 @@ function loadAdminData(): AdminData | null {
       dailyStats: dailyStats as unknown as DailyStats,
       menu: parsed.menu as MenuItem[],
       reservations: parsed.reservations as Reservation[],
-      reviews: parsed.reviews as Review[],
+      reviews: (parsed.reviews as Review[]).length > 0
+        ? (parsed.reviews as Review[])
+        : DEFAULT_REVIEWS.map((r) => ({
+            id: r.id,
+            customer: r.author,
+            rating: r.rating,
+            quote: r.quote,
+            dish: r.dishRecommended,
+            date: r.date,
+            approved: true,
+            featured: true,
+          })),
     };
   } catch {
     return null;
@@ -600,491 +615,27 @@ function makeSeedReview(
 }
 
 function seedAdminData(): AdminData {
-  const orders: Order[] = [
-    makeSeedOrder(
-      "NK-240601",
-      "Aariz Khan",
-      "+91 98765 43210",
-      "Cooking in Degh",
-      "UPI",
-      minutesAgo(7),
-      [
-        ["NK-001", 2, "Single Bowl", "Royal Hot"],
-        ["NK-004", 4, "Plate", "Mild"],
-      ],
-      "Gate no. 3 delivery",
-    ),
-    makeSeedOrder(
-      "NK-240602",
-      "Meher Fatima",
-      "+91 98220 11445",
-      "Pending",
-      "Online",
-      minutesAgo(11),
-      [["NK-003", 1, "Handi", "Medium"]],
-    ),
-    makeSeedOrder(
-      "NK-240603",
-      "Danish Qureshi",
-      "+91 77380 99112",
-      "Ready for Pickup",
-      "Cash",
-      minutesAgo(16),
-      [
-        ["NK-002", 2, "Single Bowl", "Extra Hot"],
-        ["NK-008", 2, "Plate", "Mild"],
-      ],
-    ),
-    makeSeedOrder(
-      "NK-240604",
-      "Sanjana Patel",
-      "+91 90991 22778",
-      "Out for Delivery",
-      "UPI",
-      minutesAgo(24),
-      [["NK-001", 1, "Half Degh", "Medium"]],
-      "Call before arrival",
-    ),
-    makeSeedOrder(
-      "NK-240605",
-      "Arman Siddiqui",
-      "+91 95100 66234",
-      "Completed",
-      "Online",
-      minutesAgo(31),
-      [
-        ["NK-003", 2, "Handi", "Royal Hot"],
-        ["NK-011", 2, "Glass", "Mild"],
-      ],
-    ),
-    makeSeedOrder(
-      "NK-240606",
-      "Ruhi Verma",
-      "+91 81410 55091",
-      "Pending",
-      "UPI",
-      minutesAgo(36),
-      [["NK-007", 2, "Plate", "Medium"]],
-    ),
-    makeSeedOrder(
-      "NK-240607",
-      "Kabir Malhotra",
-      "+91 99988 10203",
-      "Cooking in Degh",
-      "Cash",
-      minutesAgo(43),
-      [
-        ["NK-001", 1, "Full Degh", "Extra Hot"],
-        ["NK-005", 6, "Plate", "Mild"],
-      ],
-      "Family celebration",
-    ),
-    makeSeedOrder(
-      "NK-240608",
-      "Nisha Gupta",
-      "+91 93277 88120",
-      "Completed",
-      "Online",
-      minutesAgo(52),
-      [
-        ["NK-010", 2, "Single Serving", "Mild"],
-        ["NK-012", 6, "Single Serving", "Mild"],
-      ],
-    ),
-    makeSeedOrder(
-      "NK-240609",
-      "Farhan Ali",
-      "+91 70655 44129",
-      "Pending",
-      "Cash",
-      minutesAgo(59),
-      [["NK-001", 3, "Single Bowl", "Royal Hot"]],
-    ),
-    makeSeedOrder(
-      "NK-240610",
-      "Aditi Joshi",
-      "+91 86520 31044",
-      "Out for Delivery",
-      "UPI",
-      minutesAgo(67),
-      [["NK-003", 1, "Handi", "Medium"]],
-      "No onion garnish",
-    ),
-    makeSeedOrder(
-      "NK-240611",
-      "Zoya Ahmed",
-      "+91 91730 82011",
-      "Cooking in Degh",
-      "Online",
-      minutesAgo(74),
-      [
-        ["NK-002", 3, "Single Bowl", "Royal Hot"],
-        ["NK-004", 6, "Plate", "Mild"],
-      ],
-    ),
-    makeSeedOrder(
-      "NK-240612",
-      "Rohan Singh",
-      "+91 94066 77182",
-      "Completed",
-      "Cash",
-      minutesAgo(83),
-      [
-        ["NK-008", 4, "Plate", "Mild"],
-        ["NK-011", 2, "Glass", "Mild"],
-      ],
-    ),
-    makeSeedOrder(
-      "NK-240613",
-      "Ishaan Chauhan",
-      "+91 96690 20314",
-      "Pending",
-      "UPI",
-      minutesAgo(91),
-      [["NK-006", 2, "Single Bowl", "Extra Hot"]],
-    ),
-    makeSeedOrder(
-      "NK-240614",
-      "Maryam Sheikh",
-      "+91 95899 41023",
-      "Ready for Pickup",
-      "Online",
-      minutesAgo(99),
-      [["NK-003", 2, "Handi", "Royal Hot"]],
-    ),
-    makeSeedOrder(
-      "NK-240615",
-      "Vikram Rathore",
-      "+91 80055 61290",
-      "Completed",
-      "Cash",
-      minutesAgo(111),
-      [["NK-001", 1, "Half Degh", "Medium"]],
-    ),
-    makeSeedOrder(
-      "NK-240616",
-      "Pooja Mehta",
-      "+91 92244 78012",
-      "Pending",
-      "UPI",
-      minutesAgo(119),
-      [
-        ["NK-009", 2, "Single Serving", "Mild"],
-        ["NK-012", 4, "Single Serving", "Mild"],
-      ],
-    ),
-    makeSeedOrder(
-      "NK-240617",
-      "Omar Qureshi",
-      "+91 97720 14556",
-      "Cooking in Degh",
-      "Cash",
-      minutesAgo(132),
-      [
-        ["NK-001", 4, "Single Bowl", "Royal Hot"],
-        ["NK-004", 8, "Plate", "Mild"],
-      ],
-      "Bulk family order",
-    ),
-    makeSeedOrder(
-      "NK-240618",
-      "Ananya Bose",
-      "+91 82910 56734",
-      "Pending",
-      "Online",
-      minutesAgo(144),
-      [["NK-003", 1, "Handi", "Medium"]],
-    ),
-  ];
-
-  const reservations: Reservation[] = [
-    makeSeedReservation(
-      "RKV-0701",
-      "Anaya Khan",
-      "+91 98765 10101",
-      "19:30",
-      4,
-      "Shahi Majlis VIP",
-      "Confirmed",
-      "Window majlis; anniversary cake allowed",
-    ),
-    makeSeedReservation(
-      "RKV-0702",
-      "Rohit Sharma",
-      "+91 98220 20202",
-      "13:00",
-      2,
-      "Traditional Diwan",
-      "Confirmed",
-    ),
-    makeSeedReservation(
-      "RKV-0703",
-      "Zainab Ali",
-      "+91 77380 30303",
-      "20:00",
-      6,
-      "Royal Dining Table",
-      "Seated",
-      "One child seat",
-    ),
-    makeSeedReservation(
-      "RKV-0704",
-      "Michael Dsouza",
-      "+91 90991 40404",
-      "13:30",
-      3,
-      "Traditional Diwan",
-      "Confirmed",
-    ),
-    makeSeedReservation(
-      "RKV-0705",
-      "Ayesha Siddiqui",
-      "+91 95100 50505",
-      "21:00",
-      5,
-      "Royal Dining Table",
-      "Confirmed",
-      "Prefers low-spice nihari",
-    ),
-    makeSeedReservation(
-      "RKV-0706",
-      "Rajput Family",
-      "+91 81410 60606",
-      "19:00",
-      10,
-      "Shahi Majlis VIP",
-      "Confirmed",
-      "VIP host: Mahendra Singh",
-    ),
-    makeSeedReservation(
-      "RKV-0707",
-      "Meera Jain",
-      "+91 99988 70707",
-      "14:00",
-      2,
-      "Traditional Diwan",
-      "Completed",
-    ),
-    makeSeedReservation(
-      "RKV-0708",
-      "Saif Qureshi",
-      "+91 93277 80808",
-      "20:30",
-      8,
-      "Royal Dining Table",
-      "Seated",
-    ),
-    makeSeedReservation(
-      "RKV-0709",
-      "Priya Nair",
-      "+91 70655 90909",
-      "13:15",
-      4,
-      "Traditional Diwan",
-      "Confirmed",
-    ),
-    makeSeedReservation(
-      "RKV-0710",
-      "Arjun Verma",
-      "+91 86520 12121",
-      "21:30",
-      2,
-      "Traditional Diwan",
-      "Cancelled",
-      "Guest cancelled by phone",
-    ),
-    makeSeedReservation(
-      "RKV-0711",
-      "Fatima Trust Delegation",
-      "+91 91730 23232",
-      "18:30",
-      14,
-      "Shahi Majlis VIP",
-      "Confirmed",
-      "Separate billing requested",
-    ),
-    makeSeedReservation(
-      "RKV-0712",
-      "Nikhil Kapoor",
-      "+91 94066 34343",
-      "19:45",
-      3,
-      "Royal Dining Table",
-      "Confirmed",
-    ),
-    makeSeedReservation(
-      "RKV-0713",
-      "Sana Mir",
-      "+91 96690 45454",
-      "12:45",
-      2,
-      "Traditional Diwan",
-      "Confirmed",
-    ),
-    makeSeedReservation(
-      "RKV-0714",
-      "Vikram Chandra",
-      "+91 80055 56565",
-      "20:15",
-      6,
-      "Royal Dining Table",
-      "Seated",
-    ),
-    makeSeedReservation(
-      "RKV-0715",
-      "Divya Reddy",
-      "+91 86070 67676",
-      "13:45",
-      4,
-      "Traditional Diwan",
-      "Confirmed",
-    ),
-    makeSeedReservation(
-      "RKV-0716",
-      "Al-Falah Group",
-      "+91 97720 78787",
-      "22:00",
-      12,
-      "Shahi Majlis VIP",
-      "Confirmed",
-      "Advance payment received",
-    ),
-    makeSeedReservation(
-      "RKV-0717",
-      "Kavya Shah",
-      "+91 82910 89898",
-      "14:30",
-      2,
-      "Traditional Diwan",
-      "Confirmed",
-    ),
-    makeSeedReservation(
-      "RKV-0718",
-      "Rahul Gupta",
-      "+91 95550 11222",
-      "21:15",
-      5,
-      "Royal Dining Table",
-      "Confirmed",
-      "Birthday note required",
-    ),
-  ];
-
-  const reviews: Review[] = [
-    makeSeedReview(
-      "REV-901",
-      "Ayesha Rahman",
-      5,
-      "The nalli literally left the bone and the gravy stayed warm until midnight. Royal from first spoon to last.",
-      "Nahari King Special Nalli Nihari",
-      1,
-      true,
-      true,
-    ),
-    makeSeedReview(
-      "REV-902",
-      "Rohan Malhotra",
-      5,
-      "Indore's most authentic dum experience. The khamiri roti is the perfect partner for the nihari.",
-      "Old Delhi Khamiri Roti",
-      2,
-      true,
-      true,
-    ),
-    makeSeedReview(
-      "REV-903",
-      "Zoya Khan",
-      5,
-      "The majlis felt like a private court dinner. Impeccable service and the paya was silk-smooth.",
-      "Shahi Mutton Paye",
-      2,
-      true,
-      true,
-    ),
-    makeSeedReview(
-      "REV-904",
-      "Aditya Joshi",
-      4,
-      "Beautiful aromatics, generous marrow and a biryani that deserves its own journey to Indore.",
-      "Mutton Dum Biryani",
-      3,
-      true,
-      false,
-    ),
-    makeSeedReview(
-      "REV-905",
-      "Meher Contractor",
-      5,
-      "The saffron, rose and slow-cooked meat balance is extraordinary. A true royal kitchen.",
-      "Nahari King Special Nalli Nihari",
-      4,
-      true,
-      true,
-    ),
-    makeSeedReview(
-      "REV-906",
-      "Farhan Qureshi",
-      5,
-      "Kakori kebabs melted instantly and the royal hot nigari had exactly the right warmth.",
-      "Kakori Galawat Kebab",
-      5,
-      true,
-      true,
-    ),
-    makeSeedReview(
-      "REV-907",
-      "Naina Verma",
-      4,
-      "Warm hospitality, dramatic ambience and phirni that tastes like an old family recipe.",
-      "Illayachi Phirni",
-      6,
-      true,
-      false,
-    ),
-    makeSeedReview(
-      "REV-908",
-      "Imran Sayed",
-      5,
-      "Worth every minute of the slow cook. The marrow shank is the finest I have had outside Lucknow.",
-      "Nahari King Special Nalli Nihari",
-      7,
-      true,
-      false,
-    ),
-    makeSeedReview(
-      "REV-909",
-      "Sneha Patel",
-      3,
-      "Lovely flavours and service, though the dinner rush made our biryani wait a little longer.",
-      "Mutton Dum Biryani",
-      8,
-      false,
-      false,
-    ),
-    makeSeedReview(
-      "REV-910",
-      "Kabir Rathore",
-      5,
-      "The VIP majlis turned a family dinner into a celebration. Every detail felt considered.",
-      "Shahi Tukda",
-      9,
-      true,
-      false,
-    ),
-  ];
-
   return {
     version: 1,
-    orders,
+    orders: [],
     dailyStats: {
-      grossRevenue: 42_850,
-      totalOrders: 84,
-      pendingOrders: 6,
-      previousRevenue: 39_680,
+      grossRevenue: 0,
+      totalOrders: 0,
+      pendingOrders: 0,
+      previousRevenue: 0,
     },
     menu: restaurantData.menu.map((item) => ({ ...item })),
-    reservations,
-    reviews,
+    reservations: [],
+    reviews: DEFAULT_REVIEWS.map((r) => ({
+      id: r.id,
+      customer: r.author,
+      rating: r.rating,
+      quote: r.quote,
+      dish: r.dishRecommended,
+      date: r.date,
+      approved: true,
+      featured: true,
+    })),
   };
 }
 
@@ -1167,6 +718,9 @@ export default function AdminDashboardPage() {
     deleteDish,
     updateViralOffer,
     updateRestaurantInfo,
+    addReview,
+    updateReview,
+    deleteReview,
     resetToDefaults,
     exportDataJson,
     importDataJson,
@@ -1184,6 +738,14 @@ export default function AdminDashboardPage() {
     tag: "👑 Indore Special",
     image: "/images/dishes/special-nalli-nihari.jpg",
     isSignature: true,
+  });
+
+  const [isAddReviewModalOpen, setIsAddReviewModalOpen] = useState(false);
+  const [newReviewDraft, setNewReviewDraft] = useState({
+    customer: "",
+    rating: 5,
+    quote: "",
+    dish: "Nahari King Special Nalli Nihari",
   });
 
   const [tickerIndex, setTickerIndex] = useState(0);
@@ -1313,11 +875,36 @@ export default function AdminDashboardPage() {
       const nextData = loadedData ?? seedAdminData();
       const nextToday = todayISO();
 
+      const initialReviews =
+        Array.isArray(cmsState.reviews) && cmsState.reviews.length > 0
+          ? cmsState.reviews.map((r) => ({
+              id: r.id,
+              customer: r.author,
+              rating: r.rating,
+              quote: r.quote,
+              dish: r.dishRecommended,
+              date: r.date,
+              approved: true,
+              featured: true,
+            }))
+          : nextData.reviews.length > 0
+            ? nextData.reviews
+            : DEFAULT_REVIEWS.map((r) => ({
+                id: r.id,
+                customer: r.author,
+                rating: r.rating,
+                quote: r.quote,
+                dish: r.dishRecommended,
+                date: r.date,
+                approved: true,
+                featured: true,
+              }));
+
       setOrders(nextData.orders);
       setDailyStats(nextData.dailyStats);
       setMenu(nextData.menu);
       setReservations(nextData.reservations);
-      setReviews(nextData.reviews);
+      setReviews(initialReviews);
       setToday(nextToday);
       setActiveShift(getActiveShift());
       setReservationDateFilter(nextToday);
@@ -1334,6 +921,88 @@ export default function AdminDashboardPage() {
       setReservationDateFilter(todayISO());
       setHasLoaded(true);
     }
+
+    // Cloud Database Hydration (Supabase - Device independent)
+    if (isSupabaseConfigured && supabase) {
+      // 1. Fetch live orders from Supabase
+      supabase
+        .from("web_orders")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .then(({ data: cloudOrders, error: orderErr }) => {
+          if (!orderErr && Array.isArray(cloudOrders) && cloudOrders.length > 0) {
+            const mappedOrders: Order[] = cloudOrders.map((co: any) => {
+              const orderItems = Array.isArray(co.items) ? co.items : [];
+              const orderTotal = orderItems.reduce(
+                (sum: number, it: any) => sum + (Number(it.quantity) || 1) * (Number(it.unitPrice) || 0),
+                0
+              );
+              return {
+                id: co.id,
+                customerName: co.customer_name || "Guest Patron",
+                phone: co.phone || "",
+                createdAt: co.created_at || new Date().toISOString(),
+                status: (co.status as OrderStatus) || "Pending",
+                paymentMethod: (co.payment_method as PaymentMethod) || "UPI",
+                items: orderItems,
+                totalAmount: orderTotal,
+                notes: co.notes || undefined,
+              };
+            });
+            setOrders(mappedOrders);
+            const totalRevenue = mappedOrders.reduce(
+              (sum, o) => sum + o.totalAmount,
+              0
+            );
+            setDailyStats((prev) => ({
+              ...prev,
+              grossRevenue: totalRevenue,
+              totalOrders: mappedOrders.length,
+              pendingOrders: mappedOrders.filter((o) => o.status === "Pending").length,
+            }));
+          }
+        });
+
+      // 2. Fetch live reservations from Supabase
+      supabase
+        .from("web_reservations")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .then(({ data: cloudRes, error: resErr }) => {
+          if (!resErr && Array.isArray(cloudRes) && cloudRes.length > 0) {
+            const mappedReservations: Reservation[] = cloudRes.map((cr: any) => ({
+              id: cr.id,
+              guestName: cr.guest_name,
+              contact: cr.contact,
+              date: cr.date,
+              timeSlot: cr.time_slot,
+              guests: Number(cr.guests) || 2,
+              seatingType: cr.seating_type || "Traditional Diwan",
+              status: cr.status || "Confirmed",
+              notes: cr.notes || undefined,
+            }));
+            setReservations(mappedReservations);
+          }
+        });
+    }
+
+    // Live Cross-tab Sync: updates dashboard immediately when a guest books or orders on website
+    const handleStorageUpdate = (e: Event) => {
+      try {
+        const fresh = loadAdminData();
+        if (fresh) {
+          setOrders(fresh.orders);
+          setDailyStats(fresh.dailyStats);
+          setReservations(fresh.reservations);
+          setReviews(fresh.reviews);
+        }
+      } catch {
+        // ignore
+      }
+    };
+
+    window.addEventListener("storage", handleStorageUpdate);
+    return () => window.removeEventListener("storage", handleStorageUpdate);
   }, []);
 
   useEffect(() => {
@@ -1527,7 +1196,7 @@ export default function AdminDashboardPage() {
   function handleResetData(): void {
     if (
       !window.confirm(
-        "Reset all orders, reservations, inventory and moderation data to the royal demo state?",
+        "Clear all orders and reservations to a fresh clean state?",
       )
     ) {
       return;
@@ -1553,7 +1222,7 @@ export default function AdminDashboardPage() {
     setReservationDraft(createEmptyReservationDraft());
     setOrderFormError("");
     setReservationFormError("");
-    notify("Royal demo data restored");
+    notify("Dashboard cleared to fresh state");
   }
 
   function handleOrderStatusChange(
@@ -1870,23 +1539,140 @@ export default function AdminDashboardPage() {
     if (!review) return;
 
     const nextValue = !(review.approved && review.featured);
-    setReviews((current) =>
-      current.map((item) =>
-        item.id === reviewId
-          ? { ...item, approved: nextValue, featured: nextValue }
-          : item,
-      ),
+    const updatedReviews = reviews.map((item) =>
+      item.id === reviewId
+        ? { ...item, approved: nextValue, featured: nextValue }
+        : item,
     );
+    setReviews(updatedReviews);
+
+    // Sync to Global CMS & Homepage
+    if (nextValue) {
+      // Add or ensure present in CMS
+      const existingInCms = cmsState.reviews.some((r) => r.id === reviewId);
+      if (!existingInCms) {
+        addReview({
+          id: review.id,
+          author: review.customer,
+          city: "Verified Patron (Khajrana)",
+          rating: review.rating,
+          quote: review.quote,
+          dishRecommended: review.dish,
+          date: review.date,
+        });
+      }
+    } else {
+      // Remove from Homepage CMS
+      deleteReview(reviewId);
+    }
+
     notify(
       nextValue
-        ? `${review.customer}'s review approved and featured`
-        : `${review.customer}'s review removed from homepage`,
+        ? `⭐ ${review.customer}'s review is now live on Homepage!`
+        : `Removed ${review.customer}'s review from Homepage`,
     );
   }
 
   function stockLabel(itemId: string, fallback: string): string {
     const item = menu.find((menuItem) => menuItem.id === itemId);
     return item ? `${item.stockCount} ${item.stockUnit}` : fallback;
+  }
+
+  function startAdminTour(): void {
+    const tourDriver = driver({
+      showProgress: true,
+      animate: true,
+      allowClose: true,
+      overlayOpacity: 0.75,
+      nextBtnText: "Next →",
+      prevBtnText: "← Back",
+      doneBtnText: "✓ Finish Tour",
+      steps: [
+        {
+          element: "#tour-brand",
+          popover: {
+            title: "👑 The Nahari King Command Center",
+            description: "Welcome to the Royal Kitchen Admin Dashboard! This interactive tour will guide you through all features so you can manage your website like a pro.",
+            side: "bottom",
+            align: "start"
+          }
+        },
+        {
+          element: "#tour-kpi",
+          popover: {
+            title: "📊 Live Business Pulse & KPI Ledger",
+            description: "Here you can monitor real-time gross revenue, total online orders placed via your website, table reservations, and degh inventory status.",
+            side: "bottom",
+            align: "center"
+          }
+        },
+        {
+          element: "#tour-nav-orders",
+          popover: {
+            title: "🍲 Live Orders (Kitchen Display)",
+            description: "Click here to see all customer orders arriving from your website's Dastarkhwan Cart. You can filter by Pending, Cooking, or Completed, advance order status, and track delivery notes.",
+            side: "right",
+            align: "start"
+          }
+        },
+        {
+          element: "#tour-nav-reservations",
+          popover: {
+            title: "📅 Table Reservations (Guest Book)",
+            description: "Track all guest bookings for Traditional Diwan, Royal Dining Tables, and Shahi Majlis VIP Chambers. You can confirm status and contact guests directly via 1-click WhatsApp!",
+            side: "right",
+            align: "start"
+          }
+        },
+        {
+          element: "#tour-nav-inventory",
+          popover: {
+            title: "🥘 Menu & Degh (Dishes & Images CMS)",
+            description: "The complete live CMS for your menu! Add new royal dishes, update prices in real time, toggle 'Sold Out' status, and change dish photos instantly.",
+            side: "right",
+            align: "start"
+          }
+        },
+        {
+          element: "#tour-nav-banners",
+          popover: {
+            title: "🏷️ Viral Offers (Homepage Banners)",
+            description: "Easily update the ₹799 Non-Veg Thaal banner, festive promo badges, headlines, and call-to-action buttons without touching a single line of code.",
+            side: "right",
+            align: "start"
+          }
+        },
+        {
+          element: "#tour-nav-settings",
+          popover: {
+            title: "🏢 Profile & Timings (Store Info CMS)",
+            description: "Update restaurant contact numbers, WhatsApp order number, Google Maps location link, Sehri hours, and midnight degh timings live across the entire website.",
+            side: "right",
+            align: "start"
+          }
+        },
+        {
+          element: "#tour-nav-reviews",
+          popover: {
+            title: "⭐ Customer Reviews Moderation",
+            description: "Approve authentic guest reviews and choose which 5-star testimonials should be featured on the royal homepage carousel.",
+            side: "right",
+            align: "start"
+          }
+        },
+        {
+          element: "#tour-actions",
+          popover: {
+            title: "⚡ Quick Action Utilities",
+            description: "• 'Simulate Live Order': Test kitchen flow anytime.\n• 'Export CSV': Download complete order ledger to Excel/Sheets.\n• 'Reset Data': Clear orders to start a fresh day.\n• 'Interactive Guide': Relaunch this guide whenever needed!",
+            side: "bottom",
+            align: "end"
+          }
+        }
+      ]
+    });
+
+    tourDriver.drive();
   }
 
   const shiftLabel = activeShift?.label ?? "Connecting";
@@ -1903,7 +1689,7 @@ export default function AdminDashboardPage() {
 
       <div className="layout" aria-hidden={!isAuthenticated}>
         <aside className="sidebar">
-          <div className="sidebar-brand">
+          <div className="sidebar-brand" id="tour-brand">
             <div className="brand-orb" aria-hidden="true">
               <span></span>
             </div>
@@ -1918,6 +1704,7 @@ export default function AdminDashboardPage() {
             {NAV_ITEMS.map((item) => (
               <button
                 key={item.id}
+                id={`tour-nav-${item.id}`}
                 type="button"
                 className={`nav-item ${activeTab === item.id ? "active" : ""}`}
                 onClick={() => {
@@ -1975,7 +1762,26 @@ export default function AdminDashboardPage() {
               </span>
             </div>
 
-            <div className="topbar-actions">
+            <div className="topbar-actions" id="tour-actions">
+              <button
+                type="button"
+                className="action-button tour-guide-btn"
+                style={{
+                  background: 'linear-gradient(135deg, rgba(212, 175, 55, 0.25), rgba(170, 124, 17, 0.15))',
+                  border: '1px solid #D4AF37',
+                  color: '#FFD700',
+                  fontWeight: 700,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  boxShadow: '0 0 14px rgba(212, 175, 55, 0.25)',
+                  cursor: 'pointer'
+                }}
+                onClick={startAdminTour}
+                title="Start interactive dashboard walkthrough"
+              >
+                <span>🎓</span> Quick Tour
+              </button>
               <button
                 className="action-button"
                 type="button"
@@ -2032,7 +1838,7 @@ export default function AdminDashboardPage() {
               </div>
             ) : (
               <>
-                <section className="kpi-section" aria-label="Today's overview">
+                <section className="kpi-section" id="tour-kpi" aria-label="Today's overview">
                   <div className="section-intro">
                     <div>
                       <p className="eyebrow">Royal Ledger</p>
@@ -2463,14 +2269,36 @@ export default function AdminDashboardPage() {
                           Control live pricing, availability and remaining stock.
                         </p>
                       </div>
-                      <div className="inventory-heading-stats" style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                        <span>
+                      <div className="inventory-heading-stats" style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '6px 12px',
+                          borderRadius: '999px',
+                          background: 'rgba(16, 185, 129, 0.12)',
+                          border: '1px solid rgba(16, 185, 129, 0.3)',
+                          color: '#34D399',
+                          fontSize: '0.82rem',
+                          fontWeight: 700
+                        }}>
                           <i className="stock-dot in-stock" />
-                          {menu.length - soldOutItems.length} in stock
+                          {menu.length - soldOutItems.length} In Stock
                         </span>
-                        <span>
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '6px',
+                          padding: '6px 12px',
+                          borderRadius: '999px',
+                          background: 'rgba(239, 68, 68, 0.12)',
+                          border: '1px solid rgba(239, 68, 68, 0.3)',
+                          color: '#F87171',
+                          fontSize: '0.82rem',
+                          fontWeight: 700
+                        }}>
                           <i className="stock-dot sold-out" />
-                          {soldOutItems.length} sold out
+                          {soldOutItems.length} Sold Out
                         </span>
                         <button
                           type="button"
@@ -2559,8 +2387,7 @@ export default function AdminDashboardPage() {
                                 type="button"
                                 role="switch"
                                 aria-checked={item.stockStatus === "In Stock"}
-                                className={`stock-switch ${item.stockStatus === "In Stock" ? "on" : ""
-                                  }`}
+                                className={`stock-switch ${item.stockStatus === "In Stock" ? "on" : ""}`}
                                 onClick={() =>
                                   handleStockToggle(
                                     item,
@@ -2571,8 +2398,8 @@ export default function AdminDashboardPage() {
                                 <span className="knob" />
                                 <span className="switch-copy">
                                   {item.stockStatus === "In Stock"
-                                    ? "In Stock"
-                                    : "Sold Out"}
+                                    ? "● In Stock"
+                                    : "✕ Sold Out"}
                                 </span>
                               </button>
                             </div>
@@ -2581,7 +2408,7 @@ export default function AdminDashboardPage() {
 
                             <div className="menu-controls">
                               <label className="price-editor">
-                                <span></span>
+                                <span>₹</span>
                                 <input
                                   key={`${item.id}-${item.price}`}
                                   type="number"
@@ -2591,7 +2418,9 @@ export default function AdminDashboardPage() {
                                   onBlur={(event) =>
                                     handleCommitPrice(item, event)
                                   }
-                                  onFocus={(event) => event.currentTarget.select()}
+                                  onFocus={(event) => {
+                                    // Keep caret at current position without forcing default blue text selection
+                                  }}
                                   aria-label={`Price for ${item.name}`}
                                 />
                               </label>
@@ -2602,7 +2431,7 @@ export default function AdminDashboardPage() {
                                   disabled={item.stockCount <= 0}
                                   aria-label={`Decrease ${item.name} stock`}
                                 >
-
+                                  −
                                 </button>
                                 <span className="stock-count">
                                   {item.stockCount} {item.stockUnit}
@@ -2612,7 +2441,7 @@ export default function AdminDashboardPage() {
                                   onClick={() => handleAdjustStock(item, 1)}
                                   aria-label={`Increase ${item.name} stock`}
                                 >
-
+                                  +
                                 </button>
                               </div>
                             </div>
@@ -2666,9 +2495,32 @@ export default function AdminDashboardPage() {
                         <h2 id="reviews-title">Reviews &amp; Moderation</h2>
                         <p>Approve genuine praise and feature it on the homepage.</p>
                       </div>
-                      <div className="review-score">
-                        <strong>{averageRating.toFixed(1)}</strong>
-                        <span> average</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        <button
+                          type="button"
+                          className="primary-button"
+                          style={{
+                            padding: '10px 18px',
+                            fontSize: '0.88rem',
+                            fontWeight: 700,
+                            borderRadius: '8px',
+                            background: 'linear-gradient(135deg, #FCE8A6 0%, #D4AF37 100%)',
+                            color: '#160608',
+                            border: 'none',
+                            cursor: 'pointer',
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: '6px',
+                            boxShadow: '0 4px 15px rgba(212,175,55,0.25)'
+                          }}
+                          onClick={() => setIsAddReviewModalOpen(true)}
+                        >
+                          <span>+ Add New Review</span>
+                        </button>
+                        <div className="review-score">
+                          <strong>{averageRating.toFixed(1)}</strong>
+                          <span> average</span>
+                        </div>
                       </div>
                     </div>
 
@@ -2746,17 +2598,14 @@ export default function AdminDashboardPage() {
                               type="button"
                               role="switch"
                               aria-checked={review.approved && review.featured}
-                              className={`feature-switch ${review.approved && review.featured ? "on" : ""
-                                }`}
-                              onClick={() =>
-                                handleReviewFeatureToggle(review.id)
-                              }
+                              className={`feature-switch ${review.approved && review.featured ? "on" : ""}`}
+                              onClick={() => handleReviewFeatureToggle(review.id)}
                             >
                               <span className="knob" />
                               <span>
                                 {review.approved && review.featured
-                                  ? "Approved + Featured"
-                                  : "Approve + Feature"}
+                                  ? "⭐ Featured on Home"
+                                  : "Show on Home"}
                               </span>
                             </button>
                           </div>
@@ -3856,6 +3705,145 @@ export default function AdminDashboardPage() {
         </div>
       )}
 
+      {/* Add Review Modal */}
+      {isAddReviewModalOpen && (
+        <div
+          className="modal-backdrop"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="add-review-modal-title"
+          onClick={() => setIsAddReviewModalOpen(false)}
+        >
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <div>
+                <p className="eyebrow">Guest Feedback</p>
+                <h2 id="add-review-modal-title">Add Verified Guest Review</h2>
+              </div>
+              <button
+                type="button"
+                className="icon-button"
+                onClick={() => setIsAddReviewModalOpen(false)}
+                aria-label="Close add review modal"
+              >
+                ✕
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (!newReviewDraft.customer.trim() || !newReviewDraft.quote.trim()) {
+                  notify("Please fill customer name and review quote");
+                  return;
+                }
+                const newRevId = `rev-${Date.now()}`;
+                const newAdminRev: Review = {
+                  id: newRevId,
+                  customer: newReviewDraft.customer.trim(),
+                  rating: Number(newReviewDraft.rating) || 5,
+                  quote: newReviewDraft.quote.trim(),
+                  dish: newReviewDraft.dish.trim() || "Nahari King Special Nalli Nihari",
+                  date: "Recent Visit",
+                  approved: true,
+                  featured: true,
+                };
+
+                // Add to local admin reviews
+                setReviews([newAdminRev, ...reviews]);
+
+                // Add to Global CMS (instant live on homepage)
+                addReview({
+                  id: newRevId,
+                  author: newAdminRev.customer,
+                  city: "Verified Patron (Khajrana)",
+                  rating: newAdminRev.rating,
+                  quote: newAdminRev.quote,
+                  dishRecommended: newAdminRev.dish,
+                  date: "Verified Visit",
+                });
+
+                setIsAddReviewModalOpen(false);
+                setNewReviewDraft({
+                  customer: "",
+                  rating: 5,
+                  quote: "",
+                  dish: "Nahari King Special Nalli Nihari",
+                });
+                notify(`⭐ Added and featured ${newAdminRev.customer}'s review on Homepage!`);
+              }}
+            >
+              <div className="modal-body">
+                <label className="field">
+                  <span>Customer / Food Critic Name *</span>
+                  <input
+                    type="text"
+                    required
+                    value={newReviewDraft.customer}
+                    onChange={(e) =>
+                      setNewReviewDraft({ ...newReviewDraft, customer: e.target.value })
+                    }
+                    placeholder="e.g. Imran Khan / Indore Foodie"
+                  />
+                </label>
+
+                <label className="field">
+                  <span>Star Rating (1 to 5) *</span>
+                  <select
+                    value={newReviewDraft.rating}
+                    onChange={(e) =>
+                      setNewReviewDraft({ ...newReviewDraft, rating: Number(e.target.value) })
+                    }
+                  >
+                    <option value={5}>★★★★★ (5 Stars - Exceptional)</option>
+                    <option value={4}>★★★★☆ (4 Stars - Very Good)</option>
+                    <option value={3}>★★★☆☆ (3 Stars - Average)</option>
+                  </select>
+                </label>
+
+                <label className="field field-wide">
+                  <span>Must-Try Dish Recommended</span>
+                  <input
+                    type="text"
+                    value={newReviewDraft.dish}
+                    onChange={(e) =>
+                      setNewReviewDraft({ ...newReviewDraft, dish: e.target.value })
+                    }
+                    placeholder="e.g. Special Nalli Nihari with Khamiri Roti"
+                  />
+                </label>
+
+                <label className="field field-wide">
+                  <span>Review Quote / Experience *</span>
+                  <textarea
+                    rows={4}
+                    required
+                    value={newReviewDraft.quote}
+                    onChange={(e) =>
+                      setNewReviewDraft({ ...newReviewDraft, quote: e.target.value })
+                    }
+                    placeholder="e.g. Mutton melted in mouth, pure Old Delhi Jama Masjid taste right here in Khajrana!"
+                  />
+                </label>
+              </div>
+
+              <div className="modal-actions">
+                <button
+                  type="button"
+                  className="ghost-button"
+                  onClick={() => setIsAddReviewModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button type="submit" className="primary-button">
+                  Publish &amp; Feature on Homepage
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       {toast && (
         <div className="toast" role="status" aria-live="polite">
           <span aria-hidden="true"></span> {toast}
@@ -3865,6 +3853,11 @@ export default function AdminDashboardPage() {
       <style jsx>{`
         * {
           box-sizing: border-box;
+          -webkit-tap-highlight-color: transparent;
+        }
+
+        *:focus {
+          outline: none;
         }
 
         button,
@@ -3872,6 +3865,7 @@ export default function AdminDashboardPage() {
         select,
         textarea {
           font: inherit;
+          -webkit-tap-highlight-color: transparent;
         }
 
         button {
@@ -3889,9 +3883,12 @@ export default function AdminDashboardPage() {
           width: 100%;
         }
 
+        *::selection,
+        input::selection,
+        textarea::selection,
         ::selection {
-          background: #d4af37;
-          color: #120607;
+          background: rgba(212, 175, 55, 0.45) !important;
+          color: #FFFDF9 !important;
         }
 
         .dashboard-shell {
@@ -5326,63 +5323,75 @@ export default function AdminDashboardPage() {
           position: relative;
           display: inline-flex;
           align-items: center;
-          gap: 7px;
-          padding: 4px;
-          border: 0;
-          color: #88765c;
-          background: rgba(255, 255, 255, 0.045);
-          font-size: 8px;
-          font-weight: 800;
+          gap: 8px;
+          padding: 4px 12px 4px 6px;
+          border-radius: 999px;
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: #9E9489;
+          background: rgba(20, 10, 11, 0.6);
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.04em;
           text-transform: uppercase;
+          cursor: pointer;
+          transition: all 0.25s ease;
+          user-select: none;
         }
 
-        .stock-switch {
-            min-width: 92px;
-            justify-content: center;
-            border-radius: 999px;
-        }
-
-        .feature-switch {
-          justify-content: flex-end;
-          border-radius: 9px;
+        .stock-switch:hover,
+        .feature-switch:hover {
+          border-color: rgba(212, 175, 55, 0.4);
+          background: rgba(30, 15, 17, 0.8);
         }
 
         .stock-switch .knob,
         .feature-switch .knob {
           position: relative;
           z-index: 1;
-          width: 17px;
-          height: 17px;
+          width: 16px;
+          height: 16px;
           border-radius: 50%;
-          background: #6e604c;
-          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-          transition: transform 0.25s ease, background 0.25s ease;
+          background: #5A4A3E;
+          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+          transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), background 0.25s ease;
+          flex-shrink: 0;
         }
 
-        .stock-switch::before,
-        .feature-switch::before {
-          position: absolute;
-          width: 28px;
-          height: 17px;
-          border-radius: 999px;
-          content: "";
-          background: #493c31;
-          transition: background 0.25s ease;
-        }
-
-        .stock-switch .knob {
-          margin-left: 3px;
-        }
-
-        .stock-switch.on::before,
-        .feature-switch.on::before {
-          background: #10b981;
+        /* Active State (ON) */
+        .stock-switch.on,
+        .feature-switch.on {
+          background: rgba(16, 185, 129, 0.15);
+          border-color: rgba(16, 185, 129, 0.45);
+          color: #34D399;
         }
 
         .stock-switch.on .knob,
         .feature-switch.on .knob {
-          background: #eafff4;
-          transform: translateX(11px);
+          background: #10B981;
+          box-shadow: 0 0 10px rgba(16, 185, 129, 0.6);
+          transform: scale(1.1);
+        }
+
+        /* Sold Out / Awaiting (OFF) */
+        .stock-switch:not(.on) {
+          background: rgba(239, 68, 68, 0.12);
+          border-color: rgba(239, 68, 68, 0.35);
+          color: #F87171;
+        }
+
+        .stock-switch:not(.on) .knob {
+          background: #EF4444;
+          box-shadow: 0 0 8px rgba(239, 68, 68, 0.5);
+        }
+
+        .feature-switch:not(.on) {
+          background: rgba(255, 255, 255, 0.04);
+          border-color: rgba(255, 255, 255, 0.12);
+          color: #8C8276;
+        }
+
+        .feature-switch:not(.on) .knob {
+          background: #504439;
         }
 
         .menu-card h3 {
@@ -5411,54 +5420,86 @@ export default function AdminDashboardPage() {
 
         .price-editor {
           position: relative;
-          display: block;
+          display: flex;
+          align-items: center;
         }
 
         .price-editor > span {
           position: absolute;
-          top: 50%;
           left: 10px;
-          color: #c9a858;
-          font-size: 12px;
-          transform: translateY(-50%);
+          color: #D4AF37;
+          font-size: 14px;
+          font-weight: 800;
+          pointer-events: none;
+          z-index: 1;
         }
 
         .price-editor input {
-          height: 37px;
-          padding: 0 9px 0 25px;
+          height: 38px;
+          padding: 0 10px 0 24px;
           border-radius: 9px;
-          color: #fff0c4;
-          font-size: 11px;
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          background: rgba(10, 4, 5, 0.65);
+          color: #FFF2D1;
+          font-size: 13px;
           font-weight: 800;
+          letter-spacing: 0.02em;
+          transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .price-editor input:focus {
+          border-color: #D4AF37;
+          box-shadow: 0 0 12px rgba(212, 175, 55, 0.3);
+          outline: none;
         }
 
         .price-editor input::-webkit-outer-spin-button,
         .price-editor input::-webkit-inner-spin-button {
           margin: 0;
-          appearance: none;
+          -webkit-appearance: none;
+        }
+        .price-editor input[type=number] {
+          -moz-appearance: textfield;
         }
 
         .stock-control {
           display: grid;
-          grid-template-columns: 31px 1fr 31px;
+          grid-template-columns: 32px 1fr 32px;
           align-items: center;
-          height: 37px;
+          height: 38px;
           overflow: hidden;
-          border: 1px solid rgba(212, 175, 55, 0.14);
+          border: 1px solid rgba(212, 175, 55, 0.22);
           border-radius: 9px;
-          background: rgba(0, 0, 0, 0.24);
+          background: rgba(10, 4, 5, 0.65);
         }
 
         .stock-control button {
           height: 100%;
           border: 0;
-          color: #d4af37;
-          background: rgba(212, 175, 55, 0.06);
-          font-size: 14px;
+          color: #D4AF37;
+          background: rgba(212, 175, 55, 0.08);
+          font-size: 15px;
+          font-weight: 800;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          transition: background 0.2s ease, color 0.2s ease;
         }
 
         .stock-control button:hover:not(:disabled) {
-          background: rgba(212, 175, 55, 0.14);
+          background: rgba(212, 175, 55, 0.25);
+          color: #FFF2D1;
+        }
+
+        .stock-control .stock-count {
+          text-align: center;
+          color: #E2D3BE;
+          font-size: 11px;
+          font-weight: 700;
+          padding: 0 4px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
 
         .stock-count {
@@ -6640,6 +6681,84 @@ export default function AdminDashboardPage() {
             animation-iteration-count: 1 !important;
             transition-duration: 0.01ms !important;
           }
+        }
+
+        /* Royal Driver.js Tour Theme */
+        .driver-popover {
+          background: #140708 !important;
+          border: 1px solid rgba(212, 175, 55, 0.45) !important;
+          color: #FAF7F2 !important;
+          border-radius: 14px !important;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.9), 0 0 25px rgba(212, 175, 55, 0.2) !important;
+          font-family: inherit !important;
+          padding: 18px 20px !important;
+          max-width: 360px !important;
+        }
+
+        .driver-popover-title {
+          font-size: 1.05rem !important;
+          font-weight: 800 !important;
+          color: #FFD700 !important;
+          margin-bottom: 8px !important;
+        }
+
+        .driver-popover-description {
+          font-size: 0.88rem !important;
+          line-height: 1.55 !important;
+          color: #E2D7C8 !important;
+          white-space: pre-line !important;
+        }
+
+        .driver-popover-progress-text {
+          color: #A99B87 !important;
+          font-size: 0.78rem !important;
+          font-weight: 600 !important;
+        }
+
+        .driver-popover-navigation-btns {
+          gap: 8px !important;
+          margin-top: 14px !important;
+        }
+
+        .driver-popover-next-btn,
+        .driver-popover-prev-btn,
+        .driver-popover-close-btn {
+          border-radius: 8px !important;
+          font-weight: 700 !important;
+          font-size: 0.82rem !important;
+          transition: all 0.2s ease !important;
+        }
+
+        .driver-popover-next-btn {
+          background: linear-gradient(135deg, #D4AF37, #AA7C11) !important;
+          color: #090404 !important;
+          border: none !important;
+          padding: 6px 14px !important;
+        }
+
+        .driver-popover-next-btn:hover {
+          background: linear-gradient(135deg, #E6C555, #C49219) !important;
+          transform: translateY(-1px) !important;
+        }
+
+        .driver-popover-prev-btn {
+          background: rgba(255, 255, 255, 0.08) !important;
+          color: #FAF7F2 !important;
+          border: 1px solid rgba(212, 175, 55, 0.25) !important;
+          padding: 6px 12px !important;
+        }
+
+        .driver-popover-arrow-side-left.driver-popover-arrow {
+          border-left-color: #140708 !important;
+        }
+        .driver-popover-arrow-side-right.driver-popover-arrow {
+          border-right-color: #140708 !important;
+        }
+        .driver-popover-arrow-side-top.driver-popover-arrow {
+          border-top-color: #140708 !important;
+        }
+        .driver-popover-arrow-side-bottom.driver-popover-arrow {
+          border-bottom-color: #140708 !important;
         }
       `}</style>
     </div>
