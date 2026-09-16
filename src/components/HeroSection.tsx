@@ -1185,86 +1185,121 @@ export default function HeroSection() {
         @media (max-width: 1080px) {
           .hero-container {
             min-height: auto;
-            padding-bottom: 80px;
+            padding: 96px 20px 60px;
           }
 
           .hero-grid {
             grid-template-columns: 1fr;
-            gap: 54px;
+            gap: 48px;
+            width: 100%;
+            max-width: 100%;
           }
 
           .hero-copy {
-            max-width: 720px;
+            max-width: 100%;
+            width: 100%;
           }
 
           .showcase-wrap {
-            width: min(100%, 520px);
+            width: min(100%, 500px);
+            max-width: 100%;
             justify-self: center;
           }
 
           .bento-grid {
             max-width: 620px;
+            width: 100%;
           }
         }
 
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
           .hero-section {
             min-height: auto;
+            overflow-x: hidden;
           }
 
           .hero-container {
-            padding: 92px 16px 40px;
+            padding: 90px 16px 36px;
+            max-width: 100%;
+            box-sizing: border-box;
           }
 
           .hero-grid {
             gap: 32px;
+            width: 100%;
+            max-width: 100%;
+          }
+
+          .hero-copy {
+            width: 100%;
+            max-width: 100%;
+            min-width: 0;
+            box-sizing: border-box;
           }
 
           .brand-tag {
             max-width: 100%;
             padding: 5px 10px;
             font-size: 9.5px;
-            letter-spacing: 0.14em;
+            letter-spacing: 0.12em;
+            box-sizing: border-box;
+            white-space: normal;
+            word-break: break-word;
           }
 
           .hero-title {
             margin: 16px 0 0;
-            font-size: clamp(2rem, 8.5vw, 2.7rem);
-            line-height: 1.14;
+            font-size: clamp(1.9rem, 7.8vw, 2.6rem);
+            line-height: 1.15;
             letter-spacing: -0.025em;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
           }
 
           .hero-description {
             margin: 14px 0 0;
             font-size: 13.5px;
             line-height: 1.6;
+            max-width: 100%;
+            word-break: break-word;
+            overflow-wrap: break-word;
           }
 
           .hero-actions {
             margin-top: 22px;
             gap: 12px;
             width: 100%;
+            max-width: 100%;
+            flex-direction: column;
+            box-sizing: border-box;
           }
 
           .primary-cta,
           .secondary-cta {
             width: 100%;
+            max-width: 100%;
             min-height: 48px;
             font-size: 13.5px;
+            box-sizing: border-box;
           }
 
           .bento-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 8px;
-            max-width: none;
+            width: 100%;
+            max-width: 100%;
             margin-top: 20px;
+            box-sizing: border-box;
           }
 
           .bento-card {
             padding: 10px 12px;
             min-height: 48px;
             border-radius: 12px;
+            min-width: 0;
+            box-sizing: border-box;
           }
 
           .bento-card:last-child {
@@ -1292,10 +1327,11 @@ export default function HeroSection() {
 
           .showcase-wrap {
             width: 100%;
-            max-width: 440px;
+            max-width: 100%;
             margin: 0 auto;
             justify-self: center;
             perspective: none;
+            box-sizing: border-box;
           }
 
           .showcase-card {
@@ -1305,6 +1341,7 @@ export default function HeroSection() {
             transform: none !important;
             padding: 14px;
             border-radius: 20px;
+            box-sizing: border-box;
           }
 
           .showcase-top {
@@ -1328,6 +1365,7 @@ export default function HeroSection() {
             height: 210px;
             margin-top: 10px;
             border-radius: 14px;
+            max-width: 100%;
           }
 
           .dish-summary {
@@ -1347,17 +1385,22 @@ export default function HeroSection() {
             font-size: 12px;
             line-height: 1.5;
             margin: 6px 2px 0;
+            word-break: break-word;
           }
 
           .dish-selector {
             gap: 6px;
             margin: 12px 0;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
           }
 
           .dish-tab {
             min-height: 44px;
             padding: 6px 3px;
             border-radius: 12px;
+            min-width: 0;
           }
 
           .tab-label {
@@ -1370,18 +1413,49 @@ export default function HeroSection() {
           }
 
           .order-button {
-            min-height: 44px;
-            font-size: 12.5px;
+            width: 100%;
+            max-width: 100%;
+            min-height: 46px;
+            font-size: 13px;
+            box-sizing: border-box;
           }
         }
 
-        @media (max-width: 380px) {
+        @media (max-width: 480px) {
           .hero-container {
-            padding: 86px 12px 32px;
+            padding: 84px 12px 28px;
+            max-width: 100%;
           }
 
           .hero-title {
-            font-size: 1.85rem;
+            font-size: clamp(1.75rem, 7.5vw, 2.15rem);
+            line-height: 1.16;
+          }
+
+          .hero-description {
+            font-size: 12.5px;
+          }
+
+          .showcase-card {
+            padding: 12px;
+          }
+
+          .dish-stage {
+            height: 195px;
+          }
+
+          .dish-name {
+            font-size: 16.5px;
+          }
+        }
+
+        @media (max-width: 360px) {
+          .hero-container {
+            padding: 80px 10px 24px;
+          }
+
+          .hero-title {
+            font-size: 1.65rem;
           }
 
           .bento-grid {
@@ -1393,15 +1467,19 @@ export default function HeroSection() {
           }
 
           .dish-stage {
-            height: 185px;
+            height: 175px;
           }
 
           .dish-tab {
-            min-height: 42px;
-            padding: 5px 2px;
+            min-height: 40px;
+            padding: 4px 2px;
           }
 
           .tab-label {
+            font-size: 9px;
+          }
+
+          .tab-price {
             font-size: 9.5px;
           }
         }
