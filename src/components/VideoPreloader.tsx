@@ -14,6 +14,7 @@ export default function VideoPreloader({
   const [isMounted, setIsMounted] = useState(true);
   const [isExiting, setIsExiting] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  const [progress, setProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const finishTriggered = useRef(false);
 
@@ -58,7 +59,7 @@ export default function VideoPreloader({
     // Fallback safe timer: if video fails to play or loads slow, don't trap the user
     const maxTimer = setTimeout(() => {
       handleFinish();
-    }, 7000);
+    }, 6500);
 
     return () => {
       document.body.style.overflow = prevOverflow;
@@ -72,30 +73,36 @@ export default function VideoPreloader({
     }
   }, [isMounted]);
 
+  const handleTimeUpdate = () => {
+    if (videoRef.current && videoRef.current.duration) {
+      const pct = Math.min(
+        100,
+        Math.round((videoRef.current.currentTime / videoRef.current.duration) * 100)
+      );
+      setProgress(pct);
+    }
+  };
+
   if (!isMounted) return null;
 
   return (
     <div
       className={`preloader-overlay ${isExiting ? 'preloader-exit' : ''}`}
-      style={{
-        position: 'fixed',
-        inset: 0,
-        width: '100vw',
-        height: '100vh',
-        zIndex: 2147483647,
-        backgroundColor: '#080605',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-      }}
-      aria-label="Website loading preview"
+      aria-label="Nahari King Loading Screen"
       role="dialog"
       aria-modal="true"
     >
       <div className="preloader-bg-ambient" />
 
-      {/* Main Video Frame */}
+      {/* Top Gold Progress Track */}
+      <div className="preloader-progress-track">
+        <div
+          className="preloader-progress-bar"
+          style={{ width: `${progress}%` }}
+        />
+      </div>
+
+      {/* Main Video Stage with responsive framing */}
       <div className="preloader-video-stage">
         <video
           ref={videoRef}
@@ -105,6 +112,7 @@ export default function VideoPreloader({
           preload="auto"
           disablePictureInPicture
           onCanPlayThrough={() => setVideoLoaded(true)}
+          onTimeUpdate={handleTimeUpdate}
           onEnded={handleFinish}
           className={`preloader-video ${videoLoaded ? 'video-visible' : ''}`}
         >
@@ -113,6 +121,32 @@ export default function VideoPreloader({
 
         {/* Ambient Top & Bottom Gold Vignette */}
         <div className="preloader-vignette" />
+      </div>
+
+      {/* Top Mobile Skip Header for Immediate Thumb Access */}
+      <div className="preloader-top-bar">
+        <div className="preloader-brand-mini">
+          <span className="brand-crest">👑</span>
+          <span className="brand-text">Nahari King</span>
+        </div>
+
+        <button
+          type="button"
+          onClick={handleFinish}
+          className="preloader-skip-pill"
+          aria-label="Skip loader animation"
+        >
+          <span>Skip</span>
+          <svg viewBox="0 0 20 20" fill="none" className="skip-arrow">
+            <path
+              d="M4.167 10h11.666M10.833 5l5 5-5 5"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+        </button>
       </div>
 
       {/* Bottom Bar with Brand and Skip CTA */}
@@ -128,7 +162,7 @@ export default function VideoPreloader({
           type="button"
           onClick={handleFinish}
           className="preloader-skip-btn"
-          aria-label="Skip loader animation"
+          aria-label="Skip intro animation"
         >
           <span>Skip Intro</span>
           <svg viewBox="0 0 20 20" fill="none" className="skip-arrow">
@@ -147,7 +181,11 @@ export default function VideoPreloader({
         .preloader-overlay {
           position: fixed;
           inset: 0;
-          z-index: 999999;
+          width: 100vw;
+          width: 100dvw;
+          height: 100vh;
+          height: 100dvh;
+          z-index: 2147483647;
           display: flex;
           flex-direction: column;
           align-items: center;
@@ -159,11 +197,12 @@ export default function VideoPreloader({
             transform 550ms cubic-bezier(0.16, 1, 0.3, 1),
             filter 550ms ease;
           will-change: opacity, transform;
+          -webkit-tap-highlight-color: transparent;
         }
 
         .preloader-overlay.preloader-exit {
           opacity: 0;
-          transform: scale(1.025);
+          transform: scale(1.02);
           filter: blur(8px);
           pointer-events: none;
         }
@@ -172,15 +211,37 @@ export default function VideoPreloader({
           position: absolute;
           inset: 0;
           background:
-            radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.08) 0%, transparent 65%),
+            radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.1) 0%, rgba(122, 12, 14, 0.05) 50%, transparent 75%),
             #080605;
           pointer-events: none;
         }
 
+        /* Top Slim Gold Progress Track */
+        .preloader-progress-track {
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          height: 2.5px;
+          background: rgba(255, 255, 255, 0.08);
+          z-index: 25;
+          overflow: hidden;
+        }
+
+        .preloader-progress-bar {
+          height: 100%;
+          background: linear-gradient(90deg, #9E7D23, #D4AF37, #FCE8A6);
+          box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+          transition: width 150ms linear;
+        }
+
+        /* Video Stage */
         .preloader-video-stage {
           position: relative;
           width: 100vw;
+          width: 100dvw;
           height: 100vh;
+          height: 100dvh;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -191,6 +252,7 @@ export default function VideoPreloader({
           width: 100%;
           height: 100%;
           object-fit: cover;
+          object-position: center center;
           opacity: 0;
           transform: translateZ(0);
           will-change: opacity, transform;
@@ -206,19 +268,75 @@ export default function VideoPreloader({
           inset: 0;
           background: radial-gradient(
             circle at 50% 50%,
-            transparent 45%,
-            rgba(8, 6, 5, 0.4) 75%,
+            transparent 35%,
+            rgba(8, 6, 5, 0.35) 70%,
             rgba(8, 6, 5, 0.95) 100%
           );
           pointer-events: none;
         }
 
-        .preloader-bottom-bar {
+        /* Top Mobile Skip Bar */
+        .preloader-top-bar {
+          display: none;
           position: absolute;
-          bottom: 28px;
+          top: calc(14px + env(safe-area-inset-top, 0px));
           left: 0;
           right: 0;
-          z-index: 10;
+          z-index: 20;
+          align-items: center;
+          justify-content: space-between;
+          padding: 0 16px;
+        }
+
+        .preloader-brand-mini {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 5px 12px;
+          background: rgba(18, 13, 10, 0.7);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(212, 175, 55, 0.25);
+          border-radius: 999px;
+          color: #f5eedf;
+          font-size: 12px;
+          font-weight: 700;
+        }
+
+        .preloader-brand-mini .brand-text {
+          color: #D4AF37;
+        }
+
+        .preloader-skip-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 14px;
+          background: rgba(26, 18, 13, 0.75);
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(212, 175, 55, 0.4);
+          border-radius: 999px;
+          color: #FAF7F2;
+          font-size: 12px;
+          font-weight: 700;
+          cursor: pointer;
+          box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+        }
+
+        .preloader-skip-pill .skip-arrow {
+          width: 13px;
+          height: 13px;
+          color: #D4AF37;
+        }
+
+        /* Bottom Bar */
+        .preloader-bottom-bar {
+          position: absolute;
+          bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+          left: 0;
+          right: 0;
+          z-index: 15;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -231,15 +349,16 @@ export default function VideoPreloader({
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 8px 16px;
-          background: rgba(18, 13, 10, 0.65);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border: 1px solid rgba(212, 175, 55, 0.22);
+          padding: 8px 18px;
+          background: rgba(18, 13, 10, 0.75);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border: 1px solid rgba(212, 175, 55, 0.26);
           border-radius: 999px;
           color: #f5eedf;
           font-size: 13px;
           letter-spacing: 0.02em;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
         }
 
         .brand-crest {
@@ -247,8 +366,9 @@ export default function VideoPreloader({
         }
 
         .brand-text {
-          font-weight: 700;
+          font-weight: 800;
           color: #d4af37;
+          letter-spacing: 0.03em;
         }
 
         .brand-divider {
@@ -256,25 +376,26 @@ export default function VideoPreloader({
         }
 
         .brand-sub {
-          color: rgba(245, 238, 223, 0.7);
-          font-size: 11.5px;
+          color: rgba(245, 238, 223, 0.8);
+          font-size: 12px;
         }
 
         .preloader-skip-btn {
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 8px 18px;
-          background: rgba(26, 18, 13, 0.7);
-          backdrop-filter: blur(12px);
-          -webkit-backdrop-filter: blur(12px);
-          border: 1px solid rgba(212, 175, 55, 0.35);
+          padding: 8px 20px;
+          background: rgba(26, 18, 13, 0.8);
+          backdrop-filter: blur(14px);
+          -webkit-backdrop-filter: blur(14px);
+          border: 1px solid rgba(212, 175, 55, 0.4);
           border-radius: 999px;
           color: #f7eedf;
-          font-size: 12.5px;
-          font-weight: 600;
+          font-size: 13px;
+          font-weight: 700;
           letter-spacing: 0.03em;
           cursor: pointer;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
           transition:
             background 200ms ease,
             border-color 200ms ease,
@@ -283,8 +404,8 @@ export default function VideoPreloader({
         }
 
         .preloader-skip-btn:hover {
-          background: rgba(42, 28, 19, 0.9);
-          border-color: rgba(224, 170, 64, 0.7);
+          background: rgba(42, 28, 19, 0.95);
+          border-color: rgba(224, 170, 64, 0.8);
           color: #ffffff;
           transform: translateY(-1.5px);
         }
@@ -299,18 +420,62 @@ export default function VideoPreloader({
           transform: translateX(3px);
         }
 
-        @media (max-width: 640px) {
+        /* Mobile Responsive Adjustments (Phones & Tablets) */
+        @media (max-width: 768px) {
+          .preloader-video {
+            /* Keep central emblem and crown in full sharp view on vertical aspect ratio */
+            object-fit: cover;
+            object-position: center 48%;
+          }
+
+          .preloader-top-bar {
+            display: flex;
+          }
+
           .preloader-bottom-bar {
-            padding: 0 18px;
-            bottom: 20px;
+            justify-content: center;
+            bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+            padding: 0 16px;
+          }
+
+          /* On mobile, top bar has the quick skip button */
+          .preloader-bottom-bar .preloader-skip-btn {
+            display: none;
+          }
+
+          .preloader-brand {
+            padding: 7px 16px;
+            font-size: 12px;
           }
 
           .brand-sub {
-            display: none;
+            font-size: 11px;
+          }
+        }
+
+        @media (max-width: 480px) {
+          .preloader-brand {
+            gap: 6px;
+            padding: 6px 14px;
+            font-size: 11.5px;
           }
 
-          .brand-divider {
-            display: none;
+          .brand-crest {
+            font-size: 13px;
+          }
+        }
+
+        /* Orientation Landscape on Mobile phones */
+        @media (max-height: 500px) and (orientation: landscape) {
+          .preloader-top-bar {
+            top: 10px;
+          }
+          .preloader-bottom-bar {
+            bottom: 10px;
+          }
+          .preloader-brand {
+            padding: 5px 12px;
+            font-size: 11px;
           }
         }
       `}</style>
