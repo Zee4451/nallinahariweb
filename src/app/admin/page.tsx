@@ -1691,7 +1691,11 @@ export default function AdminDashboardPage() {
         <aside className="sidebar">
           <div className="sidebar-brand" id="tour-brand">
             <div className="brand-orb" aria-hidden="true">
-              <span></span>
+              <img
+                src="/nahari-king-crest-sm.png"
+                alt="Nahari King Crest"
+                style={{ width: 34, height: 34, objectFit: "contain" }}
+              />
             </div>
             <div>
               <strong>The Nahari King</strong>
@@ -1728,7 +1732,7 @@ export default function AdminDashboardPage() {
 
           <div className="sidebar-footer">
             <div className="degh-note">
-              <span aria-hidden="true"></span>
+              <span aria-hidden="true">🍲</span>
               <div>
                 <strong>12-Hour Dum</strong>
                 <small>Sealed at dusk • Opened for royalty</small>
@@ -1742,7 +1746,11 @@ export default function AdminDashboardPage() {
           <header className="topbar">
             <div className="topbar-brand">
               <div className="brand-mark" aria-hidden="true">
-                <span></span>
+                <img
+                  src="/nahari-king-crest-sm.png"
+                  alt="Nahari King Mark"
+                  style={{ width: 32, height: 32, objectFit: "contain" }}
+                />
               </div>
               <div className="brand-copy">
                 <strong>The Nahari King</strong>
@@ -1787,21 +1795,21 @@ export default function AdminDashboardPage() {
                 type="button"
                 onClick={handleSimulateLiveOrder}
               >
-                <span aria-hidden="true"></span> Simulate Live Order
+                <span aria-hidden="true">⚡</span> Simulate Live Order
               </button>
               <button
                 className="action-button"
                 type="button"
                 onClick={handleExportCsv}
               >
-                <span aria-hidden="true"></span> Export CSV
+                <span aria-hidden="true">📥</span> Export CSV
               </button>
               <button
                 className="action-button danger-button"
                 type="button"
                 onClick={handleResetData}
               >
-                <span aria-hidden="true"></span> Reset Data
+                <span aria-hidden="true">🔄</span> Reset Data
               </button>
               <button
                 className="logout-button"
@@ -1810,7 +1818,7 @@ export default function AdminDashboardPage() {
                 aria-label="Logout of admin dashboard"
                 title="Logout"
               >
-
+                <span aria-hidden="true">⎋</span>
               </button>
             </div>
           </header>
@@ -1832,7 +1840,7 @@ export default function AdminDashboardPage() {
           <main className="content">
             {!hasLoaded ? (
               <div className="loading-state" role="status">
-                <span className="loading-crest"></span>
+                <span className="loading-crest">👑</span>
                 <strong>Opening the royal kitchen terminal…</strong>
                 <small>Warming deghs and aligning the guest ledger</small>
               </div>
@@ -1853,7 +1861,7 @@ export default function AdminDashboardPage() {
                     <article className="kpi-card revenue-card">
                       <div className="kpi-glow" aria-hidden="true" />
                       <div className="kpi-top">
-                        <span className="kpi-icon"></span>
+                        <span className="kpi-icon">💰</span>
                         <span className="kpi-growth positive">
                           {revenueGrowth.toFixed(1)}%
                         </span>
@@ -1885,7 +1893,7 @@ export default function AdminDashboardPage() {
 
                     <article className="kpi-card">
                       <div className="kpi-top">
-                        <span className="kpi-icon"></span>
+                        <span className="kpi-icon">📋</span>
                         <span className="status-pill tone-gold">
                           {dailyStats.pendingOrders} pending
                         </span>
@@ -1901,7 +1909,7 @@ export default function AdminDashboardPage() {
 
                     <article className="kpi-card">
                       <div className="kpi-top">
-                        <span className="kpi-icon"></span>
+                        <span className="kpi-icon">🪑</span>
                         <span className="status-pill tone-violet">
                           {vipReservations.length} VIP Majlis
                         </span>
@@ -1917,7 +1925,7 @@ export default function AdminDashboardPage() {
 
                     <article className="kpi-card inventory-card">
                       <div className="kpi-top">
-                        <span className="kpi-icon"></span>
+                        <span className="kpi-icon">🍲</span>
                         <span className="status-pill tone-emerald">Deghs Ready</span>
                       </div>
                       <p className="kpi-label">Degh Inventory Stock</p>
@@ -1950,7 +1958,7 @@ export default function AdminDashboardPage() {
                         </p>
                       </div>
                       <span className="section-emblem" aria-hidden="true">
-
+                        🍲
                       </span>
                     </div>
 
@@ -1977,7 +1985,7 @@ export default function AdminDashboardPage() {
                         )}
                       </div>
                       <label className="search-box">
-                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true">🔍</span>
                         <input
                           type="search"
                           value={orderSearch}
@@ -1991,7 +1999,7 @@ export default function AdminDashboardPage() {
                         type="button"
                         onClick={openOrderModal}
                       >
-                        <span aria-hidden="true"></span> New Order
+                        <span aria-hidden="true">+</span> New Order
                       </button>
                     </div>
 
@@ -2099,7 +2107,7 @@ export default function AdminDashboardPage() {
 
                     {visibleOrders.length === 0 && (
                       <div className="empty-state">
-                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true">📋</span>
                         <strong>No matching orders</strong>
                         <p>Try another status or search term.</p>
                       </div>
@@ -2121,13 +2129,13 @@ export default function AdminDashboardPage() {
                         </p>
                       </div>
                       <span className="section-emblem" aria-hidden="true">
-
+                        🏛️
                       </span>
                     </div>
 
                     <div className="toolbar reservation-toolbar">
                       <label className="date-filter">
-                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true">📅</span>
                         <input
                           type="date"
                           value={reservationDateFilter}
@@ -2158,7 +2166,7 @@ export default function AdminDashboardPage() {
                         type="button"
                         onClick={openReservationModal}
                       >
-                        <span aria-hidden="true"></span> Add Reservation
+                        <span aria-hidden="true">+</span> Add Reservation
                       </button>
                     </div>
 
@@ -2248,7 +2256,7 @@ export default function AdminDashboardPage() {
 
                     {visibleReservations.length === 0 && (
                       <div className="empty-state">
-                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true">🪑</span>
                         <strong>No reservations for this view</strong>
                         <p>Choose another date or seating type.</p>
                       </div>
@@ -2584,7 +2592,7 @@ export default function AdminDashboardPage() {
                                   className={star <= review.rating ? "filled" : ""}
                                   aria-hidden="true"
                                 >
-
+                                  ★
                                 </span>
                               ))}
                             </span>
@@ -2615,7 +2623,7 @@ export default function AdminDashboardPage() {
 
                     {visibleReviews.length === 0 && (
                       <div className="empty-state">
-                        <span aria-hidden="true"></span>
+                        <span aria-hidden="true">⭐</span>
                         <strong>No featured reviews yet</strong>
                         <p>Switch to All Reviews to moderate guest feedback.</p>
                       </div>
@@ -2826,7 +2834,7 @@ export default function AdminDashboardPage() {
           <div className="login-card">
             <div className="royal-crest" aria-hidden="true">
               <span className="crest-ring" />
-              <span className="crest-letter"></span>
+              <span className="crest-letter">👑</span>
             </div>
             <p className="login-eyebrow">Private Royal Terminal</p>
             <h1>The Nahari King</h1>
@@ -2839,7 +2847,7 @@ export default function AdminDashboardPage() {
                 Royal Passcode
               </label>
               <div className={`pin-field ${loginError ? "failed" : ""}`}>
-                <span aria-hidden="true"></span>
+                <span aria-hidden="true" className="pin-icon">🗝️</span>
                 <input
                   id="admin-pin"
                   ref={pinInputRef}
@@ -2869,7 +2877,7 @@ export default function AdminDashboardPage() {
                   }
                 />
                 <span className="custom-checkbox" aria-hidden="true">
-
+                  ✓
                 </span>
                 Remember session on this device
               </label>
@@ -2881,12 +2889,12 @@ export default function AdminDashboardPage() {
               )}
 
               <button className="login-submit" type="submit">
-                Unlock Royal Kitchen <span aria-hidden="true"></span>
+                Unlock Royal Kitchen <span aria-hidden="true">➔</span>
               </button>
             </form>
 
             <div className="security-note">
-              <span aria-hidden="true"></span>
+              <span aria-hidden="true">🛡️</span>
               Private admin gate • Session preference stays on this device
             </div>
           </div>
